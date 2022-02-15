@@ -23,7 +23,8 @@
 			"no-tabs": "off",
 			"import/no-unresolved": "off",
 			"no-unused-vars": "warn",
-			"no-console": "warn"
+			"no-console": "warn",
+			"camelcase": [0, {"properties": "never"}]
 		}
 
 }
