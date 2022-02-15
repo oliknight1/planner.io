@@ -7,6 +7,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.5.1",
     "nodemo": "^1.0.0",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
@@ -22,7 +23,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose",
     "dev": "nodemon index.ts",
     "lint": "eslint ./config/database.ts"
   },
