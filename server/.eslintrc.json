@@ -21,7 +21,8 @@
 			"indent": ["error", "tab"],
 			"no-tabs": "off",
 			"import/no-unresolved": "off",
-			"no-unused-vars": "warn"
+			"no-unused-vars": "warn",
+			"no-console": "off"
 		}
 
 }
