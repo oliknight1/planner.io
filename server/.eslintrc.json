@@ -11,13 +11,17 @@
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
-    "plugins": [
-        "@typescript-eslint"
-    ],
-    "rules": {
+		"rules": {
 			"quotes": ["error", "single"],
 			"object-curly-spacing": ["warn","always"],
 			"space-in-parens": ["warn", "always"],
-			"array-bracket-spacing": ["warn","always"]
-    }
+			"array-bracket-spacing": ["warn","always"],
+			"import/prefer-default-export": "off",
+			"import/extensions": "off",
+			"indent": ["error", "tab"],
+			"no-tabs": "off",
+			"import/no-unresolved": "off",
+			"no-unused-vars": "warn"
+		}
+
 }
