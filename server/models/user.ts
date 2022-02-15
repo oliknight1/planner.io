@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 export const user_schema = new Schema<User>( {
 	username: { type: String, required: true, index: { unique: true } },
 	password: { type: String, required: true },
-	email: String,
+	email: { type: String, required: true, index: { unique: true } },
 	projects: [ { type: Schema.Types.ObjectId, ref: 'Project' } ],
 	tasks: [ { type: Schema.Types.ObjectId, ref: 'Task' } ],
 } );
