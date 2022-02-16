@@ -128,9 +128,8 @@ describe( 'Testing user creation', async () => {
 		expect( result.body.error ).toContain( 'account with email already exists' );
 
 		const users_post_test = await helpers.users_in_db();
-		expect( users_post_test.length ).toEqual( users_pre_test )
+		expect( users_post_test.length ).toEqual( users_pre_test );
 	} );
-} );
 } );
 
 afterAll( () => {
