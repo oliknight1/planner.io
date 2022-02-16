@@ -14,7 +14,7 @@ beforeEach( async () => {
 
 	const password_hash = await bcrypt.hash( 'password', 10 );
 	const user_data : User = {
-		username: 'root',
+		display_name: 'root',
 		email: 'root@email.com',
 		password: password_hash,
 		projects: [],
@@ -60,12 +60,12 @@ describe( 'Testing the user GET routes', () => {
 	// test( '404 error is thrown when user is not found' );
 } );
 
-describe( 'Testing user creation', async () => {
-	test( 'User creation succeeds with unique username', async () => {
+describe( 'Testing user creation', () => {
+	test( 'User creation succeeds and adds user to database', async () => {
 		const users_pre_test = await helpers.users_in_db();
 
 		const new_user : User = {
-			username: 'oliknight',
+			display_name: 'oliknight',
 			email: 'oli@email.com',
 			password: 'password1',
 			projects: [],
@@ -73,7 +73,7 @@ describe( 'Testing user creation', async () => {
 		};
 
 		await api
-			.post( 'api/users' )
+			.post( '/api/users' )
 			.send( new_user )
 			.expect( 201 )
 			.expect( 'Content-Type', /application\/json/ );
@@ -81,15 +81,15 @@ describe( 'Testing user creation', async () => {
 		const users_post_test = await helpers.users_in_db();
 		expect( users_post_test ).toHaveLength( users_pre_test.length + 1 );
 
-		const usernames = users_post_test.map( ( user : User ) => user.username );
-		expect( usernames ).toContain( new_user.username );
+		const emails = users_post_test.map( ( user : User ) => user.email );
+		expect( emails ).toContain( new_user.display_name );
 	} );
 
-	test( 'User creation fails with correct status code when non-unique username', async () => {
+	test( 'User creation fails with correct status code when non-unique display_name', async () => {
 		const users_pre_test = await helpers.users_in_db();
 
 		const new_user : User = {
-			username: 'root',
+			display_name: 'root',
 			email: 'oli@email.com',
 			password: 'password1',
 			projects: [],
@@ -97,22 +97,22 @@ describe( 'Testing user creation', async () => {
 		};
 
 		const result = await api
-			.post( 'api/users' )
+			.post( '/api/users' )
 			.send( new_user )
 			.expect( 400 )
 			.expect( 'Content-Type', /application\/json/ );
 
-		expect( result.body.error ).toContain( 'username must be unique' );
+		expect( result.body.error ).toContain( 'display_name must be unique' );
 
 		const users_post_test = await helpers.users_in_db();
-		expect( users_post_test.length ).toEqual( users_pre_test );
+		expect( users_post_test.length ).toEqual( users_pre_test.length );
 	} );
 
 	test( 'User creation fails with correct status code when non-unique email', async () => {
 		const users_pre_test = await helpers.users_in_db();
 
 		const new_user : User = {
-			username: 'oliknight',
+			display_name: 'oliknight',
 			email: 'root@email.com',
 			password: 'password1',
 			projects: [],
@@ -120,7 +120,7 @@ describe( 'Testing user creation', async () => {
 		};
 
 		const result = await api
-			.post( 'api/users' )
+			.post( '/api/users' )
 			.send( new_user )
 			.expect( 400 )
 			.expect( 'Content-Type', /application\/json/ );

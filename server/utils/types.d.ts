@@ -2,7 +2,7 @@ import { Types } from 'mongoose';
 
 export interface User {
 	id?: string
-	username: string,
+	display_name: string,
 	email: string,
 	password: string,
 	projects: Types.ObjectId[],

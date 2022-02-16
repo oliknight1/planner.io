@@ -3,7 +3,7 @@ import { User } from '../utils/types';
 
 export const initial_users : User[] = [ {
 	id: '123',
-	username: 'user1',
+	display_name: 'user1',
 	email: 'email1@email.com',
 	password: 'password1',
 	tasks: [],
