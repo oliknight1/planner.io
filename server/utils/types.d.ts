@@ -1,7 +1,7 @@
-import { Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 
 export interface UserSchema {
-	id?: string
+	id?: mongoose.Types.ObjectId
 	display_name: string,
 	email: string,
 	password: string,
