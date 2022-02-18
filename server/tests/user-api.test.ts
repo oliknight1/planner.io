@@ -1,12 +1,36 @@
 import supertest from 'supertest';
-import mongoose from 'mongoose';
+import mongoose, { connect } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { app } from '../app';
 import { User } from '../models/user';
 import * as helpers from './test_helper';
 import { UserSchema } from '../utils/types';
+import * as db from './test_db_helper';
 
 const api = supertest( app );
+
+// TODO Rewrite these in my old way of tesint without in memory db
+beforeAll( async () => {
+	await db.connect();
+	// Delete all users before test
+	await User.deleteMany( {} );
+
+	const password_hash = await bcrypt.hash( 'password', 10 );
+	const user_data : UserSchema = {
+		display_name: 'root',
+		email: 'root@email.com',
+		password: password_hash,
+		projects: [],
+		tasks: [],
+	};
+	const user = new User( user_data );
+
+	await user.save();
+} );
+
+afterAll( async () => {
+	await db.close();
+} );
 
 beforeEach( async () => {
 	// Delete all users before test
@@ -24,19 +48,16 @@ beforeEach( async () => {
 
 	await user.save();
 } );
-describe( 'Testing the user GET routes', () => {
-	test( 'User is returned as json', async () => {
-		await api
-			.get( '/api/users' )
-			.expect( 200 )
-			.expect( 'Content-type', /application\/json/ );
-	} );
-
+describe( 'Testing GET routes', () => {
 	test( 'One user is returned when getting user by ID', async () => {
 		const user_to_find = await helpers.get_target_user();
 
-		const response = await api.get( `/api/users/${user_to_find.id}` );
-		expect( response.body ).toHaveLength( 1 );
+		const response = await api
+			.get( `/api/users/${user_to_find.id}` )
+			.expect( 'Content-type', /application\/json/ );
+
+		const processed_user_to_find = JSON.parse( JSON.stringify( user_to_find ) );
+		expect( response.body ).toEqual( processed_user_to_find );
 	} );
 
 	test( 'Correct user is returned when getting user by ID', async () => {
@@ -55,20 +76,11 @@ describe( 'Testing the user GET routes', () => {
 		const user_to_find = await helpers.get_target_user();
 		const result_user = await api
 			.get( `/api/users/${user_to_find.email}` )
-			.expect( 200 );
+			.expect( 200 )
+			.expect( 'Content-type', /application\/json/ );
 
 		const processed_user_to_view = JSON.parse( JSON.stringify( user_to_find ) );
 		expect( result_user.body ).toEqual( processed_user_to_view );
-	} );
-
-	test( '400 error is thrown when invalid ID is supplied', async () => {
-		const invalid_id = 123;
-
-		const result = await api
-			.get( `/api/users/${invalid_id}` )
-			.expect( 400 );
-
-		expect( result.body.error ).toContain( 'Invalid ID supplied' );
 	} );
 
 	test( '400 error is thrown when invalid email is supplied', async () => {
@@ -76,25 +88,29 @@ describe( 'Testing the user GET routes', () => {
 
 		const result = await api
 			.get( `/api/users/${invalid_email}` )
-			.expect( 400 );
+			.expect( 400 )
+			.expect( 'Content-type', /application\/json/ );
 
 		expect( result.body.error ).toContain( 'Invalid email supplied' );
 	} );
 
 	test( '404 error is thrown when user is not found by id', async () => {
-		const fake_id = helpers.generate_fake_id();
+		const fake_id = await helpers.generate_fake_id();
 
 		const result = await api
 			.get( `/api/users/${fake_id}` )
-			.expect( 404 );
+			.expect( 404 )
+			.expect( 'Content-type', /application\/json/ );
 
 		expect( result.body.error ).toContain( 'User not found' );
 	} );
+
 	test( '404 error is thrown when user is not found by email', async () => {
 		const fake_email = 'notreal@email.com';
 		const result = await api
 			.get( `/api/users/${fake_email}` )
-			.expect( 404 );
+			.expect( 404 )
+			.expect( 'Content-type', /application\/json/ );
 
 		expect( result.body.error ).toContain( 'User not found' );
 	} );

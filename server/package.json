@@ -25,6 +25,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
+    "mongodb-memory-server": "^8.3.0",
     "mongoose": "^6.2.1",
     "supertest": "^6.2.2"
   },
@@ -32,7 +33,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest --verbose --runInBand --forceExit",
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand --forceExit --watch",
     "dev": "cross-env NODE_ENV=development nodemon index.ts",
     "lint": "eslint ./config/database.ts"
   },

@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { User } from '../models/user';
 import { UserSchema } from '../utils/types';
+import { UserController } from '../controllers/UserController';
 
 export const user_router = express.Router();
 
@@ -34,3 +35,5 @@ user_router.post( '/', async ( request : Request, response : Response ) => {
 
 	response.status( 201 ).json( saved_user );
 } );
+
+user_router.get( '/:id', UserController.get_by_id );
