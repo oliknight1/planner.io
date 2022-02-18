@@ -125,10 +125,10 @@ describe( 'Testing user creation', () => {
 			.expect( 400 )
 			.expect( 'Content-Type', /application\/json/ );
 
-		expect( result.body.error ).toContain( 'account with email already exists' );
+		expect( result.body.error ).toContain( 'Account with that email already exists' );
 
 		const users_post_test = await helpers.users_in_db();
-		expect( users_post_test.length ).toEqual( users_pre_test );
+		expect( users_post_test.length ).toEqual( users_pre_test.length );
 	} );
 } );
 

@@ -1,7 +1,7 @@
-import { UserModel } from '../models/user';
-import { User } from '../utils/types';
+import { User } from '../models/user';
+import { UserSchema } from '../utils/types';
 
-export const initial_users : User[] = [ {
+export const initial_users : UserSchema[] = [ {
 	id: '123',
 	display_name: 'user1',
 	email: 'email1@email.com',
@@ -11,8 +11,8 @@ export const initial_users : User[] = [ {
 } ];
 
 // Returns a list of all users in test database
-export const users_in_db = async () : Promise<User[]> => {
-	const users = await UserModel.find();
+export const users_in_db = async () : Promise<UserSchema[]> => {
+	const users = await User.find();
 	return users.map( ( user ) => user.toJSON() );
 };
 
