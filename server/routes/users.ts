@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
+import { param } from 'express-validator';
 import { User } from '../models/user';
 import { UserSchema } from '../utils/types';
 import { UserController } from '../controllers/UserController';
@@ -36,4 +37,6 @@ user_router.post( '/', async ( request : Request, response : Response ) => {
 	response.status( 201 ).json( saved_user );
 } );
 
-user_router.get( '/:id', UserController.get_by_id );
+user_router.get( '/id/:id', UserController.get_by_id );
+
+user_router.get( '/email/:email', param( 'email' ).isEmail().normalizeEmail(), UserController.get_by_email );

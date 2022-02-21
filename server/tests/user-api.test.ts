@@ -9,7 +9,6 @@ import * as db from './test_db_helper';
 
 const api = supertest( app );
 
-// TODO Rewrite these in my old way of tesint without in memory db
 beforeAll( async () => {
 	await db.connect();
 	// Delete all users before test
@@ -53,7 +52,7 @@ describe( 'Testing GET routes', () => {
 		const user_to_find = await helpers.get_target_user();
 
 		const response = await api
-			.get( `/api/users/${user_to_find.id}` )
+			.get( `/api/users/id/${user_to_find.id}` )
 			.expect( 'Content-type', /application\/json/ );
 
 		const processed_user_to_find = JSON.parse( JSON.stringify( user_to_find ) );
@@ -64,7 +63,7 @@ describe( 'Testing GET routes', () => {
 		const user_to_find = await helpers.get_target_user();
 
 		const result_user = await api
-			.get( `/api/users/${user_to_find.id}` )
+			.get( `/api/users/id/${user_to_find.id}` )
 			.expect( 200 )
 			.expect( 'Content-Type', /application\/json/ );
 
@@ -75,11 +74,12 @@ describe( 'Testing GET routes', () => {
 	test( 'Correct user is returned when getting user by email', async () => {
 		const user_to_find = await helpers.get_target_user();
 		const result_user = await api
-			.get( `/api/users/${user_to_find.email}` )
+			.get( `/api/users/email/${user_to_find.email}` )
 			.expect( 200 )
 			.expect( 'Content-type', /application\/json/ );
 
 		const processed_user_to_view = JSON.parse( JSON.stringify( user_to_find ) );
+
 		expect( result_user.body ).toEqual( processed_user_to_view );
 	} );
 
@@ -87,7 +87,7 @@ describe( 'Testing GET routes', () => {
 		const invalid_email = 'invalid email';
 
 		const result = await api
-			.get( `/api/users/${invalid_email}` )
+			.get( `/api/users/email/${invalid_email}` )
 			.expect( 400 )
 			.expect( 'Content-type', /application\/json/ );
 
@@ -98,7 +98,7 @@ describe( 'Testing GET routes', () => {
 		const fake_id = await helpers.generate_fake_id();
 
 		const result = await api
-			.get( `/api/users/${fake_id}` )
+			.get( `/api/users/id/${fake_id}` )
 			.expect( 404 )
 			.expect( 'Content-type', /application\/json/ );
 
@@ -108,7 +108,7 @@ describe( 'Testing GET routes', () => {
 	test( '404 error is thrown when user is not found by email', async () => {
 		const fake_email = 'notreal@email.com';
 		const result = await api
-			.get( `/api/users/${fake_email}` )
+			.get( `/api/users/email/${fake_email}` )
 			.expect( 404 )
 			.expect( 'Content-type', /application\/json/ );
 
