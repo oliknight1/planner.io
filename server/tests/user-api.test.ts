@@ -176,6 +176,8 @@ describe( 'Testing user creation', () => {
 
 		expect( result.body.error.display_name ).toContain( 'Display name cannot be empty' );
 		expect( result.body.error.email ).toContain( 'Email cannot be empty' );
+		const users_post_test = await helpers.users_in_db();
+		expect( users_pre_test.length ).toEqual( users_post_test.length );
 	} );
 } );
 
