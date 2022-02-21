@@ -124,8 +124,6 @@ describe( 'Testing user creation', () => {
 			display_name: 'oliknight',
 			email: 'oli@email.com',
 			password: 'password1',
-			projects: [],
-			tasks: [],
 		};
 
 		await api
@@ -148,8 +146,6 @@ describe( 'Testing user creation', () => {
 			display_name: 'oliknight',
 			email: 'root@email.com',
 			password: 'password1',
-			projects: [],
-			tasks: [],
 		};
 
 		const result = await api
@@ -162,6 +158,26 @@ describe( 'Testing user creation', () => {
 
 		const users_post_test = await helpers.users_in_db();
 		expect( users_post_test.length ).toEqual( users_pre_test.length );
+	} );
+
+	test( 'User creation fails with empty email/display_name', async () => {
+		const users_pre_test = await helpers.users_in_db();
+
+		const new_user : UserSchema = {
+			display_name: '',
+			email: '',
+			password: 'password1',
+		};
+		const result = await api
+			.post( '/api/users' )
+			.send( new_user )
+			.expect( 400 )
+			.expect( 'Content-Type', /application\/json/ );
+
+		console.log( 'run', result.body.error.errors );
+
+		expect( result.body.error.display_name ).toContain( 'Display name cannot be empty' );
+		expect( result.body.error.email ).toContain( 'Email cannot be empty' );
 	} );
 } );
 
