@@ -174,8 +174,6 @@ describe( 'Testing user creation', () => {
 			.expect( 400 )
 			.expect( 'Content-Type', /application\/json/ );
 
-		console.log( 'run', result.body.error.errors );
-
 		expect( result.body.error.display_name ).toContain( 'Display name cannot be empty' );
 		expect( result.body.error.email ).toContain( 'Email cannot be empty' );
 	} );
