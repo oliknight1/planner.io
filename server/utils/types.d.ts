@@ -8,3 +8,10 @@ export interface UserSchema {
 	projects?: Types.ObjectId[],
 	tasks?: Types.ObjectId[]
 }
+
+export interface ProjectSchema {
+	id?: mongoose.Types.ObjectId,
+	name: string,
+	users: Types.ObjectId[],
+	tasks: Types.ObjectId[]
+}
