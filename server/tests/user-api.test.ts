@@ -1,11 +1,11 @@
 import supertest from 'supertest';
-import mongoose, { connect } from 'mongoose';
+import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import { app } from '../app';
 import { User } from '../models/user';
-import * as helpers from './test_helper';
+import * as helpers from './helpers/test_helper';
 import { UserSchema } from '../utils/types';
-import * as db from './test_db_helper';
+import * as db from './helpers/test_db_helper';
 
 const api = supertest( app );
 
