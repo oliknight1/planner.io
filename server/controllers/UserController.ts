@@ -6,6 +6,13 @@ import { UserSchema } from '../utils/types';
 import { BaseController } from './BaseController';
 
 export class UserController extends BaseController {
+	public static get_by_id = async (
+		request : Request<{ id: string }>,
+		response : Response,
+	) => {
+		BaseController.get_by_id( request, response, User );
+	};
+
 	public static get_by_email = async (
 		request : Request<{ email: string }>,
 		response : Response,

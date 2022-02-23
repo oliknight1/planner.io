@@ -1,15 +1,18 @@
-import { isValidObjectId } from 'mongoose';
+import mongoose, { isValidObjectId } from 'mongoose';
 import { Request, Response } from 'express';
-import { User } from '../models/user';
 
 export class BaseController {
-	public static get_by_id = async ( request : Request<{ id: string }>, response : Response ) => {
+	public static get_by_id = async <T>(
+		request : Request<{ id: string }>,
+		response : Response,
+		model: mongoose.Model<T, {}, {}, {}>,
+	) => {
 		const { id } = request.params;
 
 		if ( !isValidObjectId( id ) ) {
 			response.status( 400 ).json( { error: 'Invalid ID supplied' } );
 		}
-		const user = await User.findById( id );
+		const user = await model.findById( id );
 
 		if ( user ) {
 			response.status( 200 ).send( user.toJSON() );
