@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
-import { User } from '../models/user';
-import { UserSchema } from '../utils/types';
+import { UserSchema, ProjectSchema } from '../../utils/types';
+import { User } from '../../models/user';
+import { Project } from '../../models/project';
 
 export const initial_users : UserSchema[] = [ {
 	id: new mongoose.Types.ObjectId(),
@@ -23,12 +24,24 @@ export const get_target_user = async () => {
 	return users_pre_test[0];
 };
 
-export const generate_fake_id = async () => {
+export const generate_fake_id =	( real_id : mongoose.Types.ObjectId | undefined )
+		: mongoose.Types.ObjectId | null => {
+	if ( real_id === undefined ) {
+		return null;
+	}
 	const id = new mongoose.Types.ObjectId();
-	const user = await get_target_user();
-	const real_id = user.id;
 	if ( id === real_id ) {
-		generate_fake_id();
+		generate_fake_id( real_id );
 	}
 	return id;
+};
+
+export const project_in_db = async () : Promise<ProjectSchema[]> => {
+	const projects = await Project.find();
+	return projects.map( ( project ) => project.toJSON() );
+};
+
+export const get_target_project = async () => {
+	const projects = await project_in_db();
+	return projects[0];
 };

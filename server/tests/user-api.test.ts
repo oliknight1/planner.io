@@ -48,17 +48,6 @@ beforeEach( async () => {
 	await user.save();
 } );
 describe( 'Testing GET routes', () => {
-	test( 'One user is returned when getting user by ID', async () => {
-		const user_to_find = await helpers.get_target_user();
-
-		const response = await api
-			.get( `/api/users/id/${user_to_find.id}` )
-			.expect( 'Content-type', /application\/json/ );
-
-		const processed_user_to_find = JSON.parse( JSON.stringify( user_to_find ) );
-		expect( response.body ).toEqual( processed_user_to_find );
-	} );
-
 	test( 'Correct user is returned when getting user by ID', async () => {
 		const user_to_find = await helpers.get_target_user();
 
@@ -95,7 +84,9 @@ describe( 'Testing GET routes', () => {
 	} );
 
 	test( '404 error is thrown when user is not found by id', async () => {
-		const fake_id = await helpers.generate_fake_id();
+		const user = await helpers.get_target_user();
+		const real_id = user.id;
+		const fake_id = helpers.generate_fake_id( real_id );
 
 		const result = await api
 			.get( `/api/users/id/${fake_id}` )
