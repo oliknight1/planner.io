@@ -17,7 +17,7 @@ export class BaseController {
 		if ( user ) {
 			response.status( 200 ).send( user.toJSON() );
 		} else {
-			response.status( 404 ).json( { error: 'User not found' } );
+			response.status( 404 ).json( { error: `${model.modelName} not found` } );
 		}
 	};
 }
