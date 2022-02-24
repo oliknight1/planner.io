@@ -15,3 +15,15 @@ export interface ProjectSchema {
 	users: Types.ObjectId[],
 	tasks: Types.ObjectId[]
 }
+
+export interface TaskSchema {
+	id?: mongoose.Types.ObjectId,
+	title: string,
+	body_text: string,
+	users: Types.ObjectId[],
+	project: Types.ObjectId,
+	tags: string[],
+	column: string,
+	due_date: Date,
+	dependant_tasks: Types.ObjectId[]
+}
