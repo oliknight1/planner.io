@@ -12,10 +12,10 @@ export class BaseController {
 		if ( !isValidObjectId( id ) ) {
 			response.status( 400 ).json( { error: 'Invalid ID supplied' } );
 		}
-		const user = await model.findById( id );
+		const doc = await model.findById( id );
 
-		if ( user ) {
-			response.status( 200 ).send( user.toJSON() );
+		if ( doc ) {
+			response.status( 200 ).send( doc.toJSON() );
 		} else {
 			response.status( 404 ).json( { error: `${model.modelName} not found` } );
 		}
