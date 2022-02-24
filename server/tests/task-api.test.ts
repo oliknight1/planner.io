@@ -54,6 +54,19 @@ describe( 'Testing task GET routes', () => {
 		expect( response.body.error ).toEqual( 'Task not found' );
 	} );
 } );
+describe( 'Testing task DELETE routes', () => {
+	test( 'Successfull deletion', async () => {
+		const tasks_pre_test = await helpers.tasks_in_db();
+		const task_to_delete = await helpers.get_target_task();
+		const { id } = task_to_delete;
+
+		await api
+			.delete( `/api/tasks/id/${id}` )
+			.expect( 204 );
+
+		const tasks_post_test = await helpers.tasks_in_db;
+		expect( tasks_post_test.length ).toEqual( tasks_pre_test.length - 1 );
+	} );
+} );
 // describe( 'Testing task POST routes' );
 // describe( 'Testing task PATCH routes' );
-// describe( 'Testing task DELETE routes' );

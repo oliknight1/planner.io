@@ -7,4 +7,11 @@ export class TaskController {
 		request : Request<{ id: string }>,
 		response : Response,
 	) => BaseController.get_by_id( request, response, Task );
+
+	public static remove = async (
+		request : Request<{ id: string }>,
+		response : Response,
+	) => {
+		BaseController.remove( request, response, Task );
+	};
 }
