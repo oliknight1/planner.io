@@ -21,4 +21,25 @@ export class BaseController {
 			response.status( 404 ).json( { error: `${model.modelName} not found` } );
 		}
 	};
+
+	public static remove = async <T>(
+		request : Request<{ id: string }>,
+		response : Response,
+		model: mongoose.Model<T, {}, {}, {}>,
+	) => {
+		const { id } = request.params;
+
+		if ( !isValidObjectId( id ) ) {
+			response.status( 400 ).json( { error: 'Invalid ID supplied' } );
+			return;
+		}
+		try {
+			await model.findByIdAndRemove( id );
+			response.status( 204 ).end();
+		} catch ( error : unknown ) {
+			if ( error instanceof Error ) {
+				response.status( 400 ).json( { error: error.message } );
+			}
+		}
+	};
 }

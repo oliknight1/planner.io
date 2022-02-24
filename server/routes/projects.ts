@@ -10,4 +10,4 @@ project_router.post( '/', ProjectController.create );
 
 project_router.patch( '/id/:id', body( 'project' ).notEmpty().withMessage( 'Must provide project data' ), ProjectController.update );
 
-project_router.delete( '/' );
+project_router.delete( '/id/:id', ProjectController.remove );

@@ -62,7 +62,7 @@ describe( 'Testing project GET routes', () => {
 
 describe( 'Testing project POST routes', () => {
 	test( 'Project is successfully created', async () => {
-		const projects_pre_test = await helpers.project_in_db();
+		const projects_pre_test = await helpers.projects_in_db();
 
 		const new_project : ProjectSchema = {
 			name: 'Test project',
@@ -76,7 +76,7 @@ describe( 'Testing project POST routes', () => {
 			.expect( 201 )
 			.expect( 'Content-type', /application\/json/ );
 
-		const projects_post_test = await helpers.project_in_db();
+		const projects_post_test = await helpers.projects_in_db();
 		expect( projects_post_test.length ).toEqual( projects_pre_test.length + 1 );
 
 		const names = projects_post_test.map( ( project : ProjectSchema ) => project.name );
@@ -84,7 +84,7 @@ describe( 'Testing project POST routes', () => {
 	} );
 
 	test( 'Project creation fails with empty name', async () => {
-		const projects_pre_test = await helpers.project_in_db();
+		const projects_pre_test = await helpers.projects_in_db();
 
 		const new_project : ProjectSchema = {
 			name: '',
@@ -98,7 +98,7 @@ describe( 'Testing project POST routes', () => {
 			.expect( 400 )
 			.expect( 'Content-type', /application\/json/ );
 
-		const projects_post_test = await helpers.project_in_db();
+		const projects_post_test = await helpers.projects_in_db();
 		expect( projects_post_test.length ).toEqual( projects_pre_test.length );
 
 		expect( response.body.error ).toContain( 'Name cannot be empty' );
@@ -158,5 +158,30 @@ describe( 'Testing project PATCH routes', () => {
 		expect( response.body.error ).toContain( 'No data provided' );
 	} );
 } );
-//
-// describe( 'Testing DELETE routes' )
+
+describe( 'Testing project DELETE routes', () => {
+	beforeAll( async () => {
+		const project_data : ProjectSchema = {
+			name: 'Test Project',
+			tasks: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
+			users: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
+		};
+
+		const project = await new Project( project_data );
+		await project.save();
+	} );
+
+	test( 'Successfull deletion', async () => {
+		const projects_pre_test = await helpers.projects_in_db();
+		const project_to_delete = await helpers.get_target_project();
+		const { id } = project_to_delete;
+
+		await api
+			.delete( `/api/projects/id/${id}` )
+			.expect( 204 );
+
+		const projects_post_test = await helpers.projects_in_db();
+
+		expect( projects_post_test.length ).toEqual( projects_pre_test.length - 1 );
+	} );
+} );

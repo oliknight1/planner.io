@@ -36,12 +36,12 @@ export const generate_fake_id =	( real_id : mongoose.Types.ObjectId | undefined 
 	return id;
 };
 
-export const project_in_db = async () : Promise<ProjectSchema[]> => {
+export const projects_in_db = async () : Promise<ProjectSchema[]> => {
 	const projects = await Project.find();
 	return projects.map( ( project ) => project.toJSON() );
 };
 
 export const get_target_project = async () => {
-	const projects = await project_in_db();
+	const projects = await projects_in_db();
 	return projects[0];
 };

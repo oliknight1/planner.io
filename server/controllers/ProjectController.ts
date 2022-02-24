@@ -72,4 +72,11 @@ export class ProjectController extends BaseController {
 			}
 		}
 	};
+
+	public static remove = async (
+		request : Request<{ id: string }>,
+		response : Response,
+	) => {
+		BaseController.remove( request, response, Project );
+	};
 }
