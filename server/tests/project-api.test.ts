@@ -48,7 +48,6 @@ describe( 'Testing project GET routes', () => {
 
 	test( 'Returns 404 when no project is found', async () => {
 		const project = await helpers.get_target_project();
-		console.log( 'sheesh', project );
 		const real_id = project.id;
 		const fake_id = helpers.generate_fake_id( real_id );
 
@@ -61,14 +60,54 @@ describe( 'Testing project GET routes', () => {
 	} );
 } );
 
-//
-// describe( 'Testing POST routes', () => {
-//   test( 'Project is successfully created' );
-//
-//   test( 'Project creation fails with empty name' );
-// } );
-//
+describe( 'Testing project POST routes', () => {
+	test( 'Project is successfully created', async () => {
+		const projects_pre_test = await helpers.project_in_db();
+
+		const new_project : ProjectSchema = {
+			name: 'Test project',
+			users: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
+			tasks: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
+		};
+
+		await api
+			.post( '/api/projects' )
+			.send( new_project )
+			.expect( 201 )
+			.expect( 'Content-type', /application\/json/ );
+
+		const projects_post_test = await helpers.project_in_db();
+		expect( projects_post_test.length ).toEqual( projects_pre_test.length + 1 );
+
+		const names = projects_post_test.map( ( project : ProjectSchema ) => project.name );
+		expect( names ).toContain( new_project.name );
+	} );
+
+	test( 'Project creation fails with empty name', async () => {
+		const projects_pre_test = await helpers.project_in_db();
+
+		const new_project : ProjectSchema = {
+			name: '',
+			users: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
+			tasks: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
+		};
+
+		const response = await api
+			.post( '/api/projects' )
+			.send( new_project )
+			.expect( 400 )
+			.expect( 'Content-type', /application\/json/ );
+
+		const projects_post_test = await helpers.project_in_db();
+		expect( projects_post_test.length ).toEqual( projects_pre_test.length );
+
+		expect( response.body.error ).toContain( 'Name cannot be empty' );
+	} );
+} );
+
 // describe( 'Testing PATCH routes', () => {
 //   test( 'Project is successfully patched' );
 //   test( 'PATCH fails if no data is provided' );
 // } );
+//
+// describe( 'Testing DELETE routes' )
