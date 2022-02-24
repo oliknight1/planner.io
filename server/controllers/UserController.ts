@@ -65,9 +65,11 @@ export class UserController extends BaseController {
 			const saved_user = await user.save();
 
 			response.status( 201 ).json( saved_user );
-		} catch ( error : any ) {
-			const { errors } = error;
-			response.status( 400 ).json( { error: errors } );
+		} catch ( error : unknown ) {
+			if ( error instanceof Error ) {
+				const { message } = error;
+				response.status( 400 ).json( { error: message } );
+			}
 		}
 	};
 }
