@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
-import { UserSchema, ProjectSchema } from '../../utils/types';
+import { UserSchema, ProjectSchema, TaskSchema } from '../../utils/types';
 import { User } from '../../models/user';
 import { Project } from '../../models/project';
+import { Task } from '../../models/task';
 
 export const initial_users : UserSchema[] = [ {
 	id: new mongoose.Types.ObjectId(),
@@ -11,6 +12,8 @@ export const initial_users : UserSchema[] = [ {
 	tasks: [],
 	projects: [],
 } ];
+
+// TODO: Generalize functions
 
 // Returns a list of all users in test database
 export const users_in_db = async () : Promise<UserSchema[]> => {
@@ -44,4 +47,14 @@ export const projects_in_db = async () : Promise<ProjectSchema[]> => {
 export const get_target_project = async () => {
 	const projects = await projects_in_db();
 	return projects[0];
+};
+
+export const tasks_in_db = async () : Promise<TaskSchema[]> => {
+	const tasks = await Task.find();
+	return tasks.map( ( task ) => task.toJSON() );
+};
+
+export const get_target_task = async () => {
+	const tasks = await tasks_in_db();
+	return tasks[0];
 };
