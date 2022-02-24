@@ -42,7 +42,7 @@ describe( 'Testing task GET routes', () => {
 		expect( response.body ).toEqual( JSON.parse( JSON.stringify( task_to_find ) ) );
 	} );
 	test( 'Return 404 when no task found', async () => {
-		const project = await helpers.get_target_project();
+		const project = await helpers.get_target_task();
 		const real_id = project.id;
 		const fake_id = helpers.generate_fake_id( real_id );
 
@@ -51,7 +51,7 @@ describe( 'Testing task GET routes', () => {
 			.expect( 404 )
 			.expect( 'Content-type', /application\/json/ );
 
-		expect( response.body.error ).toEqual( 'No task found' );
+		expect( response.body.error ).toEqual( 'Task not found' );
 	} );
 } );
 // describe( 'Testing task POST routes' );
