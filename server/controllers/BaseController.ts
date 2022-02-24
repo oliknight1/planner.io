@@ -11,6 +11,7 @@ export class BaseController {
 
 		if ( !isValidObjectId( id ) ) {
 			response.status( 400 ).json( { error: 'Invalid ID supplied' } );
+			return;
 		}
 		const doc = await model.findById( id );
 

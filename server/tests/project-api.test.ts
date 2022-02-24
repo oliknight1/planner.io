@@ -105,9 +105,58 @@ describe( 'Testing project POST routes', () => {
 	} );
 } );
 
-// describe( 'Testing PATCH routes', () => {
-//   test( 'Project is successfully patched' );
-//   test( 'PATCH fails if no data is provided' );
-// } );
+describe( 'Testing project PATCH routes', () => {
+	beforeAll( async () => {
+		const project_data : ProjectSchema = {
+			name: 'Test Project',
+			tasks: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
+			users: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
+		};
+
+		const project = await new Project( project_data );
+		await project.save();
+	} );
+	test( 'Project is successfully patched', async () => {
+		const project = await helpers.get_target_project();
+		const { id } = project;
+		await api.patch( `/api/projects/id/${id}` )
+			.send( { name: 'new name' } )
+			.expect( 200 );
+
+		const project_post_patch = await helpers.get_target_project();
+		expect( project_post_patch.name ).toEqual( 'new name' );
+	} );
+	test( '404 error is sent if project not found', async () => {
+		const project = await helpers.get_target_project();
+		const real_id = project.id;
+		const fake_id = helpers.generate_fake_id( real_id );
+
+		const response = await api
+			.patch( `/api/projects/id/${fake_id}` )
+			.send( { name: 'New name' } )
+			.expect( 404 )
+			.expect( 'Content-type', /application\/json/ );
+
+		const project_post_patch = await helpers.get_target_project();
+		expect( project_post_patch ).toEqual( project );
+
+		expect( response.body.error ).toContain( 'Project not found' );
+	} );
+	test( 'PATCH fails if no data is provided', async () => {
+		const project = await helpers.get_target_project();
+		const { id } = project;
+
+		const response = await api
+			.patch( `/api/projects/id/${id}` )
+			.send( { name: '' } )
+			.expect( 400 )
+			.expect( 'Content-type', /application\/json/ );
+
+		const project_post_patch = await helpers.get_target_project();
+		expect( project_post_patch ).toEqual( project );
+
+		expect( response.body.error ).toContain( 'No data provided' );
+	} );
+} );
 //
 // describe( 'Testing DELETE routes' )
