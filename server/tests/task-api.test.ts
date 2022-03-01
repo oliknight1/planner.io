@@ -122,4 +122,31 @@ describe( 'Testing task POST routes', () => {
 		expect( response.body.error ).toContain( 'Title cannot be empty' );
 	} );
 } );
-// describe( 'Testing task PATCH routes' );
+describe( 'Testing task PATCH routes', () => {
+	test( 'Task is successfully patched', async () => {
+		const task = await helpers.get_target_task();
+		const { id } = task;
+
+		await api
+			.patch( `/api/tasks/id/${id}` )
+			.send( { title: 'new title' } )
+			.expect( 200 );
+
+		const tasks_post_test = await helpers.get_target_task();
+		expect( tasks_post_test.title ).toEqual( 'new title' );
+	} );
+
+	test( '404 error if task not found', async () => {
+		const task = await helpers.get_target_task();
+		const real_id = task.id;
+		const id = helpers.generate_fake_id( real_id );
+		await api
+			.patch( `/api/tasks/id/${id}` )
+			.send( { title: 'new title' } )
+			.expect( 404 )
+			.expect( 'Content-type', /application\/json/ );
+
+		const tasks_post_test = await helpers.get_target_task();
+		expect( tasks_post_test.title ).toEqual( task.title );
+	} );
+} );

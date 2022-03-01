@@ -8,3 +8,5 @@ task_router.get( '/id/:id', TaskController.get_by_id );
 task_router.delete( '/id/:id', TaskController.remove );
 
 task_router.post( '/', TaskController.create );
+
+task_router.patch( '/id/:id', TaskController.update );

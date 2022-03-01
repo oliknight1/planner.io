@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { isValidObjectId } from 'mongoose';
 import { Task } from '../models/task';
 import { BaseController } from './BaseController';
 
@@ -35,5 +36,48 @@ export class TaskController {
 				response.status( 400 ).json( { error: message } );
 			}
 		}
+	};
+
+	public static update = async (
+		request: Request<{ id: string }>,
+		response: Response,
+	) => {
+		const { id } = request.params;
+		if ( !isValidObjectId( id ) ) {
+			console.log( 'bnad iod' );
+			response.status( 400 ).json( { error: 'Invalid ID supplied' } );
+			return;
+		}
+
+		const task = await Task.findById( id );
+		if ( !task ) {
+			response.status( 404 ).json( { error: 'Tasl not found' } );
+			return;
+		}
+
+		Object.keys( request.body ).reduce( ( request_task : any, key ) => {
+			const updated_task = request_task;
+			updated_task[key] = request.body[key];
+			return updated_task;
+		}, task );
+		// task = {
+		//   ...task,
+		//   ...request.body,
+		// };
+
+		if ( task ) {
+			try {
+				await task.save();
+				response.status( 200 ).json( task );
+				return;
+			} catch ( error : unknown ) {
+				if ( error instanceof Error ) {
+					const { message } = error;
+					response.status( 400 ).json( { error: message } );
+					return;
+				}
+			}
+		}
+		response.status( 404 ).end();
 	};
 }
