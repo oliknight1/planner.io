@@ -68,5 +68,58 @@ describe( 'Testing task DELETE routes', () => {
 		expect( tasks_post_test.length ).toEqual( tasks_pre_test.length - 1 );
 	} );
 } );
-// describe( 'Testing task POST routes' );
+describe( 'Testing task POST routes', () => {
+	test( 'Task is successfully created', async () => {
+		const tasks_pre_test = await helpers.tasks_in_db();
+
+		const new_task :TaskSchema = {
+			title: 'new task',
+			body_text: 'task body',
+			users: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
+			project: new mongoose.Types.ObjectId(),
+			tags: [ 'tag1', 'tag2' ],
+			column: 'backlog',
+			due_date: new Date(),
+			dependant_tasks: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
+		};
+
+		await api
+			.post( '/api/tasks' )
+			.send( new_task )
+			.expect( 201 )
+			.expect( 'Content-type', /application\/json/ );
+
+		const tasks_post_test = await helpers.tasks_in_db();
+		expect( tasks_post_test.length ).toEqual( tasks_pre_test.length + 1 );
+
+		const titles = tasks_post_test.map( ( task: TaskSchema ) => task.title );
+		expect( titles ).toContain( new_task.title );
+	} );
+
+	test( 'Task creations fails with empty title', async () => {
+		const tasks_pre_test = await helpers.tasks_in_db();
+
+		const new_task :TaskSchema = {
+			title: '',
+			body_text: 'task body',
+			users: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
+			project: new mongoose.Types.ObjectId(),
+			tags: [ 'tag1', 'tag2' ],
+			column: 'backlog',
+			due_date: new Date(),
+			dependant_tasks: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
+		};
+
+		const response = await api
+			.post( '/api/tasks' )
+			.send( new_task )
+			.expect( 400 )
+			.expect( 'Content-type', /application\/json/ );
+
+		const tasks_post_test = await helpers.tasks_in_db();
+		expect( tasks_post_test.length ).toEqual( tasks_pre_test.length );
+
+		expect( response.body.error ).toContain( 'Title cannot be empty' );
+	} );
+} );
 // describe( 'Testing task PATCH routes' );
