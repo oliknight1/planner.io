@@ -18,7 +18,8 @@ export class ProjectController extends BaseController {
 	) => {
 		const { name } : ProjectSchema = request.body;
 
-		if ( !this.verify_token( request ) ) {
+		const token = this.verify_token( request );
+		if ( !token ) {
 			response.status( 401 ).json( { error: 'Auth token missing or invalid' } );
 			return;
 		}
@@ -59,7 +60,9 @@ export class ProjectController extends BaseController {
 			response.status( 400 ).json( { error: 'No data provided' } );
 			return;
 		}
-		if ( !this.verify_token( request ) ) {
+
+		const token = this.verify_token( request );
+		if ( !token ) {
 			response.status( 401 ).json( { error: 'Auth token missing or invalid' } );
 			return;
 		}

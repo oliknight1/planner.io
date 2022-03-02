@@ -28,9 +28,13 @@ export const get_target_user = async () => {
 	return users_pre_test[0];
 };
 
-export const token = jwt.sign( {}, process.env.JWT_SECRET as string, {
-	expiresIn: process.env.JWT_EXPIRES_IN,
-} );
+export const token = jwt.sign(
+	{ id: new mongoose.Types.ObjectId() },
+ process.env.JWT_SECRET as string,
+ {
+ 	expiresIn: process.env.JWT_EXPIRES_IN,
+ },
+);
 
 export const generate_fake_id =	( real_id : mongoose.Types.ObjectId | undefined )
 		: mongoose.Types.ObjectId | null => {

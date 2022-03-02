@@ -30,7 +30,8 @@ export class BaseController {
 	) => {
 		const { id } = request.params;
 
-		if ( !this.verify_token( request ) ) {
+		const token = this.verify_token( request );
+		if ( !token ) {
 			response.status( 401 ).json( { error: 'Auth token missing or invalid' } );
 			return;
 		}
@@ -49,7 +50,7 @@ export class BaseController {
 		}
 	};
 
-	public static verify_token = ( request : Request ) : boolean => {
+	public static verify_token = ( request : Request ) : null | jwt.JwtPayload => {
 		const auth = request.get( 'authorization' );
 		if ( auth && auth.toLowerCase().startsWith( 'bearer ' ) ) {
 			const token = auth.substring( 7 );
@@ -59,9 +60,9 @@ export class BaseController {
 				: null;
 
 			if ( decoded_token ) {
-				return true;
+				return decoded_token as jwt.JwtPayload;
 			}
 		}
-		return false;
+		return null;
 	};
 }

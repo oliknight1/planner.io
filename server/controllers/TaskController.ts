@@ -22,7 +22,9 @@ export class TaskController extends BaseController {
 			response.status( 400 ).json( { error: 'Title cannot be empty' } );
 			return;
 		}
-		if ( !this.verify_token( request ) ) {
+
+		const token = this.verify_token( request );
+		if ( !token ) {
 			response.status( 401 ).json( { error: 'Auth token missing or invalid' } );
 			return;
 		}
@@ -51,7 +53,9 @@ export class TaskController extends BaseController {
 			response.status( 400 ).json( { error: 'Invalid ID supplied' } );
 			return;
 		}
-		if ( !this.verify_token( request ) ) {
+
+		const token = this.verify_token( request );
+		if ( !token ) {
 			response.status( 401 ).json( { error: 'Auth token missing or invalid' } );
 			return;
 		}
