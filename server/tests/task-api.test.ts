@@ -74,7 +74,7 @@ describe( 'Testing task POST routes', () => {
 	test( 'Task is successfully created', async () => {
 		const tasks_pre_test = await helpers.tasks_in_db();
 
-		const new_task :TaskSchema = {
+		const new_task : TaskSchema = {
 			title: 'new task',
 			body_text: 'task body',
 			users: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
@@ -97,6 +97,33 @@ describe( 'Testing task POST routes', () => {
 
 		const titles = tasks_post_test.map( ( task: TaskSchema ) => task.title );
 		expect( titles ).toContain( new_task.title );
+	} );
+
+	test( 'Task is automatically assigned authed user', async () => {
+		const tasks_pre_test = await helpers.tasks_in_db();
+
+		const new_task : TaskSchema = {
+			title: 'new task',
+			body_text: 'task body',
+			users: [],
+			project: new mongoose.Types.ObjectId(),
+			tags: [ 'tag1', 'tag2' ],
+			column: 'backlog',
+			due_date: new Date(),
+			dependant_tasks: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
+		};
+
+		await api
+			.post( '/api/tasks' )
+			.send( new_task )
+			.expect( 201 )
+			.set( 'Authorization', `Bearer ${helpers.token}` )
+			.expect( 'Content-type', /application\/json/ );
+
+		const tasks_post_test = await helpers.tasks_in_db();
+		expect( tasks_post_test.length ).toEqual( tasks_pre_test.length + 1 );
+
+		expect( tasks_post_test[tasks_post_test.length - 1].users ).toEqual( [ helpers.token_id ] );
 	} );
 
 	test( 'Task creations fails with empty title', async () => {

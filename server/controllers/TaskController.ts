@@ -31,6 +31,7 @@ export class TaskController extends BaseController {
 
 		const task = new Task( {
 			...data,
+			users: [ token.id ],
 		} );
 
 		try {

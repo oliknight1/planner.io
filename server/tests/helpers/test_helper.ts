@@ -28,8 +28,9 @@ export const get_target_user = async () => {
 	return users_pre_test[0];
 };
 
+export const token_id = new mongoose.Types.ObjectId();
 export const token = jwt.sign(
-	{ id: new mongoose.Types.ObjectId() },
+	{ id: token_id },
  process.env.JWT_SECRET as string,
  {
  	expiresIn: process.env.JWT_EXPIRES_IN,

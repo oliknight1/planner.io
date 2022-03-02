@@ -67,7 +67,7 @@ describe( 'Testing project POST routes', () => {
 
 		const new_project : ProjectSchema = {
 			name: 'Test project',
-			users: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
+			users: [],
 			tasks: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
 		};
 
@@ -83,6 +83,9 @@ describe( 'Testing project POST routes', () => {
 
 		const names = projects_post_test.map( ( project : ProjectSchema ) => project.name );
 		expect( names ).toContain( new_project.name );
+
+		expect( projects_post_test[projects_post_test.length - 1].users )
+			.toEqual( [ helpers.token_id ] );
 	} );
 
 	test( 'Project creation fails if not authorized', async () => {

@@ -32,7 +32,7 @@ export class ProjectController extends BaseController {
 		const project = new Project( {
 			name,
 			tasks: [],
-			users: [],
+			users: [ token.id ],
 		} );
 
 		try {
