@@ -1,11 +1,8 @@
-import express, { Request, Response } from 'express';
-import { body, param } from 'express-validator';
+import express from 'express';
+import { param } from 'express-validator';
 import { UserController } from '../controllers/UserController';
-import { user_validation_rules, validate } from '../utils/validator';
 
 export const user_router = express.Router();
-
-user_router.post( '/', user_validation_rules(), validate, UserController.create );
 
 user_router.get( '/id/:id', UserController.get_by_id );
 

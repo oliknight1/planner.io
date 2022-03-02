@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { User } from '../models/user';
+import { UserSchema } from '../utils/types';
 
 export class AuthController {
 	public static login = async (
@@ -35,6 +36,51 @@ export class AuthController {
 				display_name: user.display_name,
 				id: user.id,
 			} );
+		}
+	};
+
+	public static create = async (
+		request : Request,
+		response : Response,
+	) => {
+		const {
+			display_name, email, password, password_confirm,
+		} : UserSchema = request.body;
+
+		const user_exists = await User.findOne( { email } );
+
+		if ( user_exists ) {
+			response.status( 400 ).json( {
+				error: 'Account with that email already exists',
+			} );
+			return;
+		}
+
+		if ( password !== password_confirm ) {
+			response.status( 400 ).json( { error: 'Passwords do not match' } );
+			return;
+		}
+
+		const salt_rounds = 10;
+		const password_hash = await bcrypt.hash( password, salt_rounds );
+
+		const user = new User( {
+			display_name,
+			email,
+			password: password_hash,
+			tasks: [],
+			projects: [],
+		} );
+
+		try {
+			const saved_user = await user.save();
+
+			response.status( 201 ).json( saved_user );
+		} catch ( error : unknown ) {
+			if ( error instanceof Error ) {
+				const { message } = error;
+				response.status( 400 ).json( { error: message } );
+			}
 		}
 	};
 }

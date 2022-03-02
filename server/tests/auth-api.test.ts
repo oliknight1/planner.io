@@ -73,39 +73,90 @@ describe( 'Test logging in', () => {
 	} );
 } );
 
-describe( 'Test registering new user', () => {
-	test( 'Successfull register', async () => {
+describe( 'Test user registration', () => {
+	test( 'User creation succeeds and adds user to database', async () => {
 		const users_pre_test = await helpers.users_in_db();
-		const user_details : UserSchema = {
-			display_name: 'new user',
-			email: 'newuser@email.com',
-			password: 'password',
+
+		const new_user : UserSchema = {
+			display_name: 'oliknight',
+			email: 'oli@email.com',
+			password: 'password1',
+			password_confirm: 'password1',
 		};
 
 		await api
 			.post( '/api/auth/register' )
-			.send( user_details )
-			.expect( 201 );
+			.send( new_user )
+			.expect( 201 )
+			.expect( 'Content-Type', /application\/json/ );
 
 		const users_post_test = await helpers.users_in_db();
-		expect( users_post_test.length ).toEqual( users_pre_test.length + 1 );
+		expect( users_post_test ).toHaveLength( users_pre_test.length + 1 );
+
+		const emails = users_post_test.map( ( user : UserSchema ) => user.email );
+		expect( emails ).toContain( new_user.email );
 	} );
-	test( 'Register fails if email is in use', async () => {
+
+	test( 'User creation fails with correct status code when non-unique email', async () => {
 		const users_pre_test = await helpers.users_in_db();
-		const user_details : UserSchema = {
-			display_name: 'new user',
+
+		const new_user : UserSchema = {
+			display_name: 'oliknight',
 			email: 'root@email.com',
-			password: 'password',
+			password: 'password1',
+			password_confirm: 'password1',
 		};
 
-		const response = await api
+		const result = await api
 			.post( '/api/auth/register' )
-			.send( user_details )
-			.expect( 400 );
+			.send( new_user )
+			.expect( 400 )
+			.expect( 'Content-Type', /application\/json/ );
+
+		expect( result.body.error ).toContain( 'Account with that email already exists' );
 
 		const users_post_test = await helpers.users_in_db();
 		expect( users_post_test.length ).toEqual( users_pre_test.length );
+	} );
 
-		expect( response.body.error ).toContain( 'A user is already registered with this email' );
+	test( 'User creation fails with empty email/display_name', async () => {
+		const users_pre_test = await helpers.users_in_db();
+
+		const new_user : UserSchema = {
+			display_name: '',
+			email: '',
+			password: 'password1',
+			password_confirm: 'password1',
+		};
+		const result = await api
+			.post( '/api/auth/register' )
+			.send( new_user )
+			.expect( 400 )
+			.expect( 'Content-Type', /application\/json/ );
+
+		expect( result.body.error.display_name ).toContain( 'Display name cannot be empty' );
+		expect( result.body.error.email ).toContain( 'Email cannot be empty' );
+		const users_post_test = await helpers.users_in_db();
+		expect( users_pre_test.length ).toEqual( users_post_test.length );
+	} );
+
+	test( 'User creation fails if passwords do not match', async () => {
+		const users_pre_test = await helpers.users_in_db();
+
+		const new_user : UserSchema = {
+			display_name: 'new users',
+			email: 'newuser@email.com',
+			password: 'password1',
+			password_confirm: 'password2',
+		};
+		const result = await api
+			.post( '/api/auth/register' )
+			.send( new_user )
+			.expect( 400 )
+			.expect( 'Content-Type', /application\/json/ );
+
+		expect( result.body.error.).toContain( 'Passwords do not match' );
+		const users_post_test = await helpers.users_in_db();
+		expect( users_pre_test.length ).toEqual( users_post_test.length );
 	} );
 } );

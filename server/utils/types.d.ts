@@ -5,6 +5,7 @@ export interface UserSchema {
 	display_name: string,
 	email: string,
 	password: string,
+	password_confirm?: string,
 	projects?: Types.ObjectId[],
 	tasks?: Types.ObjectId[]
 }
