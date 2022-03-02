@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import mongoose, { isValidObjectId } from 'mongoose';
+import { isValidObjectId } from 'mongoose';
 import { Project } from '../models/project';
 import { ProjectSchema } from '../utils/types';
 import { BaseController } from './BaseController';
@@ -17,6 +17,11 @@ export class ProjectController extends BaseController {
 		response: Response,
 	) => {
 		const { name } : ProjectSchema = request.body;
+
+		if ( !this.verify_token( request ) ) {
+			response.status( 401 ).json( { error: 'Auth token missing or invalid' } );
+			return;
+		}
 
 		if ( name.length === 0 ) {
 			response.status( 400 ).json( { error: 'Name cannot be empty' } );
@@ -52,6 +57,10 @@ export class ProjectController extends BaseController {
 		}
 		if ( name.length === 0 ) {
 			response.status( 400 ).json( { error: 'No data provided' } );
+			return;
+		}
+		if ( !this.verify_token( request ) ) {
+			response.status( 401 ).json( { error: 'Auth token missing or invalid' } );
 			return;
 		}
 

@@ -1,5 +1,6 @@
 import supertest from 'supertest';
 import mongoose from 'mongoose';
+import * as jwt from 'jsonwebtoken';
 import { app } from '../app';
 import * as db from './helpers/test_db_helper';
 import * as helpers from './helpers/test_helper';
@@ -62,6 +63,7 @@ describe( 'Testing task DELETE routes', () => {
 
 		await api
 			.delete( `/api/tasks/id/${id}` )
+			.set( 'Authorization', `Bearer ${helpers.token}` )
 			.expect( 204 );
 
 		const tasks_post_test = await helpers.tasks_in_db;
@@ -87,6 +89,7 @@ describe( 'Testing task POST routes', () => {
 			.post( '/api/tasks' )
 			.send( new_task )
 			.expect( 201 )
+			.set( 'Authorization', `Bearer ${helpers.token}` )
 			.expect( 'Content-type', /application\/json/ );
 
 		const tasks_post_test = await helpers.tasks_in_db();
@@ -129,6 +132,7 @@ describe( 'Testing task PATCH routes', () => {
 
 		await api
 			.patch( `/api/tasks/id/${id}` )
+			.set( 'Authorization', `Bearer ${helpers.token}` )
 			.send( { title: 'new title' } )
 			.expect( 200 );
 
@@ -143,6 +147,7 @@ describe( 'Testing task PATCH routes', () => {
 		await api
 			.patch( `/api/tasks/id/${id}` )
 			.send( { title: 'new title' } )
+			.set( 'Authorization', `Bearer ${helpers.token}` )
 			.expect( 404 )
 			.expect( 'Content-type', /application\/json/ );
 

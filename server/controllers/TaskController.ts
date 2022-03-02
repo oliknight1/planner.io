@@ -3,7 +3,7 @@ import { isValidObjectId } from 'mongoose';
 import { Task } from '../models/task';
 import { BaseController } from './BaseController';
 
-export class TaskController {
+export class TaskController extends BaseController {
 	public static get_by_id = async (
 		request : Request<{ id: string }>,
 		response : Response,
@@ -20,6 +20,10 @@ export class TaskController {
 		const data = request.body;
 		if ( !data.title || data.title.length === 0 ) {
 			response.status( 400 ).json( { error: 'Title cannot be empty' } );
+			return;
+		}
+		if ( !this.verify_token( request ) ) {
+			response.status( 401 ).json( { error: 'Auth token missing or invalid' } );
 			return;
 		}
 
@@ -44,8 +48,11 @@ export class TaskController {
 	) => {
 		const { id } = request.params;
 		if ( !isValidObjectId( id ) ) {
-			console.log( 'bnad iod' );
 			response.status( 400 ).json( { error: 'Invalid ID supplied' } );
+			return;
+		}
+		if ( !this.verify_token( request ) ) {
+			response.status( 401 ).json( { error: 'Auth token missing or invalid' } );
 			return;
 		}
 
@@ -60,10 +67,6 @@ export class TaskController {
 			updated_task[key] = request.body[key];
 			return updated_task;
 		}, task );
-		// task = {
-		//   ...task,
-		//   ...request.body,
-		// };
 
 		if ( task ) {
 			try {

@@ -1,5 +1,6 @@
 import supertest from 'supertest';
 import mongoose from 'mongoose';
+import * as jwt from 'jsonwebtoken';
 import { app } from '../app';
 import { Project } from '../models/project';
 import * as helpers from './helpers/test_helper';
@@ -74,6 +75,7 @@ describe( 'Testing project POST routes', () => {
 			.post( '/api/projects' )
 			.send( new_project )
 			.expect( 201 )
+			.set( 'Authorization', `Bearer ${helpers.token}` )
 			.expect( 'Content-type', /application\/json/ );
 
 		const projects_post_test = await helpers.projects_in_db();
@@ -83,6 +85,26 @@ describe( 'Testing project POST routes', () => {
 		expect( names ).toContain( new_project.name );
 	} );
 
+	test( 'Project creation fails if not authorized', async () => {
+		const projects_pre_test = await helpers.projects_in_db();
+
+		const new_project : ProjectSchema = {
+			name: 'Test project',
+			users: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
+			tasks: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
+		};
+
+		const response = await api
+			.post( '/api/projects' )
+			.send( new_project )
+			.expect( 401 )
+			.expect( 'Content-type', /application\/json/ );
+
+		expect( response.body.error ).toContain( 'Auth token missing or invalid' );
+
+		const projects_post_test = await helpers.projects_in_db();
+		expect( projects_post_test.length ).toEqual( projects_pre_test.length );
+	} );
 	test( 'Project creation fails with empty name', async () => {
 		const projects_pre_test = await helpers.projects_in_db();
 
@@ -96,6 +118,7 @@ describe( 'Testing project POST routes', () => {
 			.post( '/api/projects' )
 			.send( new_project )
 			.expect( 400 )
+			.set( 'Authorization', `Bearer ${helpers.token}` )
 			.expect( 'Content-type', /application\/json/ );
 
 		const projects_post_test = await helpers.projects_in_db();
@@ -119,13 +142,16 @@ describe( 'Testing project PATCH routes', () => {
 	test( 'Project is successfully patched', async () => {
 		const project = await helpers.get_target_project();
 		const { id } = project;
+
 		await api.patch( `/api/projects/id/${id}` )
 			.send( { name: 'new name' } )
+			.set( 'Authorization', `Bearer ${helpers.token}` )
 			.expect( 200 );
 
 		const project_post_patch = await helpers.get_target_project();
 		expect( project_post_patch.name ).toEqual( 'new name' );
 	} );
+
 	test( '404 error is sent if project not found', async () => {
 		const project = await helpers.get_target_project();
 		const real_id = project.id;
@@ -135,6 +161,7 @@ describe( 'Testing project PATCH routes', () => {
 			.patch( `/api/projects/id/${fake_id}` )
 			.send( { name: 'New name' } )
 			.expect( 404 )
+			.set( 'Authorization', `Bearer ${helpers.token}` )
 			.expect( 'Content-type', /application\/json/ );
 
 		const project_post_patch = await helpers.get_target_project();
@@ -150,12 +177,24 @@ describe( 'Testing project PATCH routes', () => {
 			.patch( `/api/projects/id/${id}` )
 			.send( { name: '' } )
 			.expect( 400 )
+			.set( 'Authorization', `Bearer ${helpers.token}` )
 			.expect( 'Content-type', /application\/json/ );
 
 		const project_post_patch = await helpers.get_target_project();
 		expect( project_post_patch ).toEqual( project );
 
 		expect( response.body.error ).toContain( 'No data provided' );
+	} );
+	test( 'PATCH fails if not authorized', async () => {
+		const project = await helpers.get_target_project();
+		const { id } = project;
+
+		await api.patch( `/api/projects/id/${id}` )
+			.send( { name: 'new name' } )
+			.expect( 401 );
+
+		const project_post_patch = await helpers.get_target_project();
+		expect( project_post_patch ).toEqual( project );
 	} );
 } );
 
@@ -178,6 +217,7 @@ describe( 'Testing project DELETE routes', () => {
 
 		await api
 			.delete( `/api/projects/id/${id}` )
+			.set( 'Authorization', `Bearer ${helpers.token}` )
 			.expect( 204 );
 
 		const projects_post_test = await helpers.projects_in_db();

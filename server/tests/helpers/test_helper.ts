@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import * as jwt from 'jsonwebtoken';
 import { UserSchema, ProjectSchema, TaskSchema } from '../../utils/types';
 import { User } from '../../models/user';
 import { Project } from '../../models/project';
@@ -26,6 +27,10 @@ export const get_target_user = async () => {
 	const users_pre_test = await users_in_db();
 	return users_pre_test[0];
 };
+
+export const token = jwt.sign( {}, process.env.JWT_SECRET as string, {
+	expiresIn: process.env.JWT_EXPIRES_IN,
+} );
 
 export const generate_fake_id =	( real_id : mongoose.Types.ObjectId | undefined )
 		: mongoose.Types.ObjectId | null => {

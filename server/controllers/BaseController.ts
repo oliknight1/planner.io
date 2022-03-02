@@ -1,5 +1,6 @@
 import mongoose, { isValidObjectId } from 'mongoose';
 import { Request, Response } from 'express';
+import * as jwt from 'jsonwebtoken';
 
 export class BaseController {
 	public static get_by_id = async <T>(
@@ -29,6 +30,11 @@ export class BaseController {
 	) => {
 		const { id } = request.params;
 
+		if ( !this.verify_token( request ) ) {
+			response.status( 401 ).json( { error: 'Auth token missing or invalid' } );
+			return;
+		}
+
 		if ( !isValidObjectId( id ) ) {
 			response.status( 400 ).json( { error: 'Invalid ID supplied' } );
 			return;
@@ -41,5 +47,21 @@ export class BaseController {
 				response.status( 400 ).json( { error: error.message } );
 			}
 		}
+	};
+
+	public static verify_token = ( request : Request ) : boolean => {
+		const auth = request.get( 'authorization' );
+		if ( auth && auth.toLowerCase().startsWith( 'bearer ' ) ) {
+			const token = auth.substring( 7 );
+			// Check if token & env variable exist before verify
+			const decoded_token = token !== null && process.env.JWT_SECRET
+				? jwt.verify( token, process.env.JWT_SECRET )
+				: null;
+
+			if ( decoded_token ) {
+				return true;
+			}
+		}
+		return false;
 	};
 }
