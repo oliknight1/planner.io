@@ -84,7 +84,7 @@ describe( 'Test user registration', () => {
 			password_confirm: 'password1',
 		};
 
-		await api
+		const response = await api
 			.post( '/api/auth/register' )
 			.send( new_user )
 			.expect( 201 )
@@ -95,6 +95,12 @@ describe( 'Test user registration', () => {
 
 		const emails = users_post_test.map( ( user : UserSchema ) => user.email );
 		expect( emails ).toContain( new_user.email );
+
+		expect( response.body ).toEqual( expect.objectContaining( {
+			token: expect.any( String ),
+			display_name: 'oliknight',
+			id: users_post_test[users_post_test.length - 1].id,
+		} ) );
 	} );
 
 	test( 'User creation fails with correct status code when non-unique email', async () => {
@@ -155,7 +161,7 @@ describe( 'Test user registration', () => {
 			.expect( 400 )
 			.expect( 'Content-Type', /application\/json/ );
 
-		expect( result.body.error.).toContain( 'Passwords do not match' );
+		expect( result.body.error ).toContain( 'Passwords do not match' );
 		const users_post_test = await helpers.users_in_db();
 		expect( users_pre_test.length ).toEqual( users_post_test.length );
 	} );

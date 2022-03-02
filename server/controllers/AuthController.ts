@@ -75,7 +75,22 @@ export class AuthController {
 		try {
 			const saved_user = await user.save();
 
-			response.status( 201 ).json( saved_user );
+			const token_data = {
+				display_name: saved_user.display_name,
+				id: saved_user.id,
+			};
+
+			if ( process.env.JWT_SECRET ) {
+				const token = jwt.sign( token_data, process.env.JWT_SECRET, {
+					expiresIn: process.env.JWT_EXPIRES_IN,
+				} );
+
+				response.status( 201 ).send( {
+					token,
+					display_name: user.display_name,
+					id: user.id,
+				} );
+			}
 		} catch ( error : unknown ) {
 			if ( error instanceof Error ) {
 				const { message } = error;
