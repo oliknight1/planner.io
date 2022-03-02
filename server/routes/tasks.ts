@@ -3,9 +3,9 @@ import { TaskController } from '../controllers/TaskController';
 
 export const task_router = express.Router();
 
-task_router.get( '/id/:id', TaskController.get_by_id );
+task_router.get( '/id/:id', TaskController.get_task );
 
-task_router.delete( '/id/:id', TaskController.remove );
+task_router.delete( '/id/:id', TaskController.remove_task );
 
 task_router.post( '/', TaskController.create );
 

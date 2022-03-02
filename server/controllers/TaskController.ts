@@ -4,16 +4,16 @@ import { Task } from '../models/task';
 import { BaseController } from './BaseController';
 
 export class TaskController extends BaseController {
-	public static get_by_id = async (
+	public static get_task = async (
 		request : Request<{ id: string }>,
 		response : Response,
-	) => BaseController.get_by_id( request, response, Task );
+	) => this.get_by_id( request, response, Task );
 
-	public static remove = async (
+	public static remove_task = async (
 		request : Request<{ id: string }>,
 		response : Response,
 	) => {
-		BaseController.remove( request, response, Task );
+		this.remove( request, response, Task );
 	};
 
 	public static create = async ( request : Request, response : Response ) => {

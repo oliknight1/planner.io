@@ -5,11 +5,11 @@ import { ProjectSchema } from '../utils/types';
 import { BaseController } from './BaseController';
 
 export class ProjectController extends BaseController {
-	public static get_by_id = async (
+	public static get_project = async (
 		request : Request<{ id: string }>,
 		response : Response,
 	) => {
-		BaseController.get_by_id( request, response, Project );
+		this.get_by_id( request, response, Project );
 	};
 
 	public static create = async (
@@ -82,10 +82,10 @@ export class ProjectController extends BaseController {
 		}
 	};
 
-	public static remove = async (
+	public static remove_project = async (
 		request : Request<{ id: string }>,
 		response : Response,
 	) => {
-		BaseController.remove( request, response, Project );
+		this.remove( request, response, Project );
 	};
 }

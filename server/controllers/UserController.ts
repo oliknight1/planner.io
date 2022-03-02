@@ -1,16 +1,14 @@
 import { validationResult } from 'express-validator';
 import { Request, Response } from 'express';
-import bcrypt from 'bcrypt';
 import { User } from '../models/user';
-import { UserSchema } from '../utils/types';
 import { BaseController } from './BaseController';
 
 export class UserController extends BaseController {
-	public static get_by_id = async (
+	public static get_user = async (
 		request : Request<{ id: string }>,
 		response : Response,
 	) => {
-		BaseController.get_by_id( request, response, User );
+		this.get_by_id( request, response, User );
 	};
 
 	public static get_by_email = async (
