@@ -11,9 +11,16 @@ const theme = extendTheme( {
 	styles: {
 		global: ( props : any ) => ( {
 			body: {
-				bg: mode( '#ffffff', '#121212' )( props ),
+				bg: mode( '#ffffff', '#1F1F1F' )( props ),
 			},
 		} ),
+	},
+	colors: {
+		brand: {
+			yellow: '#FFB703',
+			black: '#121212',
+			dark_blue: '#023047',
+		},
 	},
 } );
 
