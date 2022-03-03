@@ -1,7 +1,10 @@
+import { Box } from '@chakra-ui/react';
 import React from 'react';
 
 const App = () => (
-	<div>Init</div>
+	<Box>
+		Box
+	</Box>
 );
 
 export default App;
