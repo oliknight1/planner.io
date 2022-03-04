@@ -37,6 +37,7 @@
 				"namedComponents": "arrow-function",
 				"unnamedComponents": "arrow-function"
 			}],
-			"react/no-children-prop": 0
+			"react/no-children-prop": 0,
+			"react/jsx-indent-props": [ "warn", "tab" ]
 		}
 }
