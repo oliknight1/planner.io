@@ -1,11 +1,16 @@
 import {
-	Box, Container, Heading, useColorMode,
+	Box, Container, Flex, FormControl,
+	Heading, Input, InputGroup, InputLeftElement,
+	Link, useColorMode, Text, Button,
 } from '@chakra-ui/react';
-import React, { FC, useEffect, useState } from 'react';
+import { EmailIcon, InfoIcon, LockIcon } from '@chakra-ui/icons';
+import React, {
+	FC, ReactElement, useEffect, useState,
+} from 'react';
 
 const BackgroundImage : FC = () => (
-	<Box position="fixed" bottom={0} left={0} width="100%" zIndex={-1}>
-		<svg width="100%" preserveAspectRatio="none" viewBox="0 0 820 1440" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<Box bottom={0} left={0} width="100%" zIndex={-1}>
+		<svg width="100%" preserveAspectRatio="none" viewBox="0 0 520 1440" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<defs>
 				<linearGradient id="gradient">
 					<stop offset="0%" stopColor="#FFA216" />
@@ -17,6 +22,22 @@ const BackgroundImage : FC = () => (
 		</svg>
 	</Box>
 
+);
+
+interface AuthInputProps {
+	placeholder: string,
+	icon: ReactElement,
+}
+
+const AuthInput : FC<AuthInputProps> = ( { placeholder, icon } ) => (
+	<FormControl isRequired mb={5}>
+		<Flex flexDir="column" alignItems="center">
+			<InputGroup w="80%">
+				<InputLeftElement pointerEvents="none" top="10%" children={icon} />
+				<Input size="lg" placeholder={placeholder} />
+			</InputGroup>
+		</Flex>
+	</FormControl>
 );
 
 const Register : FC = () => {
@@ -34,10 +55,32 @@ const Register : FC = () => {
 		}
 	}, [] );
 	return (
-		<>
+		<Flex overflowY="hidden" maxH="100vh" alignItems="center" pos="relative">
+			<Button pos="absolute" right={10} top={10} px={8}>Log in</Button>
 			<BackgroundImage />
-			<Container maxW="container.xl" centerContent />
-		</>
+			<Container maxW="container.xl" alignItems="right" centerContent>
+				<Box maxW="lg">
+					<Heading textAlign="center" fontWeight="light" pb={10}>
+						Create an account
+					</Heading>
+					<form>
+						<Flex flexDir="column" alignItems="center">
+							<AuthInput placeholder="Display Name" icon={<InfoIcon color="gray.300" />} />
+							<AuthInput placeholder="Email" icon={<EmailIcon color="gray.300" />} />
+							<AuthInput placeholder="Password" icon={<LockIcon color="gray.300" />} />
+							<AuthInput placeholder="Confirm Password" icon={<LockIcon color="gray.300" />} />
+							<Button type="submit" w="fit-content" mt={5}>
+								Register
+							</Button>
+						</Flex>
+					</form>
+					<Text textAlign="center" mt={6}>
+						Already have an account?
+						<Link color="yellow.500" href="/login" fontWeight="semibold"> Log in</Link>
+					</Text>
+				</Box>
+			</Container>
+		</Flex>
 	);
 };
 export default Register;

@@ -1,4 +1,4 @@
-import { extendTheme, ThemeConfig } from '@chakra-ui/react';
+import { extendTheme, ThemeConfig, withDefaultColorScheme } from '@chakra-ui/react';
 import { mode } from '@chakra-ui/theme-tools';
 
 const config : ThemeConfig = {
@@ -16,10 +16,39 @@ const theme = extendTheme( {
 		} ),
 	},
 	colors: {
+		yellow: {
+			50: '#FFF8E5',
+			100: '#FFEBB8',
+			200: '#FFDD8A',
+			300: '#FFD05C',
+			400: '#FFC32E',
+			500: '#FFB600',
+			600: '#CC9200',
+			700: '#996D00',
+			800: '#664900',
+			900: '#332400',
+		},
 		brand: {
-			yellow: '#FFB703',
 			black: '#121212',
 			dark_blue: '#023047',
+		},
+
+	},
+	components: {
+		Input: {
+			defaultProps: {
+				focusBorderColor: 'yellow.400',
+			},
+		},
+		Text: {
+			baseStyle: {
+				fontWeight: 'light',
+			},
+		},
+		Button: {
+			defaultProps: {
+				colorScheme: 'yellow',
+			},
 		},
 	},
 } );
