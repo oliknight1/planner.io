@@ -20,7 +20,6 @@ const BackgroundImage : FC = () => (
 );
 
 const Register : FC = () => {
-	const test = '';
 	const [ display_name, set_display_name ] = useState<string>( '' );
 	const [ email, set_email ] = useState<string>( '' );
 	const [ password, set_password ] = useState<string>( '' );
