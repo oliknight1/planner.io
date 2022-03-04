@@ -1,10 +1,9 @@
 import { Box } from '@chakra-ui/react';
 import React from 'react';
+import Register from './components/Register';
 
 const App = () => (
-	<Box bg="brand.yellow">
-		Box
-	</Box>
+	<Register />
 );
 
 export default App;
