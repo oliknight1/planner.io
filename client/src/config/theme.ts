@@ -12,6 +12,7 @@ const theme = extendTheme( {
 		global: ( props : any ) => ( {
 			body: {
 				bg: mode( '#ffffff', '#1F1F1F' )( props ),
+				fontWeight: 'light',
 			},
 		} ),
 	},
