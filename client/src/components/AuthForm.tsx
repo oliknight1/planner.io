@@ -60,16 +60,16 @@ const AuthForm : FC<AuthFormProps> = ( { form_type, children } ) => {
 			maxH="100vh"
 			alignItems="center"
 		>
-			<Button pos="absolute" right={10} top={10} px={8}>
-				<Link href={form_type === 0 ? '/register' : '/login'}>
+			<Link href={form_type === 0 ? '/register' : '/login'}>
+				<Button pos="absolute" right={10} top={10} px={8}>
 					{
 						form_type === 0
 							? ( 'Register' )
 							: ( 'Login' )
 					}
 
-				</Link>
-			</Button>
+				</Button>
+			</Link>
 			{
 				is_mobile_breakpoint
 					&& <BackgroundImageVertical />
