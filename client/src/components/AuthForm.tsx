@@ -61,8 +61,14 @@ const AuthForm : FC<AuthFormProps> = ( { form_type, children } ) => {
 			alignItems="center"
 		>
 			<Button pos="absolute" right={10} top={10} px={8}>
-				{ form_type === 0 ? ( 'Register' )
-					: ( 'Login' )}
+				<Link href={form_type === 0 ? '/register' : '/login'}>
+					{
+						form_type === 0
+							? ( 'Register' )
+							: ( 'Login' )
+					}
+
+				</Link>
 			</Button>
 			{
 				is_mobile_breakpoint
