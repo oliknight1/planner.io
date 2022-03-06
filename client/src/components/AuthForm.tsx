@@ -36,11 +36,6 @@ interface AuthFormProps {
 }
 
 const AuthForm : FC<AuthFormProps> = ( { form_type, children } ) => {
-	const [ display_name, set_display_name ] = useState<string>( '' );
-	const [ email, set_email ] = useState<string>( '' );
-	const [ password, set_password ] = useState<string>( '' );
-	const [ password_confirm, set_password_confirm ] = useState<string>( '' );
-
 	const { colorMode, toggleColorMode } = useColorMode();
 
 	const current_breakpoint = useBreakpoint();
