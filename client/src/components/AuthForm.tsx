@@ -103,7 +103,7 @@ const AuthForm : FC<AuthFormProps> = ( { form_type, children } ) => {
 								: ( 'Already have an account?' )
 						}
 						{
-							form_type === 0 ? ( <Link color="yellow.500" href="/register">Register</Link> )
+							form_type === 0 ? ( <Link color="yellow.500" href="/register"> Register</Link> )
 								: ( <Link color="yellow.500" href="/login"> Login</Link> )
 						}
 					</Text>
