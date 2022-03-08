@@ -54,7 +54,7 @@ describe( 'Test logging in', () => {
 			.send( login_details )
 			.expect( 'Content-type', /application\/json/ );
 
-		expect( response.body.error ).toContain( 'Invalid email or password' );
+		expect( response.body.error ).toContain( 'Incorrect email or password' );
 	} );
 
 	test( 'Login fails with wrong password', async () => {
@@ -69,7 +69,7 @@ describe( 'Test logging in', () => {
 			.send( login_details )
 			.expect( 'Content-type', /application\/json/ );
 
-		expect( response.body.error ).toContain( 'Invalid email or password' );
+		expect( response.body.error ).toContain( 'Incorrect email or password' );
 	} );
 } );
 

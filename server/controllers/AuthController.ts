@@ -18,7 +18,7 @@ export class AuthController {
 			? false : await bcrypt.compare( password, user.password );
 
 		if ( !user || !correct_password ) {
-			response.status( 401 ).json( { error: 'Invalid email or password' } );
+			response.status( 401 ).json( { error: 'Incorrect email or password' } );
 			return;
 		}
 		const token_data = {
@@ -35,6 +35,7 @@ export class AuthController {
 			display_name: user.display_name,
 			id: user.id,
 		} );
+		console.log( 'successful login' );
 	};
 
 	public static create = async (
