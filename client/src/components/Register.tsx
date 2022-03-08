@@ -1,7 +1,8 @@
 import { InfoIcon, EmailIcon, LockIcon } from '@chakra-ui/icons';
-import React, { useState } from 'react';
+import React, { Context, useContext, useState } from 'react';
 import { AuthController } from '../controllers/AuthController';
 import { FormType } from '../utils/enums';
+import { User } from '../utils/types';
 import AuthForm from './AuthForm';
 import AuthInput from './AuthInput';
 

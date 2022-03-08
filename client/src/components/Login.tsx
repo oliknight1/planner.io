@@ -1,5 +1,6 @@
 import { EmailIcon, LockIcon } from '@chakra-ui/icons';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useUser } from '../contexts/auth_context';
 import { AuthController } from '../controllers/AuthController';
 import { FormType } from '../utils/enums';
 import AuthForm from './AuthForm';
@@ -8,16 +9,15 @@ import AuthInput from './AuthInput';
 const Login = () => {
 	const [ email, set_email ] = useState<string>( '' );
 	const [ password, set_password ] = useState<string>( '' );
-	const [ error, set_error ] = useState<string>( '' );
+	// const [ error, set_error ] = useState<string>( '' );
 	const [ loading, set_loading ] = useState<boolean>( false );
 
+	const { user, login, error } = useUser();
+
 	const handle_submit = async () => {
-		set_loading( true );
-		set_error( '' );
-		await AuthController.login( email, password );
-		set_error( AuthController.get_error() );
-		set_loading( false );
+		await login( email, password );
 	};
+
 	return (
 		<AuthForm
 			form_type={FormType.Login}

@@ -1,11 +1,8 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { User } from '../utils/types';
 
 export class AuthController {
 	private static error : string = '';
-
-	private static add_error = ( error : string ) => {
-		this.error = error;
-	};
 
 	public static get_error = () => this.error;
 
@@ -21,18 +18,49 @@ export class AuthController {
 			password,
 			password_confirm,
 		};
-		await axios.post( '/api/auth/register', data )
-			.then( ( response ) => {
-				window.localStorage.setItem( 'user', JSON.stringify( response.data ) );
-			} )
-			.catch( ( err ) => this.add_error( err.response.data.error ) );
+		return this.handle_request( '/api/auth/register', data );
 	};
 
-	public static login = async ( email : string, password : string ) => {
-		await axios.post( '/api/auth/login', { email, password } )
-			.then( ( response ) => {
-				window.localStorage.setItem( 'user', JSON.stringify( response.data ) );
-			} )
-			.catch( ( err ) => this.add_error( err.response.data.error ) );
+	public static login = (
+		email : string,
+		password : string,
+	) : Promise<User | string> => this.handle_request( '/api/auth/login', { email, password } );
+
+	private static handle_request = async <T> ( url : string, data : T ) => {
+		try {
+			const response = await axios.post( url, { ...data } );
+			window.localStorage.setItem( 'user', JSON.stringify( response.data ) );
+			return response.data;
+		} catch ( error : unknown ) {
+			if ( axios.isAxiosError( error ) ) {
+				return error.response?.data.error;
+			}
+			if ( error instanceof Error ) {
+				return error.message;
+			}
+			throw new Error( 'Error logging in' );
+		}
 	};
+
+	// private static set_user = ( user : User ) => {
+	//   const context = useContext( UserContext );
+	//   const set_user = context?.set_user;
+	//
+	//   if ( set_user ) {
+	//     set_user( user );
+	//   } else {
+	//     throw new Error( 'Set user function not found' );
+	//   }
+	// };
+	//
+	// public static get_user = () : User | null => {
+	//   const context = useContext( UserContext );
+	//
+	//   const user = context?.user;
+	//
+	//   if ( user ) {
+	//     return user;
+	//   }
+	//   return null;
+	// };
 }
