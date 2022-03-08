@@ -3,7 +3,7 @@ import React, {
 	createContext, FC, useContext, useMemo, useState,
 } from 'react';
 import { AuthController } from '../controllers/AuthController';
-import { User } from '../utils/types';
+import { User, UserRequest } from '../utils/types';
 
 const UserContext = createContext<any>( null );
 
@@ -25,22 +25,19 @@ export const UserProvider : FC = ( { children } ) => {
 		}
 	};
 
-	const register = async (
-		display_name : string,
-		email : string,
-		password : string,
-		password_confirm : string,
-	) => {
+	const register = async ( {
+		display_name, email, password, password_confirm,
+	} : UserRequest ) => {
 		const response : User | string = await AuthController.register(
-			display_name,
+			display_name!,
 			email,
 			password,
-			password_confirm,
+			password_confirm!,
 		);
 		handle_response( response );
 	};
 
-	const login = async ( email : string, password : string ) => {
+	const login = async ( { email, password } : UserRequest ) => {
 		const response : User | string = await AuthController.login( email, password );
 		handle_response( response );
 	};
