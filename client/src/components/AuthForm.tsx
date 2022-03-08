@@ -1,9 +1,11 @@
 import {
 	Box, Container, Flex, Heading,
-	Link, useColorMode, Text, Button, useBreakpoint,
+	Link, useColorMode, Text, Button, useBreakpoint, Stack, Alert, AlertIcon, ListItem, UnorderedList,
 } from '@chakra-ui/react';
 import React, {
-	FC, useEffect, useState,
+	FC,
+	SyntheticEvent,
+	useEffect,
 } from 'react';
 import { FormType } from '../utils/enums';
 
@@ -32,10 +34,14 @@ const BackgroundImageVertical : FC = () => (
 );
 
 interface AuthFormProps {
-	form_type: FormType
+	form_type: FormType,
+	form_submit: () => void,
+	errors: string[]
 }
 
-const AuthForm : FC<AuthFormProps> = ( { form_type, children } ) => {
+const AuthForm : FC<AuthFormProps> = ( {
+	form_type, form_submit, errors, children,
+} ) => {
 	const { colorMode, toggleColorMode } = useColorMode();
 
 	const current_breakpoint = useBreakpoint();
@@ -48,6 +54,10 @@ const AuthForm : FC<AuthFormProps> = ( { form_type, children } ) => {
 		}
 	}, [] );
 
+	const handle_submit = ( e : SyntheticEvent ) => {
+		e.preventDefault();
+		form_submit();
+	};
 	return (
 		<Flex
 			flexDir={is_mobile_breakpoint ? 'column-reverse' : 'row'}
@@ -81,7 +91,7 @@ const AuthForm : FC<AuthFormProps> = ( { form_type, children } ) => {
 								: ( 'Create an account' )
 						}
 					</Heading>
-					<form>
+					<form onSubmit={handle_submit}>
 						<Flex flexDir="column" alignItems="center">
 							{ children }
 							<Button type="submit" w="fit-content" mt={5}>
@@ -91,6 +101,24 @@ const AuthForm : FC<AuthFormProps> = ( { form_type, children } ) => {
 								}
 							</Button>
 						</Flex>
+						{
+							errors.length > 0
+					&& (
+						<Stack spacing={3} mb={5} width="90%" margin="16px auto">
+							<Alert status="error" variant="subtle" position={[ 'absolute', 'relative' ]} rounded="xl" left={0} top={0}>
+								<AlertIcon />
+								{ errors.length > 1
+									? (
+										<UnorderedList>
+											{
+												errors.map( ( error : string ) => <ListItem>{ error }</ListItem> )
+											}
+										</UnorderedList>
+									) : errors[0]}
+							</Alert>
+						</Stack>
+					)
+						}
 					</form>
 					<Text textAlign="center" mt={6}>
 						{
