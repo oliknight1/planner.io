@@ -11,19 +11,28 @@ const Register = () => {
 	const [ password, set_password ] = useState<string>( '' );
 	const [ password_confirm, set_password_confirm ] = useState<string>( '' );
 	const [ error, set_error ] = useState<string>( '' );
+	const [ loading, set_loading ] = useState<boolean>( false );
 
 	const handle_submit = async () => {
+		set_loading( true );
 		set_error( '' );
 		if ( password !== password_confirm ) {
 			set_error( 'Passwords do not match' );
+			set_loading( false );
 			throw new Error( 'Passwords do not match' );
 		}
 		await AuthController.register( display_name, email, password, password_confirm );
 		set_error( AuthController.get_error() );
+		set_loading( false );
 	};
 
 	return (
-		<AuthForm form_type={FormType.Register} form_submit={handle_submit} error={error}>
+		<AuthForm
+			form_type={FormType.Register}
+			form_submit={handle_submit}
+			error={error}
+			loading={loading}
+		>
 			<AuthInput set_state={set_display_name} type="text" placeholder="Display Name" icon={<InfoIcon color="gray.300" />} />
 			<AuthInput set_state={set_email} type="email" placeholder="Email" icon={<EmailIcon color="gray.300" />} />
 			<AuthInput set_state={set_password} type="password" placeholder="Password" icon={<LockIcon color="gray.300" />} />

@@ -36,11 +36,12 @@ const BackgroundImageVertical : FC = () => (
 interface AuthFormProps {
 	form_type: FormType,
 	form_submit: () => void,
-	error: string
+	error: string,
+	loading: boolean
 }
 
 const AuthForm : FC<AuthFormProps> = ( {
-	form_type, form_submit, error, children,
+	form_type, form_submit, error, children, loading,
 } ) => {
 	const { colorMode, toggleColorMode } = useColorMode();
 
@@ -94,7 +95,7 @@ const AuthForm : FC<AuthFormProps> = ( {
 					<form onSubmit={handle_submit}>
 						<Flex flexDir="column" alignItems="center">
 							{ children }
-							<Button type="submit" w="fit-content" mt={5}>
+							<Button type="submit" w="fit-content" mt={5} isLoading={loading}>
 								{
 									form_type === 0 ? ( 'Login' )
 										: ( 'Register' )
