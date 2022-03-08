@@ -35,7 +35,6 @@ export class AuthController {
 			display_name: user.display_name,
 			id: user.id,
 		} );
-		console.log( 'successful login' );
 	};
 
 	public static create = async (

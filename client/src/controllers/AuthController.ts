@@ -22,8 +22,11 @@ export class AuthController {
 			password_confirm,
 		};
 		await axios.post( '/api/auth/register', data )
-			.catch( ( err ) => {
-				this.add_error( err.response.data.error );
-			} );
+			.catch( ( err ) => this.add_error( err.response.data.error ) );
+	};
+
+	public static login = async ( email : string, password : string ) => {
+		await axios.post( '/api/auth/login', { email, password } )
+			.catch( ( err ) => this.add_error( err.response.data.error ) );
 	};
 }
