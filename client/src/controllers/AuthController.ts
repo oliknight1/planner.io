@@ -22,11 +22,17 @@ export class AuthController {
 			password_confirm,
 		};
 		await axios.post( '/api/auth/register', data )
+			.then( ( response ) => {
+				window.localStorage.setItem( 'user', JSON.stringify( response.data ) );
+			} )
 			.catch( ( err ) => this.add_error( err.response.data.error ) );
 	};
 
 	public static login = async ( email : string, password : string ) => {
 		await axios.post( '/api/auth/login', { email, password } )
+			.then( ( response ) => {
+				window.localStorage.setItem( 'user', JSON.stringify( response.data ) );
+			} )
 			.catch( ( err ) => this.add_error( err.response.data.error ) );
 	};
 }
