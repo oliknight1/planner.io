@@ -1,13 +1,13 @@
 import axios from 'axios';
 
 export class AuthController {
-	private static errors : string[] = [];
+	private static error : string = '';
 
 	private static add_error = ( error : string ) => {
-		this.errors.push( error );
+		this.error = error;
 	};
 
-	public static get_errors = () => this.errors;
+	public static get_error = () => this.error;
 
 	public static register = async (
 		display_name : string,

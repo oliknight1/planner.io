@@ -36,11 +36,11 @@ const BackgroundImageVertical : FC = () => (
 interface AuthFormProps {
 	form_type: FormType,
 	form_submit: () => void,
-	errors: string[]
+	error: string
 }
 
 const AuthForm : FC<AuthFormProps> = ( {
-	form_type, form_submit, errors, children,
+	form_type, form_submit, error, children,
 } ) => {
 	const { colorMode, toggleColorMode } = useColorMode();
 
@@ -102,19 +102,12 @@ const AuthForm : FC<AuthFormProps> = ( {
 							</Button>
 						</Flex>
 						{
-							errors.length > 0
+							error.length > 0
 					&& (
 						<Stack spacing={3} mb={5} width="90%" margin="16px auto">
 							<Alert status="error" variant="subtle" position={[ 'absolute', 'relative' ]} rounded="xl" left={0} top={0}>
 								<AlertIcon />
-								{ errors.length > 1
-									? (
-										<UnorderedList>
-											{
-												errors.map( ( error : string ) => <ListItem>{ error }</ListItem> )
-											}
-										</UnorderedList>
-									) : errors[0]}
+								{ error }
 							</Alert>
 						</Stack>
 					)
