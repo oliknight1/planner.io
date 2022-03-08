@@ -14,18 +14,7 @@ export const UserProvider : FC = ( { children } ) => {
 	const [ user, set_user ] = useState<User|null>( null );
 	const [ error, set_error ] = useState<string>( '' );
 
-	const register = async (
-		display_name : string,
-		email : string,
-		password : string,
-		password_confirm : string,
-	) => {
-		const response : User | AxiosError | string = await AuthController.register(
-			display_name,
-			email,
-			password,
-			password_confirm,
-		);
+	const handle_response = ( response : User | string ) => {
 		if ( typeof response === 'string' ) {
 			set_error( response );
 			return;
@@ -36,16 +25,24 @@ export const UserProvider : FC = ( { children } ) => {
 		}
 	};
 
+	const register = async (
+		display_name : string,
+		email : string,
+		password : string,
+		password_confirm : string,
+	) => {
+		const response : User | string = await AuthController.register(
+			display_name,
+			email,
+			password,
+			password_confirm,
+		);
+		handle_response( response );
+	};
+
 	const login = async ( email : string, password : string ) => {
-		const response : User | AxiosError | string = await AuthController.login( email, password );
-		if ( typeof response === 'string' ) {
-			set_error( response );
-			return;
-		}
-		// User type
-		if ( 'token' in response ) {
-			set_user( response );
-		}
+		const response : User | string = await AuthController.login( email, password );
+		handle_response( response );
 	};
 
 	// returns a memorized value, faster than using object
