@@ -1,4 +1,3 @@
-import axios, { AxiosError } from 'axios';
 import React, {
 	createContext, FC, useContext, useMemo, useState,
 } from 'react';
@@ -16,7 +15,6 @@ export const UserProvider : FC = ( { children } ) => {
 	const [ loading, set_loading ] = useState<boolean>( false );
 
 	const handle_response = ( response : User | string ) => {
-		console.log( response );
 		if ( typeof response === 'string' ) {
 			set_error( response );
 			return;
