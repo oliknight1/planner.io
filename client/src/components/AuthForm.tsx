@@ -1,6 +1,6 @@
 import {
 	Box, Container, Flex, Heading,
-	Link, useColorMode, Text, Button, useBreakpoint, Stack, Alert, AlertIcon, ListItem, UnorderedList,
+	Link, useColorMode, Text, Button, useBreakpoint, Stack, Alert, AlertIcon,
 } from '@chakra-ui/react';
 import React, {
 	FC,

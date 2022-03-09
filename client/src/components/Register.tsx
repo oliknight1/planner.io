@@ -1,5 +1,6 @@
 import { InfoIcon, EmailIcon, LockIcon } from '@chakra-ui/icons';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/auth_context';
 import { FormType } from '../utils/enums';
 import AuthForm from './AuthForm';
@@ -12,9 +13,11 @@ const Register = () => {
 	const [ password_confirm, set_password_confirm ] = useState<string>( '' );
 
 	const { register, error, loading } = useUser();
+	const navigate = useNavigate();
 
 	const handle_submit = async () => {
 		await register( display_name, email, password, password_confirm );
+		navigate( '/' );
 	};
 
 	return (
