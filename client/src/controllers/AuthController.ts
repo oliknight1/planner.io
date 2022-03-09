@@ -41,4 +41,11 @@ export class AuthController {
 			throw new Error( 'Error logging in' );
 		}
 	};
+
+	public static get_auth = () => {
+		if ( window.localStorage.getItem( 'user' ) !== null ) {
+			return JSON.parse( window.localStorage.getItem( 'user' ) as string );
+		}
+		return null;
+	};
 }

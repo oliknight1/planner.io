@@ -2,7 +2,7 @@ import React, {
 	createContext, FC, useContext, useMemo, useState,
 } from 'react';
 import { AuthController } from '../controllers/AuthController';
-import { User, UserRequest } from '../utils/types';
+import { User } from '../utils/types';
 
 const UserContext = createContext<any>( null );
 
@@ -10,7 +10,7 @@ const UserContext = createContext<any>( null );
 export const useUser = () => useContext( UserContext );
 
 export const UserProvider : FC = ( { children } ) => {
-	const [ user, set_user ] = useState<User|null>( null );
+	const [ user, set_user ] = useState<User|null>( AuthController.get_auth() );
 	const [ error, set_error ] = useState<string>( '' );
 	const [ loading, set_loading ] = useState<boolean>( false );
 
@@ -42,7 +42,7 @@ export const UserProvider : FC = ( { children } ) => {
 		set_loading( false );
 	};
 
-	const login = async ( { email, password } : UserRequest ) => {
+	const login = async ( email : string, password : string ) => {
 		set_loading( true );
 		const response : User | string = await AuthController.login( email, password );
 		handle_response( response );
