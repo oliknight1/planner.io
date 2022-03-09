@@ -1,8 +1,7 @@
 import { InfoIcon, EmailIcon, LockIcon } from '@chakra-ui/icons';
-import React, { Context, useContext, useState } from 'react';
-import { AuthController } from '../controllers/AuthController';
+import React, { useState } from 'react';
+import { useUser } from '../contexts/auth_context';
 import { FormType } from '../utils/enums';
-import { User } from '../utils/types';
 import AuthForm from './AuthForm';
 import AuthInput from './AuthInput';
 
@@ -11,20 +10,11 @@ const Register = () => {
 	const [ email, set_email ] = useState<string>( '' );
 	const [ password, set_password ] = useState<string>( '' );
 	const [ password_confirm, set_password_confirm ] = useState<string>( '' );
-	const [ error, set_error ] = useState<string>( '' );
-	const [ loading, set_loading ] = useState<boolean>( false );
+
+	const { register, error, loading } = useUser();
 
 	const handle_submit = async () => {
-		set_loading( true );
-		set_error( '' );
-		if ( password !== password_confirm ) {
-			set_error( 'Passwords do not match' );
-			set_loading( false );
-			throw new Error( 'Passwords do not match' );
-		}
-		await AuthController.register( display_name, email, password, password_confirm );
-		set_error( AuthController.get_error() );
-		set_loading( false );
+		await register( display_name, email, password, password_confirm );
 	};
 
 	return (

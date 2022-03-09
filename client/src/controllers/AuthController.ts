@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { User } from '../utils/types';
 
 export class AuthController {
@@ -41,26 +41,4 @@ export class AuthController {
 			throw new Error( 'Error logging in' );
 		}
 	};
-
-	// private static set_user = ( user : User ) => {
-	//   const context = useContext( UserContext );
-	//   const set_user = context?.set_user;
-	//
-	//   if ( set_user ) {
-	//     set_user( user );
-	//   } else {
-	//     throw new Error( 'Set user function not found' );
-	//   }
-	// };
-	//
-	// public static get_user = () : User | null => {
-	//   const context = useContext( UserContext );
-	//
-	//   const user = context?.user;
-	//
-	//   if ( user ) {
-	//     return user;
-	//   }
-	//   return null;
-	// };
 }

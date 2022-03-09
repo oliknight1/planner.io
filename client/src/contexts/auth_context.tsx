@@ -13,8 +13,10 @@ export const useUser = () => useContext( UserContext );
 export const UserProvider : FC = ( { children } ) => {
 	const [ user, set_user ] = useState<User|null>( null );
 	const [ error, set_error ] = useState<string>( '' );
+	const [ loading, set_loading ] = useState<boolean>( false );
 
 	const handle_response = ( response : User | string ) => {
+		console.log( response );
 		if ( typeof response === 'string' ) {
 			set_error( response );
 			return;
@@ -25,9 +27,13 @@ export const UserProvider : FC = ( { children } ) => {
 		}
 	};
 
-	const register = async ( {
-		display_name, email, password, password_confirm,
-	} : UserRequest ) => {
+	const register = async (
+		display_name : string,
+		email : string,
+		password : string,
+		password_confirm : string,
+	) => {
+		set_loading( true );
 		const response : User | string = await AuthController.register(
 			display_name!,
 			email,
@@ -35,17 +41,20 @@ export const UserProvider : FC = ( { children } ) => {
 			password_confirm!,
 		);
 		handle_response( response );
+		set_loading( false );
 	};
 
 	const login = async ( { email, password } : UserRequest ) => {
+		set_loading( true );
 		const response : User | string = await AuthController.login( email, password );
 		handle_response( response );
+		set_loading( false );
 	};
 
 	// returns a memorized value, faster than using object
 	const value = useMemo( () => ( {
-		user, register, login, error,
-	} ), [ set_user, register, login, set_error ] );
+		user, register, login, error, loading,
+	} ), [ set_user, register, login, set_error, set_loading ] );
 
 	return (
 		<UserContext.Provider value={value}>
