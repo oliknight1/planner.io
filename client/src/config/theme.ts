@@ -1,4 +1,4 @@
-import { extendTheme, ThemeConfig, withDefaultColorScheme } from '@chakra-ui/react';
+import { extendTheme, ThemeConfig } from '@chakra-ui/react';
 import { mode } from '@chakra-ui/theme-tools';
 
 const config : ThemeConfig = {
@@ -20,14 +20,12 @@ const theme = extendTheme( {
 		yellow: {
 			50: '#FFF8E5',
 			100: '#FFEBB8',
-			200: '#FFDD8A',
-			300: '#FFD05C',
-			400: '#FFC32E',
-			500: '#FFB600',
-			600: '#CC9200',
-			700: '#996D00',
-			800: '#664900',
-			900: '#332400',
+			200: '#FFC32E',
+			300: '#FFB600',
+			400: '#CC9200',
+			500: '#996D00',
+			600: '#664900',
+			700: '#332400',
 		},
 		brand: {
 			black: '#121212',

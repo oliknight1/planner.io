@@ -1,11 +1,10 @@
 import {
 	Box, Container, Flex, Heading,
-	Link, useColorMode, Text, Button, useBreakpoint, Stack, Alert, AlertIcon,
+	Link, Text, Button, useBreakpoint, Stack, Alert, AlertIcon,
 } from '@chakra-ui/react';
 import React, {
 	FC,
 	SyntheticEvent,
-	useEffect,
 } from 'react';
 import { FormType } from '../utils/enums';
 
@@ -43,17 +42,8 @@ interface AuthFormProps {
 const AuthForm : FC<AuthFormProps> = ( {
 	form_type, form_submit, error, children, loading,
 } ) => {
-	const { colorMode, toggleColorMode } = useColorMode();
-
 	const current_breakpoint = useBreakpoint();
 	const is_mobile_breakpoint = [ 'base', 'sm' ].includes( current_breakpoint as string );
-
-	useEffect( () => {
-		// Force light mode
-		if ( colorMode === 'dark' ) {
-			toggleColorMode();
-		}
-	}, [] );
 
 	const handle_submit = ( e : SyntheticEvent ) => {
 		e.preventDefault();
@@ -120,8 +110,8 @@ const AuthForm : FC<AuthFormProps> = ( {
 								: ( 'Already have an account?' )
 						}
 						{
-							form_type === 0 ? ( <Link color="yellow.500" href="/register"> Register</Link> )
-								: ( <Link color="yellow.500" href="/login"> Login</Link> )
+							form_type === 0 ? ( <Link color="yellow.300" href="/register"> Register</Link> )
+								: ( <Link color="yellow.300" href="/login"> Login</Link> )
 						}
 					</Text>
 				</Box>
