@@ -5,6 +5,7 @@ import React, { FC, useState } from 'react';
 import { CloseIcon } from '@chakra-ui/icons';
 import { motion } from 'framer-motion';
 import Logo from './Logo';
+import { is_mobile_breakpoint } from '../utils/helpers';
 
 const MotionBox = motion( Box );
 
@@ -16,10 +17,10 @@ const Nav : FC = () => {
 		open: { x: 0 },
 	};
 	return (
-		<MotionBox h="100vh" maxW="xs" background="black.900" variants={variants} animate={open ? 'open' : 'closed'}>
+		<MotionBox h="100vh" maxW={is_mobile_breakpoint() ? '100%' : 'xs'} background="black.900" variants={variants} animate={open ? 'open' : 'closed'}>
 			<Container pt={3}>
 				<Flex w="100%" alignItems="center" justifyContent="space-between">
-					<Box w="70%">
+					<Box w={is_mobile_breakpoint() ? '50%' : '70%'}>
 						<Logo />
 					</Box>
 					<IconButton
