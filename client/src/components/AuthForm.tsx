@@ -7,6 +7,7 @@ import React, {
 	SyntheticEvent,
 } from 'react';
 import { FormType } from '../utils/enums';
+import { is_mobile_breakpoint } from '../utils/helpers';
 
 const BackgroundImage : FC = () => (
 	<Box width="100%" zIndex={-1}>
@@ -42,16 +43,13 @@ interface AuthFormProps {
 const AuthForm : FC<AuthFormProps> = ( {
 	form_type, form_submit, error, children, loading,
 } ) => {
-	const current_breakpoint = useBreakpoint();
-	const is_mobile_breakpoint = [ 'base', 'sm' ].includes( current_breakpoint as string );
-
 	const handle_submit = ( e : SyntheticEvent ) => {
 		e.preventDefault();
 		form_submit();
 	};
 	return (
 		<Flex
-			flexDir={is_mobile_breakpoint ? 'column-reverse' : 'row'}
+			flexDir={is_mobile_breakpoint() ? 'column-reverse' : 'row'}
 			overflowY="hidden"
 			maxH="100vh"
 			alignItems="center"
@@ -67,15 +65,15 @@ const AuthForm : FC<AuthFormProps> = ( {
 				</Button>
 			</Link>
 			{
-				is_mobile_breakpoint
+				is_mobile_breakpoint()
 					&& <BackgroundImageVertical />
 			}
 			{
-				!is_mobile_breakpoint
+				!is_mobile_breakpoint()
 					&& <BackgroundImage />
 			}
 			<Container maxW="container.xl" mt={32}>
-				<Box maxW={is_mobile_breakpoint ? '100%' : 'lg'}>
+				<Box maxW={is_mobile_breakpoint() ? '100%' : 'lg'}>
 					<Heading textAlign="center" fontWeight="light" pb={10}>
 						{
 							form_type === 0 ? ( 'Login to your account' )
