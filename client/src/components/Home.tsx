@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
+import Nav from './Nav';
 
 const Home : FC = () => (
-	<div>home</div>
+	<Nav />
 );
-
 export default Home;
