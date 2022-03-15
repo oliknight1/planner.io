@@ -6,6 +6,8 @@ const config : ThemeConfig = {
 	useSystemColorMode: false,
 };
 
+const focus_colour = '0 0 0 1px rgba(204, 146, 0, 0.8)';
+
 const theme = extendTheme( {
 	config,
 	styles: {
@@ -49,6 +51,14 @@ const theme = extendTheme( {
 		Button: {
 			defaultProps: {
 				colorScheme: 'yellow',
+			},
+			variants: {
+				'dropdown-trigger': {
+					fontWeight: 'light',
+					_focus: {
+						boxShadow: focus_colour,
+					},
+				},
 			},
 		},
 		Link: {
