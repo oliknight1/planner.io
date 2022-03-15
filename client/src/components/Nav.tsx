@@ -49,16 +49,16 @@ const Nav : FC = () => {
 	];
 
 	return (
-		<MotionBox h="100vh" maxW={is_mobile_breakpoint() ? '100%' : 'xs'} background="black.900" variants={variants} animate={open ? 'open' : 'closed'}>
+		<MotionBox h="100vh" maxW={is_mobile_breakpoint() ? '100%' : 'sm'} background="black.900" variants={variants} animate={open ? 'open' : 'closed'}>
 			<Container pt={3}>
-				<Flex w="100%" alignItems="center" justifyContent="space-between">
-					<Box w={is_mobile_breakpoint() ? '50%' : '70%'}>
+				<Flex w="100%" alignItems="center" justifyContent="space-around">
+					<Box w={is_mobile_breakpoint() ? '50%' : '60%'}>
 						<Logo />
 					</Box>
 					<IconButton
 						aria-label="Close navigaton"
 						variant="ghost"
-						icon={<CloseIcon w={6} h={6} />}
+						icon={<CloseIcon w={5} h={5} />}
 						onClick={() => set_open( false )}
 					/>
 				</Flex>
