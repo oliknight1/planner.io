@@ -51,6 +51,14 @@ const theme = extendTheme( {
 				colorScheme: 'yellow',
 			},
 		},
+		Link: {
+			baseStyle: {
+				_hover: {
+					textDecoration: 'none',
+					color: 'yellow.200',
+				},
+			},
+		},
 	},
 } );
 

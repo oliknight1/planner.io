@@ -19,12 +19,13 @@ interface NavLink {
 const MotionBox = motion( Box );
 
 const NavItem : FC<NavLink> = ( { name, icon, url } : NavLink ) => (
-	<Link href={url}>
-		<ListItem fontSize="2xl">
-			<ListIcon as={icon as As<any>} />
+	// TODO: Imporve hover styling
+	<ListItem>
+		<Link href={url} fontSize="2xl">
+			<ListIcon as={icon as As<any>} h={8} w={8} mr={5} />
 			{ name }
-		</ListItem>
-	</Link>
+		</Link>
+	</ListItem>
 );
 
 const Nav : FC = () => {
@@ -62,10 +63,10 @@ const Nav : FC = () => {
 						onClick={() => set_open( false )}
 					/>
 				</Flex>
-				<Center py={6}>
+				<Center py={10}>
 					<Divider orientation="horizontal" borderColor="white" />
 				</Center>
-				<List>
+				<List spacing={10} pl={4}>
 					{
 						links.map( ( link : NavLink ) => (
 							<NavItem
