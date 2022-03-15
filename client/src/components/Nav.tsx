@@ -1,10 +1,10 @@
 import {
-	As, Box, Center, Container,
-	Divider, Flex, IconButton,
-	Link, List, ListIcon, ListItem,
+	As, Box, Button, Center, Container,
+	Divider, Flex, IconButton, Text,
+	Link, List, ListIcon, ListItem, LinkBox,
 } from '@chakra-ui/react';
 import React, { FC, ReactElement, useState } from 'react';
-import { CloseIcon } from '@chakra-ui/icons';
+import { ChevronDownIcon, CloseIcon } from '@chakra-ui/icons';
 import { motion } from 'framer-motion';
 import Logo from './Logo';
 import { is_mobile_breakpoint } from '../utils/helpers';
@@ -19,13 +19,14 @@ interface NavLink {
 const MotionBox = motion( Box );
 
 const NavItem : FC<NavLink> = ( { name, icon, url } : NavLink ) => (
-	// TODO: Imporve hover styling
-	<ListItem>
-		<Link href={url} fontSize="2xl">
-			<ListIcon as={icon as As<any>} h={8} w={8} mr={5} />
-			{ name }
+	<LinkBox>
+		<Link href={url} variant="ghost" fontSize="2xl">
+			<ListItem px={4} py={2} _hover={{ backgroundColor: 'rgba(255, 195, 46, 0.12)', color: 'white' }} borderRadius="md">
+				<ListIcon as={icon as As<any>} h={8} w={8} mr={5} />
+				{ name }
+			</ListItem>
 		</Link>
-	</ListItem>
+	</LinkBox>
 );
 
 const Nav : FC = () => {
@@ -66,7 +67,7 @@ const Nav : FC = () => {
 				<Center py={10}>
 					<Divider orientation="horizontal" borderColor="white" />
 				</Center>
-				<List spacing={10} pl={4}>
+				<List spacing={8} pl={4} variant="ghost">
 					{
 						links.map( ( link : NavLink ) => (
 							<NavItem
@@ -78,6 +79,16 @@ const Nav : FC = () => {
 						) )
 					}
 				</List>
+				<Center py={10}>
+					<Divider orientation="horizontal" borderColor="white" />
+				</Center>
+				<Button fontSize="2xl" variant="ghost" w="100%">
+					<Flex justifyContent="space-between" w="100%">
+						<Text>Projects</Text>
+						<ChevronDownIcon />
+					</Flex>
+
+				</Button>
 			</Container>
 		</MotionBox>
 	);
