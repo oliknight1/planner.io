@@ -6,9 +6,9 @@ import {
 import React, { FC, ReactElement, useState } from 'react';
 import { ChevronDownIcon, CloseIcon } from '@chakra-ui/icons';
 import { motion } from 'framer-motion';
-import Logo from './Logo';
-import { is_mobile_breakpoint } from '../utils/helpers';
-import { AllProjectsIcon, HomeIcon } from '../utils/icons';
+import Logo from '../Logo';
+import { is_mobile_breakpoint } from '../../utils/helpers';
+import { AllProjectsIcon, HomeIcon } from '../../utils/icons';
 
 interface NavLink {
 	name: string,
@@ -82,7 +82,7 @@ const Nav : FC = () => {
 				<Center py={10}>
 					<Divider orientation="horizontal" borderColor="white" />
 				</Center>
-				<Button fontSize="2xl" variant="ghost" w="100%">
+				<Button fontSize="2xl" variant="ghost" w="100%" color="white">
 					<Flex justifyContent="space-between" w="100%">
 						<Text>Projects</Text>
 						<ChevronDownIcon />
