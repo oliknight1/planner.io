@@ -1,33 +1,18 @@
 import {
-	As, Box, Button, Center, Container,
+	Box, Button, Center, Container,
 	Divider, Flex, IconButton, Text,
-	Link, List, ListIcon, ListItem, LinkBox,
+	List,
 } from '@chakra-ui/react';
-import React, { FC, ReactElement, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { ChevronDownIcon, CloseIcon } from '@chakra-ui/icons';
 import { motion } from 'framer-motion';
 import Logo from '../Logo';
 import { is_mobile_breakpoint } from '../../utils/helpers';
 import { AllProjectsIcon, HomeIcon } from '../../utils/icons';
-
-interface NavLink {
-	name: string,
-	icon : As<any> | ReactElement
-	url: string
-}
+import { NavLink } from '../../utils/types';
+import NavItem from './NavItem';
 
 const MotionBox = motion( Box );
-
-const NavItem : FC<NavLink> = ( { name, icon, url } : NavLink ) => (
-	<LinkBox>
-		<Link href={url} variant="ghost" fontSize="2xl">
-			<ListItem px={4} py={2} _hover={{ backgroundColor: 'rgba(255, 195, 46, 0.12)', color: 'white' }} borderRadius="md">
-				<ListIcon as={icon as As<any>} h={8} w={8} mr={5} />
-				{ name }
-			</ListItem>
-		</Link>
-	</LinkBox>
-);
 
 const Nav : FC = () => {
 	const [ open, set_open ] = useState<boolean>( true );
@@ -87,7 +72,6 @@ const Nav : FC = () => {
 						<Text>Projects</Text>
 						<ChevronDownIcon />
 					</Flex>
-
 				</Button>
 			</Container>
 		</MotionBox>
