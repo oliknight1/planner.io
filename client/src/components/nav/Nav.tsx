@@ -1,7 +1,7 @@
 import {
 	Box, Button, Center, Container,
 	Divider, Flex, IconButton, Text,
-	List,
+	List, ListIcon, As,
 } from '@chakra-ui/react';
 import React, { FC, useState } from 'react';
 import { ChevronDownIcon, CloseIcon } from '@chakra-ui/icons';
@@ -11,11 +11,13 @@ import { is_mobile_breakpoint } from '../../utils/helpers';
 import { AllProjectsIcon, HomeIcon } from '../../utils/icons';
 import { NavLink } from '../../utils/types';
 import NavItem from './NavItem';
+import NavProjectList from './NavProjectList';
 
 const MotionBox = motion( Box );
 
 const Nav : FC = () => {
 	const [ open, set_open ] = useState<boolean>( true );
+	const [ projects_open, set_projects_open ] = useState<boolean>( true );
 
 	const variants = {
 		closed: { x: -500 },
@@ -58,7 +60,7 @@ const Nav : FC = () => {
 							<NavItem
 								key={link.url}
 								name={link.name}
-								icon={link.icon}
+								icon={<ListIcon as={link.icon as As<any>} w={8} h={8} />}
 								url={link.url}
 							/>
 						) )
@@ -67,12 +69,13 @@ const Nav : FC = () => {
 				<Center py={10}>
 					<Divider orientation="horizontal" borderColor="white" />
 				</Center>
-				<Button fontSize="2xl" variant="ghost" w="100%" color="white">
+				<Button fontSize="2xl" variant="ghost" w="100%" color="white" onClick={() => set_projects_open( !projects_open )}>
 					<Flex justifyContent="space-between" w="100%">
 						<Text>Projects</Text>
 						<ChevronDownIcon />
 					</Flex>
 				</Button>
+				<NavProjectList />
 			</Container>
 		</MotionBox>
 	);
