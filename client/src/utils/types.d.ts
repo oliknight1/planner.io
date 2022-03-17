@@ -12,3 +12,10 @@ export interface NavLink {
 	icon : As<any> | ReactElement
 	url: string
 }
+
+export interface Project {
+	id: string,
+	title: string,
+	tasks: string[],
+	users: string[]
+}
