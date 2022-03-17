@@ -3,7 +3,7 @@ import {
 	Avatar, Button, List, Text, SlideFade, useColorMode, Flex,
 } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
-import { ChevronDownIcon } from '@chakra-ui/icons';
+import { AddIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import axios from 'axios';
 import NavItem from './NavItem';
 import { Project } from '../../utils/types';
@@ -55,6 +55,7 @@ const NavProjectList : FC = () => {
 			<SlideFade in={open} offsetX={0} offsetY="-20px" reverse>
 				<List pl={2}>
 					{ render_list() }
+					<Button w="100%" mt={8} variant="outline" colorScheme="yellow" rightIcon={<AddIcon ml={4} />}>New Project</Button>
 				</List>
 			</SlideFade>
 		</>
