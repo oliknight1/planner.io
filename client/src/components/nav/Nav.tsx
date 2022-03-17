@@ -1,9 +1,9 @@
 import {
 	Box, Center, Container,
-	Divider, Flex, IconButton, List, ListIcon, As, SlideFade,
+	Divider, Flex, IconButton, List, ListIcon, As, SlideFade, useColorMode, Switch, FormControl,
 } from '@chakra-ui/react';
 import React, { FC, useState } from 'react';
-import { CloseIcon } from '@chakra-ui/icons';
+import { CloseIcon, MoonIcon, SunIcon } from '@chakra-ui/icons';
 import Logo from '../Logo';
 import { is_mobile_breakpoint } from '../../utils/helpers';
 import { AllProjectsIcon, HomeIcon } from '../../utils/icons';
@@ -13,6 +13,7 @@ import NavProjectList from './NavProjectList';
 
 const Nav : FC = () => {
 	const [ open, set_open ] = useState<boolean>( true );
+	const { colorMode, toggleColorMode } = useColorMode();
 
 	const links : NavLink[] = [
 		{
@@ -29,7 +30,7 @@ const Nav : FC = () => {
 
 	return (
 		<SlideFade in={open} offsetX="-200px" offsetY={0} unmountOnExit>
-			<Box h="100vh" maxW={is_mobile_breakpoint() ? '100%' : 'sm'} background="black.900">
+			<Box pos="relative" h="100vh" maxW={is_mobile_breakpoint() ? '100%' : 'sm'} background="black.900">
 				<Container pt={3}>
 					<Flex w="100%" alignItems="center" justifyContent="space-around">
 						<Box w={is_mobile_breakpoint() ? '50%' : '60%'}>
@@ -62,6 +63,12 @@ const Nav : FC = () => {
 					</Center>
 					<NavProjectList />
 				</Container>
+				<FormControl display="flex" justifyContent="space-around" alignItems="center" position="absolute" bottom={6} right={6} width="fit-content">
+					<SunIcon w={6} h={6} color={colorMode === 'light' ? 'yellow.200' : 'white'} />
+					<Switch mx={4} size="md" defaultChecked colorScheme="yellow" onChange={toggleColorMode} />
+					<MoonIcon w={6} h={6} color={colorMode === 'dark' ? 'yellow.200' : 'white'} />
+				</FormControl>
+
 			</Box>
 		</SlideFade>
 	);
