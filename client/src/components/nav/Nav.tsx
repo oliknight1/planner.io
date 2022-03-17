@@ -32,6 +32,7 @@ const Nav : FC = () => {
 		<SlideFade in={open} offsetX="-200px" offsetY={0} unmountOnExit>
 			<Box
 				pos="relative"
+				maxH="100vh"
 				h="100vh"
 				maxW={is_mobile_breakpoint() ? '100%' : 'sm'}
 				background={colorMode === 'dark' ? 'black.900' : 'brand.dark_blue'}
@@ -68,7 +69,9 @@ const Nav : FC = () => {
 					<Center py={10}>
 						<Divider orientation="horizontal" borderColor="white" />
 					</Center>
-					<NavProjectList />
+					<Box overflowY="auto" overflowX="hidden" h="50vh">
+						<NavProjectList />
+					</Box>
 				</Container>
 				<FormControl display="flex" justifyContent="space-around" alignItems="center" position="absolute" bottom={6} right={6} width="fit-content">
 					<SunIcon w={6} h={6} color={colorMode === 'light' ? 'yellow.200' : 'white'} />
