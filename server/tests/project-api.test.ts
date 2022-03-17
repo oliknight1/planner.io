@@ -1,6 +1,5 @@
 import supertest from 'supertest';
 import mongoose from 'mongoose';
-import * as jwt from 'jsonwebtoken';
 import { app } from '../app';
 import { Project } from '../models/project';
 import * as helpers from './helpers/test_helper';

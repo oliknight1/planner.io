@@ -12,6 +12,10 @@ export class ProjectController extends BaseController {
 		this.get_by_id( request, response, Project );
 	};
 
+	public static get_all_projects = async ( request : Request, response : Response ) => {
+		this.get_all( request, response, Project );
+	};
+
 	public static create = async (
 		request : Request,
 		response: Response,

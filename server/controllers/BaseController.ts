@@ -3,6 +3,19 @@ import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 
 export class BaseController {
+	public static get_all = async <T> (
+		request : Request,
+		response : Response,
+		model: mongoose.Model<T, {}, {}, {}>,
+	) => {
+		const docs = await model.find();
+		if ( docs ) {
+			response.status( 200 ).json( docs );
+		} else {
+			response.status( 404 ).json( { error: `${model.modelName} not found` } );
+		}
+	};
+
 	public static get_by_id = async <T>(
 		request : Request<{ id: string }>,
 		response : Response,
