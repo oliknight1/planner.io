@@ -30,7 +30,13 @@ const Nav : FC = () => {
 
 	return (
 		<SlideFade in={open} offsetX="-200px" offsetY={0} unmountOnExit>
-			<Box pos="relative" h="100vh" maxW={is_mobile_breakpoint() ? '100%' : 'sm'} background="black.900">
+			<Box
+				pos="relative"
+				h="100vh"
+				maxW={is_mobile_breakpoint() ? '100%' : 'sm'}
+				background={colorMode === 'dark' ? 'black.900' : 'brand.dark_blue'}
+				color="white"
+			>
 				<Container pt={3}>
 					<Flex w="100%" alignItems="center" justifyContent="space-around">
 						<Box w={is_mobile_breakpoint() ? '50%' : '60%'}>
@@ -39,6 +45,7 @@ const Nav : FC = () => {
 						<IconButton
 							aria-label="Close navigaton"
 							variant="ghost"
+							color="yellow.200"
 							icon={<CloseIcon w={5} h={5} />}
 							onClick={() => set_open( false )}
 						/>

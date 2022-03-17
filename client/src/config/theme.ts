@@ -20,12 +20,12 @@ const theme = extendTheme( {
 	},
 	colors: {
 		yellow: {
-			50: '#FFF8E5',
+			50: '#FFFFFF',
 			100: '#FFEBB8',
 			200: '#FFC32E',
 			300: '#FFB600',
-			400: '#CC9200',
-			500: '#996D00',
+			400: '#FFB600',
+			500: '#FFB600',
 			600: '#664900',
 			700: '#332400',
 		},
@@ -48,6 +48,13 @@ const theme = extendTheme( {
 				fontWeight: 'light',
 			},
 		},
+		Link: {
+			baseStyle: {
+				_hover: {
+					textDecoration: 'none',
+				},
+			},
+		},
 		Button: {
 			defaultProps: {
 				colorScheme: 'yellow',
@@ -58,14 +65,6 @@ const theme = extendTheme( {
 					_focus: {
 						boxShadow: focus_colour,
 					},
-				},
-			},
-		},
-		Link: {
-			baseStyle: {
-				_hover: {
-					textDecoration: 'none',
-					color: 'yellow.200',
 				},
 			},
 		},
