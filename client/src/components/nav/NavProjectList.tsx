@@ -5,9 +5,12 @@ import {
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import NavItem from './NavItem';
 
-const NavProject = () => (
+interface NavProjectProps {
+	name : string
+}
+const NavProject : FC<NavProjectProps> = ( { name } ) => (
 	<ListItem>
-		<NavItem name="Project name" icon={<Avatar name="Project name" borderRadius="md" />} url="/projects/project_url" />
+		<NavItem name={name} icon={<Avatar name={name} borderRadius="md" />} url="/projects/project_url" />
 	</ListItem>
 );
 
@@ -28,7 +31,7 @@ const NavProjectList : FC = () => {
 			</Button>
 			<SlideFade in={open} offsetX={0} offsetY="-20px" reverse unmountOnExit>
 				<List pl={2}>
-					<NavProject />
+					<NavProject name="Test Project" />
 				</List>
 			</SlideFade>
 		</>
