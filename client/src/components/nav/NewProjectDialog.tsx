@@ -2,36 +2,65 @@ import {
 	Modal, ModalOverlay, ModalContent, ModalHeader,
 	ModalCloseButton, ModalBody, ModalFooter, Button,
 	FormControl, Input, useColorMode, FormLabel, FormHelperText,
-	VStack, HStack, AvatarGroup, Avatar,
+	VStack, HStack, AvatarGroup, Avatar, FormErrorMessage,
 } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
 import React, { FC, useEffect, useState } from 'react';
 import axios from 'axios';
 import { AddIcon } from '@chakra-ui/icons';
 import { User } from '../../utils/types';
+import { useUser } from '../../contexts/auth_context';
 
 interface NewProjectDialogProps {
 	is_open: boolean,
 	on_close: () => void
 }
 
-const get_by_email = async ( email : string ) : Promise<User> => {
-	const response = await axios.get( `/api/users/email/${email}` );
-	return response.data;
-};
-
 const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) => {
+	const { user } = useUser();
 	const [ member_email, set_member_email ] = useState<string>( '' );
-	const [ invited_members, set_invited_members ] = useState<User[]>( [] );
+	const [ invited_members, set_invited_members ] = useState<User[]>( [ {
+		token: user.token,
+		id: user.id,
+		display_name: user.display_name,
+		email: user.email,
+	} ] );
 	const [ title, set_title ] = useState<string>( '' );
 	const { colorMode } = useColorMode();
+
+	const get_by_email = async ( email : string ) : Promise<User> => {
+		set_member_email( '' );
+		if ( email === user.email || invited_members.some( ( member ) => member.email === email ) ) {
+			throw new Error( 'User already invited' );
+		}
+		const response = await axios.get( `/api/users/email/${email}` );
+		return response.data;
+	};
 	const {
 		data, error, isError, isLoading, isSuccess, refetch,
-	} = useQuery<User, Error>( 'get_by_email', () => get_by_email( 'test@email.com' ), { enabled: false, refetchOnMount: false } );
+	} = useQuery<User, Error>(
+		'user_by_email',
+		() => get_by_email( member_email ),
+		{
+			enabled: false,
+			refetchOnMount: false,
+			retry: ( failureCount, request_error ) => {
+				// stop query from retrying if the user has already been invited
+				if ( request_error.message === 'User already invited' ) {
+					return false;
+				}
+				if ( failureCount <= 3 ) {
+					return true;
+				}
+				return false;
+			},
+
+		},
+	);
 
 	useEffect( () => {
 		if ( isSuccess ) {
-			set_invited_members( [ data ] );
+			set_invited_members( [ ...invited_members, data ] );
 		}
 	}, [ data ] );
 	return (
@@ -47,7 +76,7 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 								<FormLabel>Project Title</FormLabel>
 								<Input type="text" variant="filled" placeholder="Title" onChange={( e ) => set_title( e.currentTarget.value )} value={title} />
 							</FormControl>
-							<FormControl>
+							<FormControl isInvalid={isError}>
 								<FormLabel>Invite members</FormLabel>
 								<HStack>
 									<Input
@@ -67,14 +96,18 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 										Invite
 									</Button>
 								</HStack>
-								<FormHelperText>Enter member&apos;s email address</FormHelperText>
+								{ !isError
+									&& <FormHelperText>Enter member&apos;s email address</FormHelperText>}
+								<FormErrorMessage>{error?.message}</FormErrorMessage>
 							</FormControl>
 						</VStack>
 					</form>
 					<FormLabel mt={6}>Members</FormLabel>
 					<AvatarGroup>
 						{
-							invited_members.map( ( member ) => <Avatar name={member.display_name} /> )
+							invited_members.map(
+								( member ) => <Avatar name={member.display_name} key={member.id} />,
+							)
 						}
 					</AvatarGroup>
 				</ModalBody>

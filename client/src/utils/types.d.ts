@@ -3,6 +3,7 @@ import { ReactElement } from 'react';
 
 export interface User {
 	display_name: string,
+	email: string
 	id: string,
 	token: string
 }

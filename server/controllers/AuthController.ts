@@ -23,6 +23,7 @@ export class AuthController {
 		}
 		const token_data = {
 			display_name: user.display_name,
+			email: user.email,
 			id: user.id,
 		};
 
@@ -33,6 +34,7 @@ export class AuthController {
 		response.status( 200 ).send( {
 			token,
 			display_name: user.display_name,
+			email: user.email,
 			id: user.id,
 		} );
 	};
@@ -75,6 +77,7 @@ export class AuthController {
 
 			const token_data = {
 				display_name: saved_user.display_name,
+				email: user.email,
 				id: saved_user.id,
 			};
 
@@ -85,6 +88,7 @@ export class AuthController {
 			response.status( 201 ).send( {
 				token,
 				display_name: user.display_name,
+				email: user.email,
 				id: user.id,
 			} );
 		} catch ( error : unknown ) {
