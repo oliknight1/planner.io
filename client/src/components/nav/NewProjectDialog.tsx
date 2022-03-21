@@ -35,8 +35,15 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 		if ( email === user.email || invited_members.some( ( member ) => member.email === email ) ) {
 			throw new Error( 'User already invited' );
 		}
-		const response = await axios.get( `/api/users/email/${email}` );
-		return response.data;
+		try {
+			const response = await axios.get( `/api/users/email/${email}` );
+			return response.data;
+		} catch ( error : any ) {
+			if ( axios.isAxiosError( error ) ) {
+				throw new Error( error.response?.data.error );
+			}
+			throw new Error( error.message );
+		}
 	};
 
 	const {
@@ -52,7 +59,7 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 				if ( request_error.message === 'User already invited' ) {
 					return false;
 				}
-				if ( failureCount <= 3 ) {
+				if ( failureCount <= 1 ) {
 					return true;
 				}
 				return false;
