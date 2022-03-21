@@ -42,9 +42,28 @@ export class AuthController {
 		}
 	};
 
-	public static get_auth = () => {
+	private static verify_token = async ( token : string ) => {
+		if ( !token ) return false;
+		try {
+			const headers = {
+				Authorization: `Bearer ${token}`,
+			};
+			await axios.post( '/api/auth/verify-token', {}, { headers } );
+			return true;
+		} catch ( error : unknown ) {
+			return false;
+		}
+	};
+
+	public static get_auth = async () => {
 		if ( window.localStorage.getItem( 'user' ) !== null ) {
-			return JSON.parse( window.localStorage.getItem( 'user' ) as string );
+			const auth = JSON.parse( window.localStorage.getItem( 'user' ) as string );
+			const verified = await this.verify_token( auth.token );
+			if ( !verified ) {
+				window.localStorage.removeItem( 'user' );
+				return null;
+			}
+			return auth;
 		}
 		return null;
 	};

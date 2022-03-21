@@ -3,8 +3,10 @@ import bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { User } from '../models/user';
 import { UserSchema } from '../utils/types';
+import { BaseController } from './BaseController';
+import { JWT_EXPIRES_IN, JWT_SECRET } from '../utils/config';
 
-export class AuthController {
+export class AuthController extends BaseController {
 	public static login = async (
 		request: Request,
 		response: Response,
@@ -27,8 +29,8 @@ export class AuthController {
 			id: user.id,
 		};
 
-		const token = jwt.sign( token_data, process.env.JWT_SECRET as string, {
-			expiresIn: process.env.JWT_EXPIRES_IN,
+		const token = jwt.sign( token_data, JWT_SECRET as string, {
+			expiresIn: JWT_EXPIRES_IN,
 		} );
 
 		response.status( 200 ).send( {
@@ -82,7 +84,7 @@ export class AuthController {
 			};
 
 			const token = jwt.sign( token_data, process.env.JWT_SECRET as string, {
-				expiresIn: process.env.JWT_EXPIRES_IN,
+				expiresIn: JWT_EXPIRES_IN,
 			} );
 
 			response.status( 201 ).send( {
@@ -96,6 +98,13 @@ export class AuthController {
 				const { message } = error;
 				response.status( 400 ).json( { error: message } );
 			}
+		}
+	};
+
+	public static verify_user = ( request : Request, response : Response ) => {
+		const verified = this.verify_token( request, response );
+		if ( verified ) {
+			response.status( 200 ).send();
 		}
 	};
 }

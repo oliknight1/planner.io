@@ -32,9 +32,6 @@ export const token_id = new mongoose.Types.ObjectId();
 export const token = jwt.sign(
 	{ id: token_id },
  process.env.JWT_SECRET as string,
- {
- 	expiresIn: process.env.JWT_EXPIRES_IN,
- },
 );
 
 export const generate_fake_id =	( real_id : mongoose.Types.ObjectId | undefined )

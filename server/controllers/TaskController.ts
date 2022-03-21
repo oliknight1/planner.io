@@ -23,7 +23,7 @@ export class TaskController extends BaseController {
 			return;
 		}
 
-		const token = this.verify_token( request );
+		const token = this.verify_token( request, response );
 		if ( !token ) {
 			response.status( 401 ).json( { error: 'Auth token missing or invalid' } );
 			return;
@@ -55,7 +55,7 @@ export class TaskController extends BaseController {
 			return;
 		}
 
-		const token = this.verify_token( request );
+		const token = this.verify_token( request, response );
 		if ( !token ) {
 			response.status( 401 ).json( { error: 'Auth token missing or invalid' } );
 			return;

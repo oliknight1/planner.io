@@ -7,3 +7,5 @@ export const auth_router = express.Router();
 auth_router.post( '/login', AuthController.login );
 
 auth_router.post( '/register', user_validation_rules(), validate, AuthController.create );
+
+auth_router.post( '/verify-token', AuthController.verify_user );

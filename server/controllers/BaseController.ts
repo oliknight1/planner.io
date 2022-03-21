@@ -1,6 +1,7 @@
 import mongoose, { isValidObjectId } from 'mongoose';
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
+import { JWT_SECRET } from '../utils/config';
 
 export class BaseController {
 	public static get_all = async <T> (
@@ -43,7 +44,7 @@ export class BaseController {
 	) => {
 		const { id } = request.params;
 
-		const token = this.verify_token( request );
+		const token = this.verify_token( request, response );
 		if ( !token ) {
 			response.status( 401 ).json( { error: 'Auth token missing or invalid' } );
 			return;
@@ -63,18 +64,19 @@ export class BaseController {
 		}
 	};
 
-	public static verify_token = ( request : Request ) : null | jwt.JwtPayload => {
+	public static verify_token = ( request : Request, response : Response ) => {
 		const auth = request.get( 'authorization' );
 		if ( auth && auth.toLowerCase().startsWith( 'bearer ' ) ) {
 			const token = auth.substring( 7 );
 			// Check if token & env variable exist before verify
-			const decoded_token = token !== null && process.env.JWT_SECRET
-				? jwt.verify( token, process.env.JWT_SECRET )
-				: null;
 
-			if ( decoded_token ) {
-				return decoded_token as jwt.JwtPayload;
+			const decoded_token = jwt.verify( token, JWT_SECRET as string );
+
+			if ( !decoded_token ) {
+				response.status( 401 ).json( { error: 'Token expired' } );
+				return null;
 			}
+			return decoded_token as jwt.JwtPayload;
 		}
 		return null;
 	};

@@ -1,5 +1,5 @@
 import React, {
-	createContext, FC, useContext, useMemo, useState,
+	createContext, FC, useContext, useEffect, useMemo, useState,
 } from 'react';
 import { AuthController } from '../controllers/AuthController';
 import { User } from '../utils/types';
@@ -10,9 +10,19 @@ const UserContext = createContext<any>( null );
 export const useUser = () => useContext( UserContext );
 
 export const UserProvider : FC = ( { children } ) => {
-	const [ user, set_user ] = useState<User|null>( AuthController.get_auth() );
+	const [ user, set_user ] = useState<User|null>();
 	const [ error, set_error ] = useState<string>( '' );
 	const [ loading, set_loading ] = useState<boolean>( false );
+
+	useEffect( () => {
+		set_loading( true );
+		const get_auth = async () => {
+			const auth = await AuthController.get_auth();
+			set_user( auth );
+		};
+		get_auth();
+		set_loading( false );
+	}, [] );
 
 	const handle_response = ( response : User | string ) => {
 		if ( typeof response === 'string' ) {
