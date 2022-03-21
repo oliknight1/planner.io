@@ -4,7 +4,7 @@ import {
 	FormControl, Input, useColorMode, FormLabel, FormHelperText,
 	VStack, HStack, AvatarGroup, Avatar, FormErrorMessage,
 } from '@chakra-ui/react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import React, {
 	FC, SyntheticEvent, useEffect, useState,
 } from 'react';
@@ -74,7 +74,7 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 		}
 	}, [ data ] );
 
-	const handle_submit = async ( e : SyntheticEvent ) => {
+	const mutation = useMutation( ( e : SyntheticEvent ) => {
 		e.preventDefault();
 		const headers = {
 			Authorization: `Bearer ${user.token}`,
@@ -83,9 +83,8 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 			title,
 			users: invited_members,
 		};
-		const response = await axios.post( '/api/projects', post_data, { headers } );
-		console.log( response );
-	};
+		return axios.post( '/api/projects', post_data, { headers } );
+	} );
 
 	return (
 		<Modal onClose={on_close} isOpen={is_open} isCentered>
@@ -93,7 +92,7 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 			<ModalContent background={colorMode === 'dark' ? 'gray.800' : 'white'}>
 				<ModalHeader>New Project</ModalHeader>
 				<ModalCloseButton />
-				<form onSubmit={handle_submit}>
+				<form onSubmit={mutation.mutate}>
 					<ModalBody>
 						<VStack spacing={6}>
 							<FormControl isRequired>
