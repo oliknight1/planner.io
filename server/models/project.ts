@@ -6,7 +6,7 @@ import { ProjectSchema } from '../utils/types';
 const { Schema } = mongoose;
 
 export const project_schema = new Schema<ProjectSchema>( {
-	name: { type: String, required: true },
+	title: { type: String, required: true },
 	users: [ { type: Schema.Types.ObjectId, ref: 'User' } ],
 	tasks: [ { type: Schema.Types.ObjectId, ref: 'Task' } ],
 } );

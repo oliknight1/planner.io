@@ -12,7 +12,7 @@ export interface UserSchema {
 
 export interface ProjectSchema {
 	id?: mongoose.Types.ObjectId,
-	name: string,
+	title: string,
 	users: Types.ObjectId[],
 	tasks: Types.ObjectId[]
 }

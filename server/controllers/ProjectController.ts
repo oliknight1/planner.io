@@ -20,23 +20,24 @@ export class ProjectController extends BaseController {
 		request : Request,
 		response: Response,
 	) => {
-		const { name } : ProjectSchema = request.body;
+		const { title, users } : ProjectSchema = request.body;
 
+		const user_ids = users.map( ( user ) => user.id );
 		const token = this.verify_token( request, response );
 		if ( !token ) {
 			response.status( 401 ).json( { error: 'Auth token missing or invalid' } );
 			return;
 		}
 
-		if ( name.length === 0 ) {
-			response.status( 400 ).json( { error: 'Name cannot be empty' } );
+		if ( !title || title.length === 0 ) {
+			response.status( 400 ).json( { error: 'title cannot be empty' } );
 			return;
 		}
 
 		const project = new Project( {
-			name,
+			title,
 			tasks: [],
-			users: [ token.id ],
+			users: user_ids,
 		} );
 
 		try {
@@ -55,12 +56,12 @@ export class ProjectController extends BaseController {
 		response: Response,
 	) => {
 		const { id } = request.params;
-		const { name } = request.body;
+		const { title } = request.body;
 		if ( !isValidObjectId( id ) ) {
 			response.status( 400 ).json( { error: 'Invalid ID supplied' } );
 			return;
 		}
-		if ( name.length === 0 ) {
+		if ( title.length === 0 ) {
 			response.status( 400 ).json( { error: 'No data provided' } );
 			return;
 		}
@@ -76,7 +77,7 @@ export class ProjectController extends BaseController {
 			response.status( 404 ).json( { error: 'Project not found' } );
 			return;
 		}
-		project.name = name;
+		project.title = title;
 
 		try {
 			await project.save();

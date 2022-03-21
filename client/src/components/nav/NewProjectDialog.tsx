@@ -5,7 +5,9 @@ import {
 	VStack, HStack, AvatarGroup, Avatar, FormErrorMessage,
 } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
-import React, { FC, useEffect, useState } from 'react';
+import React, {
+	FC, SyntheticEvent, useEffect, useState,
+} from 'react';
 import axios from 'axios';
 import { AddIcon } from '@chakra-ui/icons';
 import { User } from '../../utils/types';
@@ -36,6 +38,7 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 		const response = await axios.get( `/api/users/email/${email}` );
 		return response.data;
 	};
+
 	const {
 		data, error, isError, isLoading, isSuccess, refetch,
 	} = useQuery<User, Error>(
@@ -63,14 +66,28 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 			set_invited_members( [ ...invited_members, data ] );
 		}
 	}, [ data ] );
+
+	const handle_submit = async ( e : SyntheticEvent ) => {
+		e.preventDefault();
+		const headers = {
+			Authorization: `Bearer ${user.token}`,
+		};
+		const post_data = {
+			title,
+			users: invited_members,
+		};
+		const response = await axios.post( '/api/projects', post_data, { headers } );
+		console.log( response );
+	};
+
 	return (
 		<Modal onClose={on_close} isOpen={is_open} isCentered>
 			<ModalOverlay />
 			<ModalContent background={colorMode === 'dark' ? 'gray.800' : 'white'}>
 				<ModalHeader>New Project</ModalHeader>
 				<ModalCloseButton />
-				<ModalBody>
-					<form onSubmit={( e ) => e.preventDefault()}>
+				<form onSubmit={handle_submit}>
+					<ModalBody>
 						<VStack spacing={6}>
 							<FormControl isRequired>
 								<FormLabel>Project Title</FormLabel>
@@ -101,19 +118,19 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 								<FormErrorMessage>{error?.message}</FormErrorMessage>
 							</FormControl>
 						</VStack>
-					</form>
-					<FormLabel mt={6}>Members</FormLabel>
-					<AvatarGroup>
-						{
-							invited_members.map(
-								( member ) => <Avatar name={member.display_name} key={member.id} />,
-							)
-						}
-					</AvatarGroup>
-				</ModalBody>
-				<ModalFooter>
-					<Button onClick={on_close}>Close</Button>
-				</ModalFooter>
+						<FormLabel mt={6}>Members</FormLabel>
+						<AvatarGroup>
+							{
+								invited_members.map(
+									( member ) => <Avatar name={member.display_name} key={member.id} />,
+								)
+							}
+						</AvatarGroup>
+					</ModalBody>
+					<ModalFooter>
+						<Button type="submit">Submit</Button>
+					</ModalFooter>
+				</form>
 			</ModalContent>
 		</Modal>
 	);
