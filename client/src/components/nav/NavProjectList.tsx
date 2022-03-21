@@ -63,7 +63,7 @@ const NavProjectList : FC = () => {
 					<ChevronDownIcon />
 				</Flex>
 			</Button>
-			<SlideFade in={open} offsetX={0} offsetY="-20px" reverse>
+			<SlideFade in={open} offsetX={0} offsetY="-20px" reverse unmountOnExit>
 				<List pl={2}>
 					{ render_list() }
 					<Button
