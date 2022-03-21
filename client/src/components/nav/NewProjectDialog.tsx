@@ -2,7 +2,7 @@ import {
 	Modal, ModalOverlay, ModalContent, ModalHeader,
 	ModalCloseButton, ModalBody, ModalFooter, Button,
 	FormControl, Input, useColorMode, FormLabel, FormHelperText,
-	VStack, HStack, AvatarGroup, Avatar, FormErrorMessage,
+	VStack, HStack, AvatarGroup, Avatar, FormErrorMessage, useToast,
 } from '@chakra-ui/react';
 import { useMutation, useQuery } from 'react-query';
 import React, {
@@ -20,6 +20,8 @@ interface NewProjectDialogProps {
 
 const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) => {
 	const { user } = useUser();
+	const { colorMode } = useColorMode();
+	const toast = useToast();
 	const [ member_email, set_member_email ] = useState<string>( '' );
 	const [ invited_members, set_invited_members ] = useState<User[]>( [ {
 		token: user.token,
@@ -28,7 +30,6 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 		email: user.email,
 	} ] );
 	const [ title, set_title ] = useState<string>( '' );
-	const { colorMode } = useColorMode();
 
 	const get_by_email = async ( email : string ) : Promise<User> => {
 		set_member_email( '' );
@@ -85,6 +86,18 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 		};
 		return axios.post( '/api/projects', post_data, { headers } );
 	} );
+
+	if ( mutation.error ) {
+		if ( mutation.error instanceof Error ) {
+			toast( {
+				title: 'There was an error creating project',
+				description: mutation.error.message,
+				status: 'error',
+				isClosable: true,
+				position: 'top',
+			} );
+		}
+	}
 
 	return (
 		<Modal onClose={on_close} isOpen={is_open} isCentered>
