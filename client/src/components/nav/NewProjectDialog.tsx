@@ -10,6 +10,7 @@ import React, {
 } from 'react';
 import axios from 'axios';
 import { AddIcon } from '@chakra-ui/icons';
+import { useNavigate } from 'react-router-dom';
 import { User } from '../../utils/types';
 import { useUser } from '../../contexts/auth_context';
 
@@ -22,6 +23,7 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 	const { user } = useUser();
 	const { colorMode } = useColorMode();
 	const toast = useToast();
+	const navigate = useNavigate();
 	const [ member_email, set_member_email ] = useState<string>( '' );
 	const [ invited_members, set_invited_members ] = useState<User[]>( [ {
 		token: user.token,
@@ -97,6 +99,9 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 				position: 'top',
 			} );
 		}
+	}
+	if ( mutation.isSuccess ) {
+		navigate( encodeURI( `/project/${title}` ) );
 	}
 
 	return (
