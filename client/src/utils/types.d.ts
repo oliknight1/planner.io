@@ -18,5 +18,5 @@ export interface Project {
 	id: string,
 	title: string,
 	tasks: string[],
-	users: string[]
+	users: User[]
 }

@@ -34,7 +34,7 @@ const Nav : FC = () => {
 				pos="relative"
 				maxH="100vh"
 				h="100vh"
-				maxW={is_mobile_breakpoint() ? '100%' : 'sm'}
+				w={is_mobile_breakpoint() ? '100%' : 'sm'}
 				background={colorMode === 'dark' ? 'black.900' : 'brand.dark_blue'}
 				color="white"
 			>
