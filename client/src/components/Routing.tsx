@@ -1,14 +1,14 @@
-import React, { FC } from 'react';
+import React, { FC, ReactElement } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useUser } from '../contexts/auth_context';
 import Home from './Home';
 import Login from './Login';
 import Register from './Register';
 
-const CheckAuth : FC = () => {
+const CheckAuth : FC<{ target: ReactElement }> = ( { target } ) => {
 	const { user, loading } = useUser();
 	if ( !loading && user !== undefined ) {
-		return user ? <Home /> : <Navigate to="/login" />;
+		return user ? target : <Navigate to="/login" />;
 	}
 	return null;
 };
@@ -20,7 +20,7 @@ const Routing : FC = () => {
 			<Routes>
 				<Route
 					path="/"
-					element={( <CheckAuth /> )}
+					element={( <CheckAuth target={<Home />} /> )}
 				/>
 				<Route path="/register" element={<Register />} />
 				<Route path="/login" element={<Login />} />
