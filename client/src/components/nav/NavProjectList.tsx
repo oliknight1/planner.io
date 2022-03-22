@@ -4,15 +4,10 @@ import {
 } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
 import { AddIcon, ChevronDownIcon } from '@chakra-ui/icons';
-import axios from 'axios';
 import NavItem from './NavItem';
 import { Project } from '../../utils/types';
 import NewProjectDialog from './NewProjectDialog';
-
-const get_projects = async () : Promise<Project[]> => {
-	const response = await axios.get( '/api/projects' );
-	return response.data;
-};
+import { ProjectController } from '../../controllers/ProjectController';
 
 const NavProjectList : FC = () => {
 	const [ open, set_open ] = useState<boolean>( false );
@@ -25,7 +20,7 @@ const NavProjectList : FC = () => {
 
 	const {
 		data, error, status,
-	} = useQuery<Project[], Error>( 'projects', get_projects );
+	} = useQuery<Project[], Error>( 'projects', ProjectController.get_all );
 
 	const render_list = () => {
 		switch ( status ) {
