@@ -13,7 +13,7 @@ export class ProjectController extends BaseController {
 	};
 
 	public static get_all_projects = async ( request : Request, response : Response ) => {
-		this.get_all( request, response, Project );
+		this.get_all( request, response, Project, 'users', { display_name: 1 } );
 	};
 
 	public static create = async (

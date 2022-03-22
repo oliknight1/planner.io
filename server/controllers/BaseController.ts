@@ -4,12 +4,16 @@ import * as jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../utils/config';
 
 export class BaseController {
-	public static get_all = async <T> (
+	public static get_all = async <T, T2> (
 		request : Request,
 		response : Response,
 		model: mongoose.Model<T, {}, {}, {}>,
+		populate_tag?: string,
+		populate_config?: T2,
 	) => {
-		const docs = await model.find();
+		const docs = populate_tag
+			? await model.find().populate( populate_tag, populate_config || null )
+			: await model.find();
 		if ( docs ) {
 			response.status( 200 ).json( docs );
 		} else {
