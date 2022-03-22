@@ -101,7 +101,7 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 		}
 	}
 	if ( mutation.isSuccess ) {
-		navigate( encodeURI( `/project/${title}` ) );
+		navigate( encodeURI( `/projects/${title}` ) );
 	}
 
 	return (

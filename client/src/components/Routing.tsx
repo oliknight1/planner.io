@@ -1,6 +1,7 @@
 import React, { FC, ReactElement } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useUser } from '../contexts/auth_context';
+import AllProjects from './AllProjects';
 import Home from './Home';
 import Login from './Login';
 import Register from './Register';
@@ -18,12 +19,11 @@ const Routing : FC = () => {
 	if ( !loading ) {
 		return (
 			<Routes>
-				<Route
-					path="/"
-					element={( <CheckAuth target={<Home />} /> )}
-				/>
 				<Route path="/register" element={<Register />} />
 				<Route path="/login" element={<Login />} />
+				<Route path="/" element={( <CheckAuth target={<Home />} /> )}>
+					<Route path="projects" element={<AllProjects />} />
+				</Route>
 			</Routes>
 		);
 	}
