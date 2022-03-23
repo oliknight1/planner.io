@@ -16,7 +16,7 @@ const ProjectCard : FC<ProjectCardProps> = ( { title, users } ) => {
 		<LinkBox>
 			<Link href={`project/${title}`}>
 				<Card
-					whileHover={{ borderColor: '#FFB600' }}
+					whileHover={{ borderColor: '#FFB600', scale: 1.05 }}
 					borderColor={colorMode === 'dark' ? '#1F1F1F' : '#FFFFFF'}
 					borderWidth="2px"
 					borderRadius="lg"
