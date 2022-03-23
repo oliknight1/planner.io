@@ -24,7 +24,7 @@ const Nav : FC = () => {
 		{
 			name: 'All Projects',
 			icon: AllProjectsIcon,
-			url: '/projects',
+			url: 'projects',
 		},
 	];
 
