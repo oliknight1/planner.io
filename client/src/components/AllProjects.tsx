@@ -23,7 +23,7 @@ export const AllProjects : FC = () => {
 					<Wrap spacing={5}>
 						{data.map( ( project ) => (
 							<WrapItem key={project.id}>
-								<ProjectCard title={project.title} users={project.users} />
+								<ProjectCard id={project.id} title={project.title} users={project.users} />
 							</WrapItem>
 						) )}
 					</Wrap>

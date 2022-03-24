@@ -1,7 +1,8 @@
 import {
 	Box, Container, Flex, Heading,
-	Link, Text, Button, useBreakpoint, Stack, Alert, AlertIcon,
+	Link, Text, Button, Stack, Alert, AlertIcon,
 } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
 import React, {
 	FC,
 	SyntheticEvent,
@@ -54,7 +55,7 @@ const AuthForm : FC<AuthFormProps> = ( {
 			maxH="100vh"
 			alignItems="center"
 		>
-			<Link href={form_type === 0 ? '/register' : '/login'}>
+			<Link as={RouterLink} to={form_type === 0 ? '/register' : '/login'}>
 				<Button pos="absolute" right={10} top={10} px={8}>
 					{
 						form_type === 0
@@ -108,8 +109,8 @@ const AuthForm : FC<AuthFormProps> = ( {
 								: ( 'Already have an account?' )
 						}
 						{
-							form_type === 0 ? ( <Link color="yellow.300" href="/register"> Register</Link> )
-								: ( <Link color="yellow.300" href="/login"> Login</Link> )
+							form_type === 0 ? ( <Link as={RouterLink} color="yellow.300" to="/register"> Register</Link> )
+								: ( <Link as={RouterLink} color="yellow.300" to="/login"> Login</Link> )
 						}
 					</Text>
 				</Box>

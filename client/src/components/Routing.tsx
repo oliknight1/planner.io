@@ -1,5 +1,7 @@
 import React, { FC, ReactElement } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import {
+	Navigate, Route, Routes,
+} from 'react-router-dom';
 import { useUser } from '../contexts/auth_context';
 import AllProjects from './AllProjects';
 import Home from './Home';

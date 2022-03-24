@@ -2,6 +2,7 @@ import {
 	Link, LinkBox, ListItem, useColorMode, Wrap, WrapItem,
 } from '@chakra-ui/react';
 import React, { FC } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { NavLink } from '../../utils/types';
 
 const NavItem : FC<NavLink> = ( { name, icon, url } : NavLink ) => {
@@ -12,7 +13,7 @@ const NavItem : FC<NavLink> = ( { name, icon, url } : NavLink ) => {
 	};
 	return (
 		<LinkBox>
-			<Link href={url} fontSize="2xl">
+			<Link as={RouterLink} to={url} fontSize="2xl">
 				<ListItem px={2} py={2} _hover={hover_styling} borderRadius="md">
 					<Wrap align="center" spacing={6}>
 						<WrapItem>

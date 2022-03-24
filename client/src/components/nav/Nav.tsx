@@ -27,7 +27,6 @@ const Nav : FC = () => {
 			url: 'projects',
 		},
 	];
-
 	return (
 		<SlideFade in={open} offsetX="-200px" offsetY={0} unmountOnExit>
 			<Box
