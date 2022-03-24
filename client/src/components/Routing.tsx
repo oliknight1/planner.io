@@ -4,6 +4,7 @@ import {
 } from 'react-router-dom';
 import { useUser } from '../contexts/auth_context';
 import AllProjects from './AllProjects';
+import ErrorPage from './ErrorPage';
 import Home from './Home';
 import Login from './Login';
 import ProjectPage from './ProjectPage';
@@ -28,6 +29,7 @@ const Routing : FC = () => {
 					<Route path="projects" element={<AllProjects />} />
 					<Route path="/projects/:id" element={<ProjectPage />} />
 				</Route>
+				<Route path="*" element={<ErrorPage />} />
 			</Routes>
 		);
 	}
