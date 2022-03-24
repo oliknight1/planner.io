@@ -16,7 +16,7 @@ const ProjectCard : FC<ProjectCardProps> = ( { id, title, users } ) => {
 	const { colorMode } = useColorMode();
 	return (
 		<LinkBox>
-			<Link as={RouterLink} to={`project/${id}`}>
+			<Link as={RouterLink} to={`${id}`}>
 				<Card
 					whileHover={{ borderColor: '#FFB600', scale: 1.05 }}
 					borderColor={colorMode === 'dark' ? '#1F1F1F' : '#FFFFFF'}

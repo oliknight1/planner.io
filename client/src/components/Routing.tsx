@@ -6,6 +6,7 @@ import { useUser } from '../contexts/auth_context';
 import AllProjects from './AllProjects';
 import Home from './Home';
 import Login from './Login';
+import ProjectPage from './ProjectPage';
 import Register from './Register';
 
 const CheckAuth : FC<{ target: ReactElement }> = ( { target } ) => {
@@ -25,6 +26,7 @@ const Routing : FC = () => {
 				<Route path="/login" element={<Login />} />
 				<Route path="/" element={( <CheckAuth target={<Home />} /> )}>
 					<Route path="projects" element={<AllProjects />} />
+					<Route path="/projects/:id" element={<ProjectPage />} />
 				</Route>
 			</Routes>
 		);

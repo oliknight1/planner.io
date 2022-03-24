@@ -20,7 +20,7 @@ const NavProjectList : FC = () => {
 
 	const {
 		data, error, status,
-	} = useQuery<Project[], Error>( 'projects', ProjectController.get_all );
+	} = useQuery<Project[], Error>( 'all_projects', ProjectController.get_all );
 
 	const render_list = () => {
 		switch ( status ) {

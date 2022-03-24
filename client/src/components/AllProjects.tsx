@@ -10,7 +10,7 @@ import ProjectCard from './ProjectCard';
 export const AllProjects : FC = () => {
 	const {
 		data, isLoading, isSuccess,
-	} = useQuery<Project[], Error>( 'projects', ProjectController.get_all );
+	} = useQuery<Project[], Error>( 'all_projects', ProjectController.get_all );
 	return (
 		<Container maxW="100%" py={6}>
 			{
