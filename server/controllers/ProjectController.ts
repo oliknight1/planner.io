@@ -9,7 +9,21 @@ export class ProjectController extends BaseController {
 		request : Request<{ id: string }>,
 		response : Response,
 	) => {
-		this.get_by_id( request, response, Project );
+		const { id } = request.params;
+
+		if ( !isValidObjectId( id ) ) {
+			response.status( 400 ).json( { error: 'Invalid ID supplied' } );
+			return;
+		}
+		const doc = await Project.findById( id )
+			.populate( 'users', { display_name: 1 } )
+			.populate( 'tasks' );
+
+		if ( doc ) {
+			response.status( 200 ).send( doc.toJSON() );
+		} else {
+			response.status( 404 ).json( { error: 'Project not found' } );
+		}
 	};
 
 	public static get_all_projects = async ( request : Request, response : Response ) => {
