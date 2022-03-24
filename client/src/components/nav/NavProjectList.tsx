@@ -33,7 +33,7 @@ const NavProjectList : FC = () => {
 				<NavItem
 					name={project.title}
 					icon={<Avatar name={project.title} borderRadius="md" />}
-					url={encodeURI( `/projects/${project.title}` )}
+					url={encodeURI( `/projects/${project.id}` )}
 					key={project.id}
 				/>
 			) );
