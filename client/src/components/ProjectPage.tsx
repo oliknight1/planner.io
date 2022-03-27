@@ -1,5 +1,5 @@
 import { Container, Heading } from '@chakra-ui/react';
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ProjectController } from '../controllers/ProjectController';
@@ -9,22 +9,20 @@ const ProjectPage : FC = () => {
 	const navigate = useNavigate();
 	const params = useParams();
 
-	if ( !params.id ) {
+	useEffect( () => {
+		if ( !params.id ) {
 		// Redirect to 404 page
-		navigate( '/*' );
-	}
+			navigate( '/*' );
+		}
+	}, [] );
+
 	const {
-		data, isError,
+		data,
 	} = useQuery<Project, Error>( 'single_project', () => ProjectController.get_by_id( params.id as string ) );
 
-	if ( !isError || !data ) {
-		// Redirect to 404 page
-		navigate( '/*' );
-		return null;
-	}
 	return (
 		<Container>
-			<Heading>{data.title}</Heading>
+			<Heading>{data?.title}</Heading>
 		</Container>
 	);
 };
