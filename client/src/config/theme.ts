@@ -10,6 +10,14 @@ const focus_colour = '0 0 0 1px rgba(204, 146, 0, 0.8)';
 
 const theme = extendTheme( {
 	config,
+	semanticTokens: {
+		colors: {
+			text: {
+				default: 'gray.800',
+				_dark: 'whiteAlpha.900',
+			},
+		},
+	},
 	styles: {
 		global: ( props : any ) => ( {
 			body: {
