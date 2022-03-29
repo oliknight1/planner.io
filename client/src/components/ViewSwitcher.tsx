@@ -19,9 +19,9 @@ const ViewSwitcher : FC<ViewSwitcherProps> = ( { view, set_view } ) => {
 	};
 	return (
 		<ButtonGroup variant="unstyled">
-			<Button color={view === ViewType.Grid ? 'yellow.300' : 'text'} _hover={hover_styling} fontSize="lg" onClick={() => handle_click( ViewType.Grid )} id="grid-button" leftIcon={<GridViewIcon w={4} h={4} />}>Grid</Button>
+			<Button color={view === ViewType.Grid ? 'yellow.300' : undefined} _hover={hover_styling} fontSize="lg" onClick={() => handle_click( ViewType.Grid )} id="grid-button" leftIcon={<GridViewIcon w={4} h={4} />}>Grid</Button>
 			<Divider orientation="vertical" borderColor="white" />
-			<Button color={view === ViewType.List ? 'yellow.300' : 'text'} _hover={hover_styling} fontSize="lg" onClick={() => handle_click( ViewType.List )} id="list-button" leftIcon={<ListViewIcon w={5} h={5} />}>List</Button>
+			<Button color={view === ViewType.List ? 'yellow.300' : undefined} _hover={hover_styling} fontSize="lg" onClick={() => handle_click( ViewType.List )} id="list-button" leftIcon={<ListViewIcon w={5} h={5} />}>List</Button>
 		</ButtonGroup>
 
 	);

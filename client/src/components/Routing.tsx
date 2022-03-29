@@ -7,7 +7,7 @@ import AllProjects from './AllProjects';
 import ErrorPage from './ErrorPage';
 import Home from './Home';
 import Login from './Login';
-import ProjectPage from './ProjectPage';
+import ProjectPage from './project_page/ProjectPage';
 import Register from './Register';
 
 const CheckAuth : FC<{ target: ReactElement }> = ( { target } ) => {

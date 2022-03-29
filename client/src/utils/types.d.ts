@@ -14,9 +14,21 @@ export interface NavLink {
 	url: string
 }
 
+export interface Task {
+	id: string,
+	title: string,
+	body_text: string,
+	users: User[],
+	project: string,
+	tags: string[],
+	column: string,
+	due_date: Date,
+	dependant_tasks: Task[]
+
+}
 export interface Project {
 	id: string,
 	title: string,
-	tasks: string[],
+	tasks: Task[],
 	users: User[]
 }

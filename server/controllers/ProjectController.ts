@@ -15,9 +15,21 @@ export class ProjectController extends BaseController {
 			response.status( 400 ).json( { error: 'Invalid ID supplied' } );
 			return;
 		}
-		const doc = await Project.findById( id )
-			.populate( 'users', { display_name: 1 } )
-			.populate( 'tasks' );
+		const query = [
+			{
+				path: 'tasks',
+				populate: {
+					path: 'users',
+					select: [ 'display_name' ],
+				},
+			},
+			{
+				path: 'users',
+				select: [ 'display_name' ],
+			},
+
+		];
+		const doc = await Project.findById( id ).populate( query );
 
 		if ( doc ) {
 			response.status( 200 ).send( doc.toJSON() );
