@@ -40,6 +40,7 @@
 			"react/no-children-prop": 0,
 			"react/jsx-indent-props": [ "warn", "tab" ],
 			"no-shadow": "off",
-    	"@typescript-eslint/no-shadow": "error"
+    	"@typescript-eslint/no-shadow": "error",
+			"react/jsx-props-no-spreading": 0
 		}
 }
