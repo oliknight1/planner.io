@@ -3,7 +3,8 @@ import {
 	VStack, Box, List, ListItem,
 } from '@chakra-ui/react';
 import {
-	Draggable, DraggableProvided, Droppable, DroppableProvided,
+	Draggable, DraggableProvided, DraggableStateSnapshot,
+	DraggingStyle, Droppable, DroppableProvided, DroppableStateSnapshot, NotDraggingStyle,
 } from 'react-beautiful-dnd';
 import { Task } from '../../utils/types';
 import TaskCard from './TaskCard';
@@ -15,7 +16,7 @@ interface TaskColumnProps {
 }
 
 const TaskColumn : FC<TaskColumnProps> = ( { column_header, tasks, droppable_id } ) => (
-	<VStack>
+	<VStack bg="#121212" borderRadius="xl">
 		<Box
 			bg="#181818"
 			textAlign="center"
@@ -26,9 +27,15 @@ const TaskColumn : FC<TaskColumnProps> = ( { column_header, tasks, droppable_id 
 		>
 			{ column_header }
 		</Box>
-		<Droppable droppableId={droppable_id}>
+		<Box as={Droppable} droppableId={droppable_id} h="100%">
 			{ ( droppable_provided : DroppableProvided ) => (
-				<List spacing={6} w="90%" {...droppable_provided.droppableProps} ref={droppable_provided.innerRef}>
+				<List
+					overflowY="auto"
+					minHeight="20vh"
+					{...droppable_provided.droppableProps}
+					width="90%"
+					ref={droppable_provided.innerRef}
+				>
 					{ tasks.map( ( task: Task, index ) => (
 						<Draggable draggableId={task.id} index={index} key={task.id}>
 							{ ( draggable_provided : DraggableProvided ) => (
@@ -36,6 +43,7 @@ const TaskColumn : FC<TaskColumnProps> = ( { column_header, tasks, droppable_id 
 									{...draggable_provided.draggableProps}
 									{...draggable_provided.dragHandleProps}
 									ref={draggable_provided.innerRef}
+									py={4}
 								>
 									<TaskCard title={task.title} users={task.users} />
 								</ListItem>
@@ -45,7 +53,7 @@ const TaskColumn : FC<TaskColumnProps> = ( { column_header, tasks, droppable_id 
 					{droppable_provided.placeholder}
 				</List>
 			) }
-		</Droppable>
+		</Box>
 
 	</VStack>
 );
