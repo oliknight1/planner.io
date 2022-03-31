@@ -13,6 +13,7 @@ import { AddIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../../utils/types';
 import { useUser } from '../../contexts/auth_context';
+import { ProjectController } from '../../controllers/ProjectController';
 
 interface NewProjectDialogProps {
 	is_open: boolean,
@@ -79,14 +80,7 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 
 	const mutation = useMutation( ( e : SyntheticEvent ) => {
 		e.preventDefault();
-		const headers = {
-			Authorization: `Bearer ${user.token}`,
-		};
-		const post_data = {
-			title,
-			users: invited_members,
-		};
-		return axios.post( '/api/projects', post_data, { headers } );
+		return ProjectController.create( user.token, title, invited_members );
 	} );
 
 	if ( mutation.error ) {
