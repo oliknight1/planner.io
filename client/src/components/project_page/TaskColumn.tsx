@@ -3,8 +3,7 @@ import {
 	VStack, Box, List, ListItem,
 } from '@chakra-ui/react';
 import {
-	Draggable, DraggableProvided, DraggableStateSnapshot,
-	DraggingStyle, Droppable, DroppableProvided, DroppableStateSnapshot, NotDraggingStyle,
+	Draggable, DraggableProvided, Droppable, DroppableProvided,
 } from 'react-beautiful-dnd';
 import { Task } from '../../utils/types';
 import TaskCard from './TaskCard';
@@ -27,11 +26,12 @@ const TaskColumn : FC<TaskColumnProps> = ( { column_header, tasks, droppable_id 
 		>
 			{ column_header }
 		</Box>
-		<Box as={Droppable} droppableId={droppable_id} h="100%">
+		<Box as={Droppable} droppableId={droppable_id} id="test" h="100%">
 			{ ( droppable_provided : DroppableProvided ) => (
 				<List
 					overflowY="auto"
 					minHeight="20vh"
+					maxH="80vh"
 					{...droppable_provided.droppableProps}
 					width="90%"
 					ref={droppable_provided.innerRef}

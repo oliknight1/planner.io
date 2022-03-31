@@ -63,7 +63,7 @@ export class TaskController extends BaseController {
 
 		const task = await Task.findById( id );
 		if ( !task ) {
-			response.status( 404 ).json( { error: 'Tasl not found' } );
+			response.status( 404 ).json( { error: 'Task not found' } );
 			return;
 		}
 

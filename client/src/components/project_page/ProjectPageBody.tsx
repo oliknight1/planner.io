@@ -1,58 +1,29 @@
 import {
 	Grid, GridItem,
 } from '@chakra-ui/react';
-import React, { FC, useEffect, useState } from 'react';
+import React, {
+	FC, useEffect, useState,
+} from 'react';
 import {
 	DragDropContext, DraggableLocation, DropResult,
 } from 'react-beautiful-dnd';
-import { Task } from '../../utils/types';
+import { useUser } from '../../contexts/auth_context';
+import { TaskController } from '../../controllers/TaskController';
+import { ColumnName } from '../../utils/enums';
+import { Task, TaskColumnI } from '../../utils/types';
 import TaskColumn from './TaskColumn';
 
 interface ProjectPageBodyProps {
 	tasks:Task[]
 }
 
-interface TaskColumnI {
-		id: number
-		title: string,
-		tasks : Task[]
-}
-
-const reorder_tasks = (
-	task_list : Task[],
-	start_index : number,
-	end_index : number,
-) : Task[] => {
-	const result = Array.from( task_list );
-	const [ reordered_item ] = result.splice( start_index, 1 );
-	result.splice( end_index, 0, reordered_item );
-	return result;
-};
-
-const move_to_list = (
-	source : Task[],
-	destination : Task[],
-	droppable_source : DraggableLocation,
-	droppable_destination : DraggableLocation,
-) => {
-	const source_clone = Array.from( source );
-	const destination_clone = Array.from( destination );
-	const [ reordered_item ] = source_clone.splice( droppable_source.index, 1 );
-
-	destination_clone.splice( droppable_destination.index, 0, reordered_item );
-
-	const result = {
-		[+droppable_source.droppableId]: source_clone,
-		[+droppable_destination.droppableId]: destination_clone,
-	};
-	return result;
-};
-
 const ProjectPageBody : FC<ProjectPageBodyProps> = ( { tasks } ) => {
 	const filter_tasks = ( column : string ) : Task[] => (
 		tasks.filter( ( task: Task ) => task.column === column )
 	);
 	const [ grouped_tasks, set_grouped_tasks ] = useState<TaskColumnI[]>( [] );
+
+	const { user } = useUser();
 
 	useEffect( () => {
 		set_grouped_tasks(
@@ -75,6 +46,57 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { tasks } ) => {
 			],
 		);
 	}, [] );
+
+	const reorder_tasks = (
+		task_list : Task[],
+		start_index : number,
+		end_index : number,
+	) : Task[] => {
+		const result = Array.from( task_list );
+		const [ reordered_item ] = result.splice( start_index, 1 );
+		result.splice( end_index, 0, reordered_item );
+		return result;
+	};
+
+	const move_to_list = (
+		source : Task[],
+		destination : Task[],
+		droppable_source : DraggableLocation,
+		droppable_destination : DraggableLocation,
+	) => {
+		const source_clone = Array.from( source );
+		const destination_clone = Array.from( destination );
+		const [ reordered_item ] = source_clone.splice( droppable_source.index, 1 );
+
+		const droppable_id : number = +droppable_destination.droppableId;
+
+		const post_data = {
+			column: '',
+		};
+
+		switch ( droppable_id ) {
+		case ColumnName.Backlog:
+			post_data.column = 'backlog';
+			break;
+		case ColumnName.In_Progress:
+			post_data.column = 'in_progress';
+			break;
+		case ColumnName.Completed:
+			post_data.column = 'completed';
+			break;
+		default:
+			throw new Error( 'Invalid droppable id' );
+		}
+		TaskController.update_task( user.token, reordered_item.id, post_data );
+
+		destination_clone.splice( droppable_destination.index, 0, reordered_item );
+
+		const result = {
+			[+droppable_source.droppableId]: source_clone,
+			[+droppable_destination.droppableId]: destination_clone,
+		};
+		return result;
+	};
 
 	const handle_drag_end = ( result : DropResult ) => {
 		const { source, destination } = result;
