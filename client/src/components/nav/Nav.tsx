@@ -2,7 +2,7 @@ import {
 	Box, Center, Container,
 	Divider, Flex, IconButton, List, ListIcon, As, SlideFade, useColorMode, Switch, FormControl,
 } from '@chakra-ui/react';
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { CloseIcon, MoonIcon, SunIcon } from '@chakra-ui/icons';
 import Logo from '../Logo';
 import { is_mobile_breakpoint } from '../../utils/helpers';
@@ -10,9 +10,10 @@ import { AllProjectsIcon, HomeIcon } from '../../utils/icons';
 import { NavLink } from '../../utils/types';
 import NavItem from './NavItem';
 import NavProjectList from './NavProjectList';
+import { useNav } from '../../contexts/nav_context';
 
 const Nav : FC = () => {
-	const [ open, set_open ] = useState<boolean>( true );
+	const { open, toggle_state } = useNav();
 	const { colorMode, toggleColorMode } = useColorMode();
 
 	const links : NavLink[] = [
@@ -51,7 +52,7 @@ const Nav : FC = () => {
 								variant="ghost"
 								color="yellow.200"
 								icon={<CloseIcon w={5} h={5} />}
-								onClick={() => set_open( false )}
+								onClick={toggle_state}
 							/>
 						)}
 					</Flex>
