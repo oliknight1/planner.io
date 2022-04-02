@@ -30,10 +30,9 @@ const TaskColumn : FC<TaskColumnProps> = ( { column_header, tasks, droppable_id 
 			{ ( droppable_provided : DroppableProvided ) => (
 				<List
 					overflowY="auto"
-					minHeight="20vh"
-					maxH="80vh"
 					{...droppable_provided.droppableProps}
 					width="90%"
+					maxH="80vh"
 					ref={droppable_provided.innerRef}
 				>
 					{ tasks.map( ( task: Task, index : number ) => (
