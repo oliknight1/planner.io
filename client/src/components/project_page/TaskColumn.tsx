@@ -34,6 +34,7 @@ const TaskColumn : FC<TaskColumnProps> = ( { column_header, tasks, droppable_id 
 					{...droppable_provided.droppableProps}
 					width="90%"
 					maxH="80vh"
+					minH="5vh"
 					ref={droppable_provided.innerRef}
 				>
 					{ tasks.map( ( task: Task, index : number ) => (
