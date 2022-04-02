@@ -36,7 +36,7 @@ const TaskColumn : FC<TaskColumnProps> = ( { column_header, tasks, droppable_id 
 					width="90%"
 					ref={droppable_provided.innerRef}
 				>
-					{ tasks.map( ( task: Task, index ) => (
+					{ tasks.map( ( task: Task, index : number ) => (
 						<Draggable draggableId={task.id} index={index} key={task.id}>
 							{ ( draggable_provided : DraggableProvided ) => (
 								<ListItem

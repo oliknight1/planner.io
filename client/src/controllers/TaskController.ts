@@ -6,7 +6,6 @@ export class TaskController {
 			Authorization: `Bearer ${token}`,
 		};
 		try {
-			console.log( data, task_id );
 			const response = await axios.patch( `/api/tasks/id/${task_id}`, data, { headers } );
 			return response.data;
 		} catch ( error : unknown ) {

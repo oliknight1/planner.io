@@ -38,7 +38,7 @@ const ProjectPage : FC = () => {
 					<ProjectTopContent view={view} set_view={set_view} title={data.title} />
 				</Box>
 				<Box>
-					<ProjectPageBody tasks={data.tasks} />
+					<ProjectPageBody project_id={data.id} columns={data.columns} />
 				</Box>
 			</Container>
 		);

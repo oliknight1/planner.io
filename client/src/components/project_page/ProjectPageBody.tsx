@@ -8,44 +8,20 @@ import {
 	DragDropContext, DraggableLocation, DropResult,
 } from 'react-beautiful-dnd';
 import { useUser } from '../../contexts/auth_context';
+import { ProjectController } from '../../controllers/ProjectController';
 import { TaskController } from '../../controllers/TaskController';
 import { ColumnName } from '../../utils/enums';
 import { Task, TaskColumnI } from '../../utils/types';
 import TaskColumn from './TaskColumn';
 
 interface ProjectPageBodyProps {
-	tasks:Task[]
+	project_id : string,
+	columns: TaskColumnI[]
 }
 
-const ProjectPageBody : FC<ProjectPageBodyProps> = ( { tasks } ) => {
-	const filter_tasks = ( column : string ) : Task[] => (
-		tasks.filter( ( task: Task ) => task.column === column )
-	);
-	const [ grouped_tasks, set_grouped_tasks ] = useState<TaskColumnI[]>( [] );
-
+const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns } ) => {
+	const [ task_columns, set_task_columns ] = useState<TaskColumnI[]>( columns );
 	const { user } = useUser();
-
-	useEffect( () => {
-		set_grouped_tasks(
-			[
-				{
-					id: 0,
-					title: 'Backlog',
-					tasks: filter_tasks( 'backlog' ),
-				},
-				{
-					id: 1,
-					title: 'In Progress',
-					tasks: filter_tasks( 'in_progress' ),
-				},
-				{
-					id: 2,
-					title: 'Completed',
-					tasks: filter_tasks( 'completed' ),
-				},
-			],
-		);
-	}, [] );
 
 	const reorder_tasks = (
 		task_list : Task[],
@@ -71,18 +47,20 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { tasks } ) => {
 		const droppable_id : number = +droppable_destination.droppableId;
 
 		const post_data = {
-			column: '',
+			column: {
+				name: '',
+			},
 		};
 
 		switch ( droppable_id ) {
 		case ColumnName.Backlog:
-			post_data.column = 'backlog';
+			post_data.column.name = 'backlog';
 			break;
 		case ColumnName.In_Progress:
-			post_data.column = 'in_progress';
+			post_data.column.name = 'in_progress';
 			break;
 		case ColumnName.Completed:
-			post_data.column = 'completed';
+			post_data.column.name = 'completed';
 			break;
 		default:
 			throw new Error( 'Invalid droppable id' );
@@ -108,40 +86,44 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { tasks } ) => {
 		const source_id = +source.droppableId;
 		const destination_id = +destination.droppableId;
 
+		const columns_clone = [ ...columns ];
+
 		// If task stayed in the same column
 		if ( source_id === destination_id ) {
 			const items = reorder_tasks(
-				grouped_tasks[source_id].tasks,
+				columns[source_id].tasks,
 				source.index,
 				destination.index,
 			);
-			const new_state = [ ...grouped_tasks ];
-			new_state[source_id].tasks = items;
-			set_grouped_tasks( new_state );
+			columns_clone[source_id].tasks = items;
 		} else {
 		// If task moved to a different column
 			const move_result = move_to_list(
-				grouped_tasks[source_id].tasks,
-				grouped_tasks[destination_id].tasks,
+				columns[source_id].tasks,
+				columns[destination_id].tasks,
 				source,
 				destination,
 			);
-			const state_clone = [ ...grouped_tasks ];
-			state_clone[source_id].tasks = move_result[source_id];
-			state_clone[destination_id].tasks = move_result[destination_id];
-			set_grouped_tasks( state_clone );
+			columns_clone[source_id].tasks = move_result[source_id];
+			columns_clone[destination_id].tasks = move_result[destination_id];
 		}
+		const request = columns_clone.map( ( column ) => ( {
+			title: column.title,
+			tasks: column.tasks.map( ( task ) => task.id ),
+		} ) );
+		set_task_columns( columns_clone );
+		ProjectController.update( user.token, request, project_id );
 	};
 	return (
 		<Grid templateColumns="repeat( 3, 1fr )" gap={40} mt={6}>
 			<DragDropContext onDragEnd={handle_drag_end}>
 				{
-					grouped_tasks.map( ( column : TaskColumnI ) => (
+					task_columns.map( ( column : TaskColumnI, index : number ) => (
 						<GridItem key={column.id}>
 							<TaskColumn
 								column_header={column.title}
 								tasks={column.tasks}
-								droppable_id={`${column.id}`}
+								droppable_id={`${index}`}
 							/>
 						</GridItem>
 					) )

@@ -8,12 +8,11 @@ export class BaseController {
 		request : Request,
 		response : Response,
 		model: mongoose.Model<T, {}, {}, {}>,
-		populate_tag?: string,
-		populate_config?: T2,
+		populate_query?: T2,
 	) => {
-		const docs = populate_tag
-			? await model.find().populate( populate_tag, populate_config || null )
-			: await model.find();
+		const docs = populate_query
+			? await model.find().populate( populate_query )
+			: model.find();
 		if ( docs ) {
 			response.status( 200 ).json( docs );
 		} else {

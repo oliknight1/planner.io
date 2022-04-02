@@ -22,4 +22,22 @@ export class ProjectController {
 		};
 		return axios.post( '/api/projects', post_data, { headers } );
 	};
+
+	public static update = async <T> ( token : string, data : T, project_id : string ) => {
+		const headers = {
+			Authorization: `Bearer ${token}`,
+		};
+		try {
+			const response = await axios.patch( `/api/projects/id/${project_id}`, data, { headers } );
+			return response.data;
+		} catch ( error : unknown ) {
+			if ( axios.isAxiosError( error ) ) {
+				return error.response?.data.error;
+			}
+			if ( error instanceof Error ) {
+				return error.message;
+			}
+			throw new Error( 'Error logging in' );
+		}
+	};
 }

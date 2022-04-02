@@ -14,7 +14,11 @@ export interface ProjectSchema {
 	id?: mongoose.Types.ObjectId,
 	title: string,
 	users: Types.ObjectId[],
-	tasks: Types.ObjectId[]
+	tasks: Types.ObjectId[],
+	columns: {
+		name: string,
+		tasks: Types.ObjectId[]
+	}[]
 }
 
 export interface TaskSchema {
@@ -24,7 +28,12 @@ export interface TaskSchema {
 	users: Types.ObjectId[],
 	project: Types.ObjectId,
 	tags: string[],
-	column: string,
+	column: Types.ObjectId,
 	due_date: Date,
 	dependant_tasks: Types.ObjectId[]
+}
+export interface ColumnSchema {
+	id: mongoose.Types.ObjectId,
+	title: string,
+	tasks: TaskSchema[]
 }

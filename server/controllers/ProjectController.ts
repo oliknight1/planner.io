@@ -17,10 +17,13 @@ export class ProjectController extends BaseController {
 		}
 		const query = [
 			{
-				path: 'tasks',
+				path: 'columns',
 				populate: {
-					path: 'users',
-					select: [ 'display_name' ],
+					path: 'tasks',
+					populate: {
+						path: 'users',
+						select: 'display_name',
+					},
 				},
 			},
 			{
@@ -39,7 +42,13 @@ export class ProjectController extends BaseController {
 	};
 
 	public static get_all_projects = async ( request : Request, response : Response ) => {
-		this.get_all( request, response, Project, 'users', { display_name: 1 } );
+		const query = [
+			{
+				path: 'users',
+				select: [ 'display_name' ],
+			},
+		];
+		this.get_all( request, response, Project, query );
 	};
 
 	public static create = async (
@@ -82,13 +91,8 @@ export class ProjectController extends BaseController {
 		response: Response,
 	) => {
 		const { id } = request.params;
-		const { title } = request.body;
 		if ( !isValidObjectId( id ) ) {
 			response.status( 400 ).json( { error: 'Invalid ID supplied' } );
-			return;
-		}
-		if ( title.length === 0 ) {
-			response.status( 400 ).json( { error: 'No data provided' } );
 			return;
 		}
 
@@ -103,8 +107,8 @@ export class ProjectController extends BaseController {
 			response.status( 404 ).json( { error: 'Project not found' } );
 			return;
 		}
-		project.title = title;
 
+		project.columns = request.body;
 		try {
 			await project.save();
 			response.status( 200 ).json( project );

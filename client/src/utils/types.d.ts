@@ -26,15 +26,17 @@ export interface Task {
 	dependant_tasks: Task[]
 
 }
-export interface Project {
-	id: string,
-	title: string,
-	tasks: Task[],
-	users: User[]
-}
 
 export interface TaskColumnI {
 		id: number
 		title: string,
 		tasks : Task[],
+}
+
+export interface Project {
+	id: string,
+	title: string,
+	tasks: Task[],
+	users: User[],
+	columns: TaskColumnI[]
 }
