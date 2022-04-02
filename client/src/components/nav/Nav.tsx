@@ -30,25 +30,30 @@ const Nav : FC = () => {
 	return (
 		<SlideFade in={open} offsetX="-200px" offsetY={0} unmountOnExit>
 			<Box
-				pos="relative"
+				pos={is_mobile_breakpoint() ? 'fixed' : 'relative'}
 				maxH="100vh"
 				h="100vh"
-				w={is_mobile_breakpoint() ? '100%' : 'sm'}
+				w={is_mobile_breakpoint() ? '100vw' : 'sm'}
 				background={colorMode === 'dark' ? 'black.900' : 'brand.dark_blue'}
 				color="white"
+				zIndex={2}
+				overflowY="hidden"
 			>
 				<Container pt={3}>
 					<Flex w="100%" alignItems="center" justifyContent="space-around">
 						<Box w={is_mobile_breakpoint() ? '50%' : '60%'}>
 							<Logo />
 						</Box>
-						<IconButton
-							aria-label="Close navigaton"
-							variant="ghost"
-							color="yellow.200"
-							icon={<CloseIcon w={5} h={5} />}
-							onClick={() => set_open( false )}
-						/>
+						{ is_mobile_breakpoint()
+						&& (
+							<IconButton
+								aria-label="Close navigaton"
+								variant="ghost"
+								color="yellow.200"
+								icon={<CloseIcon w={5} h={5} />}
+								onClick={() => set_open( false )}
+							/>
+						)}
 					</Flex>
 					<Center py={10}>
 						<Divider orientation="horizontal" borderColor="white" />
@@ -68,7 +73,7 @@ const Nav : FC = () => {
 					<Center py={10}>
 						<Divider orientation="horizontal" borderColor="white" />
 					</Center>
-					<Box overflowY="auto" overflowX="hidden" h="50vh">
+					<Box overflowY="auto" overflowX="hidden" h={is_mobile_breakpoint() ? '30vh' : '50vh'}>
 						<NavProjectList />
 					</Box>
 				</Container>

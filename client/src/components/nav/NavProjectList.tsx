@@ -59,7 +59,19 @@ const NavProjectList : FC = () => {
 				</Flex>
 			</Button>
 			<SlideFade in={open} offsetX={0} offsetY="-20px" reverse unmountOnExit>
-				<List pl={2}>
+				<List pl={2} spacing={6}>
+					{ render_list() }
+					{ render_list() }
+					{ render_list() }
+					{ render_list() }
+					{ render_list() }
+					{ render_list() }
+					{ render_list() }
+					{ render_list() }
+					{ render_list() }
+					{ render_list() }
+					{ render_list() }
+					{ render_list() }
 					{ render_list() }
 					<Button
 						w="100%"
