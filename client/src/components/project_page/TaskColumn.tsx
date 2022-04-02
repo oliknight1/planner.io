@@ -7,6 +7,7 @@ import {
 } from 'react-beautiful-dnd';
 import { Task } from '../../utils/types';
 import TaskCard from './TaskCard';
+import { is_mobile_breakpoint } from '../../utils/helpers';
 
 interface TaskColumnProps {
 	column_header: string,
@@ -15,7 +16,7 @@ interface TaskColumnProps {
 }
 
 const TaskColumn : FC<TaskColumnProps> = ( { column_header, tasks, droppable_id } ) => (
-	<VStack bg="#121212" borderRadius="xl">
+	<VStack bg="#121212" borderRadius="xl" w={is_mobile_breakpoint( ) ? 'xs' : '2xs'}>
 		<Box
 			bg="#181818"
 			textAlign="center"
@@ -26,7 +27,7 @@ const TaskColumn : FC<TaskColumnProps> = ( { column_header, tasks, droppable_id 
 		>
 			{ column_header }
 		</Box>
-		<Box as={Droppable} droppableId={droppable_id} id="test" h="100%">
+		<Box as={Droppable} droppableId={droppable_id} h="100%">
 			{ ( droppable_provided : DroppableProvided ) => (
 				<List
 					overflowY="auto"

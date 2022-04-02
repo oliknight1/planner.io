@@ -1,5 +1,5 @@
 import {
-	Box, Container,
+	Box, Flex,
 } from '@chakra-ui/react';
 import React, { FC, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
@@ -33,14 +33,12 @@ const ProjectPage : FC = () => {
 	}
 	if ( data ) {
 		return (
-			<Container maxW="100%" pos="relative">
-				<Box>
-					<ProjectTopContent view={view} set_view={set_view} title={data.title} />
-				</Box>
+			<Flex flexDirection="column" pos="relative" w="100%">
+				<ProjectTopContent view={view} set_view={set_view} title={data.title} />
 				<Box>
 					<ProjectPageBody project_id={data.id} columns={data.columns} />
 				</Box>
-			</Container>
+			</Flex>
 		);
 	}
 	return null;

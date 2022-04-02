@@ -1,4 +1,5 @@
 import {
+	Container,
 	Grid, GridItem,
 } from '@chakra-ui/react';
 import React, {
@@ -11,6 +12,7 @@ import { useUser } from '../../contexts/auth_context';
 import { ProjectController } from '../../controllers/ProjectController';
 import { TaskController } from '../../controllers/TaskController';
 import { ColumnName } from '../../utils/enums';
+import { is_mobile_breakpoint } from '../../utils/helpers';
 import { Task, TaskColumnI } from '../../utils/types';
 import TaskColumn from './TaskColumn';
 
@@ -115,7 +117,7 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns } ) =
 		ProjectController.update( user.token, request, project_id );
 	};
 	return (
-		<Grid templateColumns="repeat( 3, 1fr )" gap={40} mt={6}>
+		<Grid templateColumns="repeat( 3, 1fr )" gap={40} mt={6} pl={12} h={is_mobile_breakpoint() ? '100vh' : undefined} maxW="100%" overflowX="auto">
 			<DragDropContext onDragEnd={handle_drag_end}>
 				{
 					task_columns.map( ( column : TaskColumnI, index : number ) => (

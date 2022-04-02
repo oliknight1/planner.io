@@ -1,6 +1,9 @@
-import { Flex, Heading, Divider } from '@chakra-ui/react';
+import {
+	Flex, Heading, Divider,
+} from '@chakra-ui/react';
 import React, { FC } from 'react';
 import { ViewType } from '../../utils/enums';
+import { is_mobile_breakpoint } from '../../utils/helpers';
 import ViewSwitcher from '../ViewSwitcher';
 
 interface ProjectTopContentProps {
@@ -10,11 +13,11 @@ interface ProjectTopContentProps {
 }
 const ProjectTopContent : FC<ProjectTopContentProps> = ( { title, set_view, view } ) => (
 	<>
-		<Flex py={6} justifyContent="space-between">
-			<Heading>{title}</Heading>
+		<Flex px={6} py={6} justifyContent="space-between" bg={is_mobile_breakpoint() ? 'black.900' : undefined} maxW="100%">
+			<Heading fontWeight="normal" size="lg">{title}</Heading>
 			<ViewSwitcher view={view} set_view={set_view} />
 		</Flex>
-		<Divider pos="absolute" left={0} width="100%" orientation="horizontal" />
+		<Divider borderColor="white" left={0} width="100%" orientation="horizontal" />
 	</>
 );
 
