@@ -16,7 +16,11 @@ interface TaskColumnProps {
 }
 
 const TaskColumn : FC<TaskColumnProps> = ( { column_header, tasks, droppable_id } ) => (
-	<VStack bg="#121212" borderRadius="xl" w={is_mobile_breakpoint( ) ? 'xs' : '2xs'}>
+	<VStack
+		bg="#121212"
+		borderRadius="xl"
+		w={is_mobile_breakpoint( ) ? 'xs' : '2xs'}
+	>
 		<Box
 			bg="#181818"
 			textAlign="center"

@@ -1,5 +1,4 @@
 import {
-	Container,
 	Grid, GridItem,
 } from '@chakra-ui/react';
 import React, {
@@ -9,6 +8,7 @@ import {
 	DragDropContext, DraggableLocation, DropResult,
 } from 'react-beautiful-dnd';
 import { useUser } from '../../contexts/auth_context';
+import { useNav } from '../../contexts/nav_context';
 import { ProjectController } from '../../controllers/ProjectController';
 import { TaskController } from '../../controllers/TaskController';
 import { ColumnName } from '../../utils/enums';
@@ -24,6 +24,7 @@ interface ProjectPageBodyProps {
 const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns } ) => {
 	const [ task_columns, set_task_columns ] = useState<TaskColumnI[]>( columns );
 	const { user } = useUser();
+	const { open } = useNav();
 
 	const reorder_tasks = (
 		task_list : Task[],
@@ -56,13 +57,13 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns } ) =
 
 		switch ( droppable_id ) {
 		case ColumnName.Backlog:
-			post_data.column.name = 'backlog';
+			post_data.column.name = 'Backlog';
 			break;
 		case ColumnName.In_Progress:
-			post_data.column.name = 'in_progress';
+			post_data.column.name = 'In Progress';
 			break;
 		case ColumnName.Completed:
-			post_data.column.name = 'completed';
+			post_data.column.name = 'Completed';
 			break;
 		default:
 			throw new Error( 'Invalid droppable id' );
@@ -116,12 +117,16 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns } ) =
 		set_task_columns( columns_clone );
 		ProjectController.update( user.token, request, project_id );
 	};
+	let show_column = false;
+	useEffect( () => {
+		show_column = open && is_mobile_breakpoint;
+	}, [ is_mobile_breakpoint ] );
 	return (
 		<Grid templateColumns="repeat( 3, 1fr )" gap={40} mt={6} pl={12} h={is_mobile_breakpoint() ? '100vh' : undefined} maxW="100%" overflowX="auto">
 			<DragDropContext onDragEnd={handle_drag_end}>
 				{
 					task_columns.map( ( column : TaskColumnI, index : number ) => (
-						<GridItem key={column.id}>
+						<GridItem key={column.id} zIndex={show_column ? 0 : -1}>
 							<TaskColumn
 								column_header={column.title}
 								tasks={column.tasks}

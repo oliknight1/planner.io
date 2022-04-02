@@ -1,5 +1,5 @@
 import {
-	List, VStack, Heading, AvatarGroup, Avatar,
+	VStack, Heading, AvatarGroup, Avatar,
 } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import { User } from '../../utils/types';
@@ -9,7 +9,7 @@ interface TaskCardProps {
 	users: User[],
 }
 const TaskCard : FC<TaskCardProps> = ( { title, users } ) => (
-	<VStack bg="#181818" borderRadius="md" p={4} alignItems="start" spacing={4}>
+	<VStack bg="#181818" borderRadius="md" p={4} alignItems="start" spacing={4} zIndex={-1}>
 		<Heading size="md" fontWeight="medium">{title}</Heading>
 		<AvatarGroup>
 			{

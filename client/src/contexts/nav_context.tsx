@@ -1,5 +1,5 @@
 import React, {
-	createContext, FC, useContext, useMemo, useState,
+	createContext, FC, useContext, useEffect, useMemo, useState,
 } from 'react';
 import { is_mobile_breakpoint } from '../utils/helpers';
 
