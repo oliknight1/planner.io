@@ -8,7 +8,12 @@ const NavContext = createContext<any>( null );
 export const useNav = () => useContext( NavContext );
 
 export const NavProvider : FC = ( { children } ) => {
-	const [ open, set_open ] = useState<boolean>( !is_mobile_breakpoint() );
+	const [ open, set_open ] = useState<boolean>( false );
+
+	const is_mobile = is_mobile_breakpoint();
+	useEffect( () => {
+		set_open( !is_mobile );
+	}, [ is_mobile ] );
 
 	const toggle_state = () => set_open( !open );
 
