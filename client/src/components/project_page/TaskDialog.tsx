@@ -15,8 +15,8 @@ interface TaskDialogProps {
 }
 
 const TaskDialog : FC<TaskDialogProps> = ( { is_open, on_close, users } ) => {
-	const [ tilte, set_title ] = useState<string>();
-	const [ body_text, set_body_text ] = useState<string>();
+	const [ tilte, set_title ] = useState<string>( '' );
+	const [ body_text, set_body_text ] = useState<string>( '' );
 	const [ assinged_users, set_assigned_users ] = useState<User[]>( [] );
 
 	const { colorMode } = useColorMode();
@@ -37,7 +37,7 @@ const TaskDialog : FC<TaskDialogProps> = ( { is_open, on_close, users } ) => {
 				<form>
 					<ModalCloseButton />
 					<ModalHeader>
-						<Input placeholder="New Task" variant="unstyled" value={tilte} onChange={( e ) => set_title( e.target.value )} />
+						<Input placeholder="New Task" variant="unstyled" value={tilte} size="lg" onChange={( e ) => set_title( e.target.value )} />
 					</ModalHeader>
 					<ModalBody>
 						<FormControl>
