@@ -1,30 +1,33 @@
+import { AddIcon } from '@chakra-ui/icons';
 import {
-	Grid, GridItem,
+	Button,
+	Grid, GridItem, useDisclosure,
 } from '@chakra-ui/react';
 import React, {
-	FC, useEffect, useState,
+	FC, useState,
 } from 'react';
 import {
 	DragDropContext, DraggableLocation, DropResult,
 } from 'react-beautiful-dnd';
 import { useUser } from '../../contexts/auth_context';
-import { useNav } from '../../contexts/nav_context';
 import { ProjectController } from '../../controllers/ProjectController';
 import { TaskController } from '../../controllers/TaskController';
 import { ColumnName } from '../../utils/enums';
 import { is_mobile_breakpoint } from '../../utils/helpers';
-import { Task, TaskColumnI } from '../../utils/types';
+import { Task, TaskColumnI, User } from '../../utils/types';
 import TaskColumn from './TaskColumn';
+import TaskDialog from './TaskDialog';
 
 interface ProjectPageBodyProps {
 	project_id : string,
-	columns: TaskColumnI[]
+	columns: TaskColumnI[],
+	users: User[]
 }
 
-const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns } ) => {
+const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns, users } ) => {
 	const [ task_columns, set_task_columns ] = useState<TaskColumnI[]>( columns );
 	const { user } = useUser();
-	const { open } = useNav();
+	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const reorder_tasks = (
 		task_list : Task[],
@@ -117,16 +120,12 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns } ) =
 		set_task_columns( columns_clone );
 		ProjectController.update( user.token, request, project_id );
 	};
-	let show_column = false;
-	useEffect( () => {
-		show_column = open && is_mobile_breakpoint;
-	}, [ is_mobile_breakpoint ] );
 	return (
 		<Grid templateColumns="repeat( 3, 1fr )" gap={40} mt={6} pl={12} h={is_mobile_breakpoint() ? '100vh' : undefined} maxW="100%" overflowX="auto">
 			<DragDropContext onDragEnd={handle_drag_end}>
 				{
 					task_columns.map( ( column : TaskColumnI, index : number ) => (
-						<GridItem key={column.id} zIndex={show_column ? 0 : -1}>
+						<GridItem key={column.id}>
 							<TaskColumn
 								column_header={column.title}
 								tasks={column.tasks}
@@ -135,6 +134,16 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns } ) =
 						</GridItem>
 					) )
 				}
+				<Button
+					pos="absolute"
+					right={12}
+					bottom={8}
+					rightIcon={<AddIcon />}
+					onClick={onOpen}
+				>
+					New Task
+				</Button>
+				<TaskDialog is_open={isOpen} on_close={onClose} users={users} />
 			</DragDropContext>
 		</Grid>
 

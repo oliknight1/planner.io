@@ -13,7 +13,7 @@ interface ProjectTopContentProps {
 	view: ViewType
 }
 const ProjectTopContent : FC<ProjectTopContentProps> = ( { title, set_view, view } ) => {
-	const { toggle_state } = useNav();
+	const { open, toggle_state } = useNav();
 	return (
 		<>
 			<Box px={6} py={6} textAlign="center" pos="relative" bg={is_mobile_breakpoint() ? 'black.900' : undefined} maxW="100%">
