@@ -3,7 +3,7 @@ import {
 	ModalHeader, Modal, ModalCloseButton, ModalContent,
 	ModalOverlay, useColorMode, ModalBody, Input, Textarea,
 	FormControl, FormLabel, Menu, MenuButton, Button, MenuList,
-	MenuItemOption, Avatar, AvatarGroup, MenuOptionGroup,
+	MenuItemOption, Avatar, AvatarGroup, MenuOptionGroup, ModalFooter,
 } from '@chakra-ui/react';
 import React, { FC, useState } from 'react';
 import { User } from '../../utils/types';
@@ -37,12 +37,12 @@ const TaskDialog : FC<TaskDialogProps> = ( { is_open, on_close, users } ) => {
 				<form>
 					<ModalCloseButton />
 					<ModalHeader>
-						<Input placeholder="New Task" variant="unstyled" value={tilte} size="lg" onChange={( e ) => set_title( e.target.value )} />
+						<Input placeholder="New Task" variant="flushed" value={tilte} size="lg" onChange={( e ) => set_title( e.target.value )} />
 					</ModalHeader>
 					<ModalBody>
 						<FormControl>
 							<Menu>
-								<MenuButton as={Button} variant="ghost" rightIcon={<ChevronDownIcon />}>
+								<MenuButton as={Button} variant="unstyled" size="lg" rightIcon={<ChevronDownIcon />}>
 									Members
 								</MenuButton>
 								<MenuList>
@@ -60,7 +60,7 @@ const TaskDialog : FC<TaskDialogProps> = ( { is_open, on_close, users } ) => {
 									</MenuOptionGroup>
 								</MenuList>
 							</Menu>
-							<AvatarGroup>
+							<AvatarGroup mb={8}>
 								{ assinged_users.map( ( user : User ) => <Avatar name={user.display_name} size="md" key={user.id} /> ) }
 							</AvatarGroup>
 						</FormControl>
@@ -69,6 +69,9 @@ const TaskDialog : FC<TaskDialogProps> = ( { is_open, on_close, users } ) => {
 							<Textarea value={body_text} id="body_text" resize="none" onChange={( e ) => set_body_text( e.target.value )} />
 						</FormControl>
 					</ModalBody>
+					<ModalFooter>
+						<Button>Submit</Button>
+					</ModalFooter>
 				</form>
 			</ModalContent>
 		</Modal>
