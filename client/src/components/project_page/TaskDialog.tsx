@@ -66,7 +66,7 @@ const TaskDialog : FC<TaskDialogProps> = ( { is_open, on_close, users } ) => {
 						</FormControl>
 						<FormControl>
 							<FormLabel htmlFor="body_text">Description</FormLabel>
-							<Textarea value={body_text} id="body_text" resize="none" onChange={( e ) => set_body_text( e.target.value )} />
+							<Textarea value={body_text} placeholder="Task description" id="body_text" resize="none" onChange={( e ) => set_body_text( e.target.value )} />
 						</FormControl>
 					</ModalBody>
 					<ModalFooter>
