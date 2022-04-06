@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { isValidObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 import { Project } from '../models/project';
 import { ProjectSchema } from '../utils/types';
 import { BaseController } from './BaseController';
@@ -11,7 +11,7 @@ export class ProjectController extends BaseController {
 	) => {
 		const { id } = request.params;
 
-		if ( !isValidObjectId( id ) ) {
+		if ( !mongoose.isValidObjectId( id ) ) {
 			response.status( 400 ).json( { error: 'Invalid ID supplied' } );
 			return;
 		}
@@ -86,12 +86,49 @@ export class ProjectController extends BaseController {
 		}
 	};
 
+	public static add_task = async (
+		request : Request<{ id: string }>,
+		response: Response,
+	) => {
+		const { id } = request.params;
+		const { task_id } = request.body[0];
+		if ( !mongoose.isValidObjectId( id ) ) {
+			response.status( 400 ).json( { error: 'Invalid ID supplied' } );
+			return;
+		}
+
+		const token = this.verify_token( request, response );
+		if ( !token ) {
+			response.status( 401 ).json( { error: 'Auth token missing or invalid' } );
+			return;
+		}
+
+		const project = await Project.findById( id );
+		if ( !project ) {
+			response.status( 404 ).json( { error: 'Project not found' } );
+			return;
+		}
+		const backlog_tasks = [
+			...project.columns[0].tasks, new mongoose.Types.ObjectId( task_id ) ];
+
+		project.columns[0].tasks = backlog_tasks;
+		try {
+			await project.save();
+			response.status( 200 ).json( project );
+		} catch ( error: unknown ) {
+			if ( error instanceof Error ) {
+				const { message } = error;
+				response.status( 400 ).json( { error: message } );
+			}
+		}
+	};
+
 	public static update = async (
 		request: Request<{ id: string }>,
 		response: Response,
 	) => {
 		const { id } = request.params;
-		if ( !isValidObjectId( id ) ) {
+		if ( !mongoose.isValidObjectId( id ) ) {
 			response.status( 400 ).json( { error: 'Invalid ID supplied' } );
 			return;
 		}
@@ -109,6 +146,7 @@ export class ProjectController extends BaseController {
 		}
 
 		project.columns = request.body;
+
 		try {
 			await project.save();
 			response.status( 200 ).json( project );

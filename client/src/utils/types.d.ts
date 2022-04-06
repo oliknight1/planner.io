@@ -15,15 +15,15 @@ export interface NavLink {
 }
 
 export interface Task {
-	id: string,
+	id?: string,
 	title: string,
 	body_text: string,
-	users: User[],
+	users: string[] | User[],
 	project: string,
 	tags: string[],
 	column: string,
-	due_date: Date,
-	dependant_tasks: Task[]
+	due_date?: Date,
+	dependant_tasks?: Task[]
 
 }
 

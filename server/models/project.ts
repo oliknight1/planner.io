@@ -21,7 +21,6 @@ column_schema.set( 'toJSON', {
 export const project_schema = new Schema<ProjectSchema>( {
 	title: { type: String, required: true },
 	users: [ { type: Schema.Types.ObjectId, ref: 'User' } ],
-	tasks: [ { type: Schema.Types.ObjectId, ref: 'Task' } ],
 	columns: [ column_schema ],
 } );
 

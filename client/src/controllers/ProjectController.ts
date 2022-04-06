@@ -23,6 +23,27 @@ export class ProjectController {
 		return axios.post( '/api/projects', post_data, { headers } );
 	};
 
+	public static add_task = async ( token : string, project_id : string, task_id : string ) => {
+		const headers = {
+			Authorization: `Bearer ${token}`,
+		};
+		const data = {
+			task_id,
+		};
+		try {
+			const response = await axios.patch( `/api/projects/add_task/${project_id}`, [ data ], { headers } );
+			return response.data;
+		} catch ( error : unknown ) {
+			if ( axios.isAxiosError( error ) ) {
+				return error.response?.data.error;
+			}
+			if ( error instanceof Error ) {
+				return error.message;
+			}
+			throw new Error( 'Error updating project' );
+		}
+	};
+
 	public static update = async <T> ( token : string, data : T, project_id : string ) => {
 		const headers = {
 			Authorization: `Bearer ${token}`,
@@ -37,7 +58,7 @@ export class ProjectController {
 			if ( error instanceof Error ) {
 				return error.message;
 			}
-			throw new Error( 'Error logging in' );
+			throw new Error( 'Error updating project' );
 		}
 	};
 }

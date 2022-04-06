@@ -25,7 +25,7 @@ const ProjectPage : FC = () => {
 
 	const {
 		data, isError,
-	} = useQuery<Project, Error>( 'single_project', () => ProjectController.get_by_id( params.id as string ) );
+	} = useQuery<Project, Error>( [ 'single_project', { id: params.id } ], () => ProjectController.get_by_id( params.id as string ) );
 
 	if ( isError ) {
 		navigate( '/*' );

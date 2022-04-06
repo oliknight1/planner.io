@@ -4,7 +4,7 @@ import {
 	Grid, GridItem, useDisclosure,
 } from '@chakra-ui/react';
 import React, {
-	FC, useState,
+	FC, useEffect, useState,
 } from 'react';
 import {
 	DragDropContext, DraggableLocation, DropResult,
@@ -25,9 +25,13 @@ interface ProjectPageBodyProps {
 }
 
 const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns, users } ) => {
-	const [ task_columns, set_task_columns ] = useState<TaskColumnI[]>( columns );
+	const [ task_columns, set_task_columns ] = useState<TaskColumnI[]>( [] );
 	const { user } = useUser();
 	const { isOpen, onOpen, onClose } = useDisclosure();
+
+	useEffect( () => {
+		set_task_columns( columns );
+	}, [ columns ] );
 
 	const reorder_tasks = (
 		task_list : Task[],
@@ -53,25 +57,23 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns, user
 		const droppable_id : number = +droppable_destination.droppableId;
 
 		const post_data = {
-			column: {
-				name: '',
-			},
+			column: '',
 		};
 
 		switch ( droppable_id ) {
 		case ColumnName.Backlog:
-			post_data.column.name = 'Backlog';
+			post_data.column = 'Backlog';
 			break;
 		case ColumnName.In_Progress:
-			post_data.column.name = 'In Progress';
+			post_data.column = 'In Progress';
 			break;
 		case ColumnName.Completed:
-			post_data.column.name = 'Completed';
+			post_data.column = 'Completed';
 			break;
 		default:
 			throw new Error( 'Invalid droppable id' );
 		}
-		TaskController.update_task( user.token, reordered_item.id, post_data );
+		TaskController.update_task( user.token, reordered_item.id as string, post_data );
 
 		destination_clone.splice( droppable_destination.index, 0, reordered_item );
 
@@ -117,6 +119,7 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns, user
 			title: column.title,
 			tasks: column.tasks.map( ( task ) => task.id ),
 		} ) );
+		console.log( request );
 		set_task_columns( columns_clone );
 		ProjectController.update( user.token, request, project_id );
 	};
@@ -143,7 +146,7 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns, user
 				>
 					New Task
 				</Button>
-				<TaskDialog is_open={isOpen} on_close={onClose} users={users} />
+				<TaskDialog is_open={isOpen} on_close={onClose} users={users} project_id={project_id} />
 			</DragDropContext>
 		</Grid>
 

@@ -12,4 +12,6 @@ project_router.post( '/', ProjectController.create );
 
 project_router.patch( '/id/:id', body( 'project' ).notEmpty().withMessage( 'Must provide project data' ), ProjectController.update );
 
+project_router.patch( '/add_task/:id', ProjectController.add_task );
+
 project_router.delete( '/id/:id', ProjectController.remove_project );

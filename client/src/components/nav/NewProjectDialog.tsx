@@ -146,7 +146,7 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 						</AvatarGroup>
 					</ModalBody>
 					<ModalFooter>
-						<Button type="submit">Submit</Button>
+						<Button type="submit" variant="outline">Submit</Button>
 					</ModalFooter>
 				</form>
 			</ModalContent>

@@ -5,7 +5,7 @@ import {
 import {
 	Draggable, DraggableProvided, Droppable, DroppableProvided,
 } from 'react-beautiful-dnd';
-import { Task } from '../../utils/types';
+import { Task, User } from '../../utils/types';
 import TaskCard from './TaskCard';
 import { is_mobile_breakpoint } from '../../utils/helpers';
 
@@ -42,7 +42,7 @@ const TaskColumn : FC<TaskColumnProps> = ( { column_header, tasks, droppable_id 
 					ref={droppable_provided.innerRef}
 				>
 					{ tasks.map( ( task: Task, index : number ) => (
-						<Draggable draggableId={task.id} index={index} key={task.id}>
+						<Draggable draggableId={task.id!} index={index} key={task.id}>
 							{ ( draggable_provided : DraggableProvided ) => (
 								<ListItem
 									{...draggable_provided.draggableProps}
@@ -50,7 +50,7 @@ const TaskColumn : FC<TaskColumnProps> = ( { column_header, tasks, droppable_id 
 									ref={draggable_provided.innerRef}
 									py={4}
 								>
-									<TaskCard title={task.title} users={task.users} />
+									<TaskCard title={task.title} users={task.users as User[]} />
 								</ListItem>
 							) }
 						</Draggable>
