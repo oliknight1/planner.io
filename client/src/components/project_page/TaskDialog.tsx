@@ -103,6 +103,13 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 		return TaskController.create( authed_user.token, new_task );
 	}, {
 		onSuccess: async ( response ) => {
+			toast( {
+				title: 'New task created',
+				status: 'success',
+				isClosable: true,
+				position: 'bottom-left',
+			} );
+			on_close();
 			project_mutation.mutate( response.data );
 		},
 	} );
