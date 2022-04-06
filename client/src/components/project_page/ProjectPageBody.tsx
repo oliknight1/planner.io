@@ -132,6 +132,8 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns, user
 								column_header={column.title}
 								tasks={column.tasks}
 								droppable_id={`${index}`}
+								project_id={project_id}
+								project_users={users}
 							/>
 						</GridItem>
 					) )
@@ -146,7 +148,13 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns, user
 				>
 					New Task
 				</Button>
-				<TaskDialog is_open={isOpen} on_close={onClose} users={users} project_id={project_id} />
+				<TaskDialog
+					is_open={isOpen}
+					on_close={onClose}
+					users={users}
+					project_id={project_id}
+					task_data={null}
+				/>
 			</DragDropContext>
 		</Grid>
 

@@ -5,7 +5,9 @@ import {
 	FormControl, FormLabel, Menu, MenuButton, Button, MenuList,
 	MenuItemOption, Avatar, AvatarGroup, MenuOptionGroup, ModalFooter, useToast, HStack, Box,
 } from '@chakra-ui/react';
-import React, { FC, SyntheticEvent, useState } from 'react';
+import React, {
+	FC, SyntheticEvent, useEffect, useState,
+} from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useUser } from '../../contexts/auth_context';
 import { ProjectController } from '../../controllers/ProjectController';
@@ -16,11 +18,12 @@ interface TaskDialogProps {
 	is_open: boolean,
 	on_close: () => void,
 	users: User[],
-	project_id: string
+	project_id: string,
+	task_data: Task | null
 }
 
 const TaskDialog : FC<TaskDialogProps> = ( {
-	is_open, on_close, users, project_id,
+	is_open, on_close, users, project_id, task_data,
 } ) => {
 	const [ title, set_title ] = useState<string>( '' );
 	const [ body_text, set_body_text ] = useState<string>( '' );
@@ -33,6 +36,13 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 	const toast = useToast();
 
 	const query_client = useQueryClient();
+
+	useEffect( () => {
+		if ( !task_data ) return;
+		set_title( task_data.title );
+		set_body_text( task_data.body_text );
+		set_assigned_users( task_data.users as User[] );
+	}, [ task_data ] );
 
 	const handle_assigning_users = ( e : string[] | string ) => {
 		if ( e instanceof Array ) {
