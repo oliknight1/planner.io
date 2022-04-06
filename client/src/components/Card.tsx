@@ -1,8 +1,8 @@
-import { Box, useColorMode } from '@chakra-ui/react';
+import { Box, BoxProps, useColorMode } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import React, { FC } from 'react';
 
-const Card : FC = ( { children } ) => {
+const Card : FC<BoxProps> = ( { children, ...props } ) => {
 	const MotionCard = motion( Box );
 	const { colorMode } = useColorMode();
 	return (
@@ -15,6 +15,7 @@ const Card : FC = ( { children } ) => {
 			w="sm"
 			p={4}
 			bg={colorMode === 'dark' ? '#181818' : '#FFFFFF'}
+			{...props}
 		>
 			{children}
 		</MotionCard>
