@@ -119,7 +119,6 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns, user
 			title: column.title,
 			tasks: column.tasks.map( ( task ) => task.id ),
 		} ) );
-		console.log( request );
 		set_task_columns( columns_clone );
 		ProjectController.update( user.token, request, project_id );
 	};
