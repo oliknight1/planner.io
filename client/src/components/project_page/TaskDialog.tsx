@@ -3,7 +3,7 @@ import {
 	ModalHeader, Modal, ModalCloseButton, ModalContent,
 	ModalOverlay, useColorMode, ModalBody, Input, Textarea,
 	FormControl, FormLabel, Menu, MenuButton, Button, MenuList,
-	MenuItemOption, Avatar, AvatarGroup, MenuOptionGroup, ModalFooter, useToast,
+	MenuItemOption, Avatar, AvatarGroup, MenuOptionGroup, ModalFooter, useToast, HStack, Box,
 } from '@chakra-ui/react';
 import React, { FC, SyntheticEvent, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
@@ -131,13 +131,19 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 			<ModalContent background={colorMode === 'dark' ? 'gray.800' : 'white'}>
 				<form onSubmit={task_mutation.mutate}>
 					<ModalCloseButton />
-					<ModalHeader>
+					<ModalHeader mt={4}>
 						<Input placeholder="New Task" variant="flushed" value={title} size="lg" onChange={( e ) => set_title( e.target.value )} />
 					</ModalHeader>
 					<ModalBody>
 						<FormControl>
-							<Menu>
-								<MenuButton as={Button} variant="unstyled" size="lg" rightIcon={<ChevronDownIcon />}>
+							<Menu closeOnSelect={false}>
+								<MenuButton
+									as={Button}
+									variant="unstyled"
+									size="lg"
+									rightIcon={<ChevronDownIcon />}
+									mb={4}
+								>
 									Members
 								</MenuButton>
 								<MenuList>
@@ -146,9 +152,9 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 											<MenuItemOption
 												value={user.id}
 												key={user.id}
+												alignItems="center"
 											>
-
-												<Avatar size="sm" name={user.display_name} />
+												<Avatar size="sm" name={user.display_name} mr={2} />
 												{user.display_name}
 											</MenuItemOption>
 										) )}
