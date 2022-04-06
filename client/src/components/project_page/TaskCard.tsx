@@ -18,11 +18,11 @@ const TaskCard : FC<TaskCardProps> = ( { title, users, snapshot } ) => (
 			borderColor={snapshot.isDragging ? '#FFB600' : '#181818'}
 			transform={snapshot.isDragging ? 'scale(1.05)' : undefined}
 		>
-			<Heading size="md" fontWeight="medium">{title}</Heading>
+			<Heading size="md" fontWeight="medium" mb={6}>{title}</Heading>
 			<AvatarGroup>
 				{
 					users
-						? ( users.map( ( user : User ) => <Avatar key={user.id} name={user.display_name} /> ) )
+						? ( users.map( ( user : User ) => <Avatar borderColor="transparent" key={user.id} name={user.display_name} /> ) )
 						: null
 				}
 			</AvatarGroup>
