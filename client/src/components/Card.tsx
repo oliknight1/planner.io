@@ -8,7 +8,7 @@ const Card : FC<BoxProps> = ( { children, ...props } ) => {
 	return (
 		<MotionCard
 			whileHover={{ borderColor: '#FFB600', scale: 1.05 }}
-			borderColor={colorMode === 'dark' ? '#1F1F1F' : '#FFFFFF'}
+			borderColor={colorMode === 'dark' ? '#181818' : '#FFFFFF'}
 			borderWidth="2px"
 			borderRadius="lg"
 			boxShadow="lg"

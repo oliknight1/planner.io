@@ -2,7 +2,6 @@ import {
 	Avatar, AvatarGroup, Box, Heading, Link, LinkBox, useColorMode,
 } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import React, { FC } from 'react';
 import { User } from '../utils/types';
 import Card from './Card';

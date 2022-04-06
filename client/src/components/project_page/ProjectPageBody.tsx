@@ -123,7 +123,7 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns, user
 		ProjectController.update( user.token, request, project_id );
 	};
 	return (
-		<Grid templateColumns="repeat( 3, 1fr )" gap={40} mt={6} pl={12} h={is_mobile_breakpoint() ? '100vh' : undefined} maxW="100%" overflowX="auto">
+		<Grid templateColumns="repeat( 3, 1fr )" gap={30} mt={6} pl={12} h={is_mobile_breakpoint() ? '100vh' : undefined} maxW="100%" overflowX="auto">
 			<DragDropContext onDragEnd={handle_drag_end}>
 				{
 					task_columns.map( ( column : TaskColumnI, index : number ) => (
@@ -142,6 +142,7 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns, user
 					bottom={8}
 					rightIcon={<AddIcon />}
 					onClick={onOpen}
+					_hover={{ transform: 'scale(1.2)' }}
 				>
 					New Task
 				</Button>
