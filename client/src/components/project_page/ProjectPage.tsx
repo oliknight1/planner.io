@@ -1,18 +1,15 @@
 import {
 	Box, Flex,
 } from '@chakra-ui/react';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ProjectController } from '../../controllers/ProjectController';
-import { ViewType } from '../../utils/enums';
 import { Project } from '../../utils/types';
+import TopBar from '../TopBar';
 import ProjectPageBody from './ProjectPageBody';
-import ProjectTopContent from './ProjectTopContent';
 
 const ProjectPage : FC = () => {
-	const [ view, set_view ] = useState<ViewType>( ViewType.Grid );
-
 	const navigate = useNavigate();
 	const params = useParams();
 
@@ -34,7 +31,7 @@ const ProjectPage : FC = () => {
 	if ( data ) {
 		return (
 			<Flex flexDirection="column" pos="relative" w="100%">
-				<ProjectTopContent view={view} set_view={set_view} title={data.title} />
+				<TopBar title={data.title} />
 				<Box>
 					<ProjectPageBody project_id={data.id} columns={data.columns} users={data.users} />
 				</Box>
