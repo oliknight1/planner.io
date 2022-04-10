@@ -1,5 +1,5 @@
 import {
-	Center, Container, Wrap, Spinner, WrapItem,
+	Center, Container, Wrap, Spinner, WrapItem, Fade,
 } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
@@ -12,13 +12,14 @@ export const AllProjects : FC = () => {
 		data, isLoading, isSuccess,
 	} = useQuery<Project[], Error>( 'all_projects', ProjectController.get_all );
 	return (
-		<Container maxW="100%" py={6}>
-			{
-				isLoading
+		<Fade in>
+			<Container maxW="100%" py={6}>
+				{
+					isLoading
 				&& <Center w="100%" h="100%"><Spinner size="xl" color="yellow.300" /></Center>
-			}
-			{
-				isSuccess
+				}
+				{
+					isSuccess
 				&& (
 					<Wrap spacing={5}>
 						{data.map( ( project ) => (
@@ -28,8 +29,9 @@ export const AllProjects : FC = () => {
 						) )}
 					</Wrap>
 				)
-			}
-		</Container>
+				}
+			</Container>
+		</Fade>
 	);
 };
 

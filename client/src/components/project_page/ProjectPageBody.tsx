@@ -1,6 +1,7 @@
 import { AddIcon } from '@chakra-ui/icons';
 import {
 	Button,
+	Fade,
 	Grid, GridItem, useDisclosure,
 } from '@chakra-ui/react';
 import React, {
@@ -123,41 +124,42 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns, user
 		ProjectController.update( user.token, request, project_id );
 	};
 	return (
-		<Grid templateColumns="repeat( 3, 1fr )" gap={30} mt={6} pl={12} h={is_mobile_breakpoint() ? '100vh' : undefined} maxW="100%" overflowX="auto">
-			<DragDropContext onDragEnd={handle_drag_end}>
-				{
-					task_columns.map( ( column : TaskColumnI, index : number ) => (
-						<GridItem key={column.id}>
-							<TaskColumn
-								column_header={column.title}
-								tasks={column.tasks}
-								droppable_id={`${index}`}
-								project_id={project_id}
-								project_users={users}
-							/>
-						</GridItem>
-					) )
-				}
-				<Button
-					pos="absolute"
-					right={12}
-					bottom={8}
-					rightIcon={<AddIcon />}
-					onClick={onOpen}
-					_hover={{ transform: 'scale(1.2)' }}
-				>
-					New Task
-				</Button>
-				<TaskDialog
-					is_open={isOpen}
-					on_close={onClose}
-					users={users}
-					project_id={project_id}
-					task_data={null}
-				/>
-			</DragDropContext>
-		</Grid>
-
+		<Fade in>
+			<Grid templateColumns="repeat( 3, 1fr )" gap={30} mt={6} pl={12} h={is_mobile_breakpoint() ? '100vh' : undefined} maxW="100%" overflowX="auto">
+				<DragDropContext onDragEnd={handle_drag_end}>
+					{
+						task_columns.map( ( column : TaskColumnI, index : number ) => (
+							<GridItem key={column.id}>
+								<TaskColumn
+									column_header={column.title}
+									tasks={column.tasks}
+									droppable_id={`${index}`}
+									project_id={project_id}
+									project_users={users}
+								/>
+							</GridItem>
+						) )
+					}
+					<Button
+						pos="absolute"
+						right={12}
+						bottom={8}
+						rightIcon={<AddIcon />}
+						onClick={onOpen}
+						_hover={{ transform: 'scale(1.2)' }}
+					>
+						New Task
+					</Button>
+					<TaskDialog
+						is_open={isOpen}
+						on_close={onClose}
+						users={users}
+						project_id={project_id}
+						task_data={null}
+					/>
+				</DragDropContext>
+			</Grid>
+		</Fade>
 	);
 };
 export default ProjectPageBody;
