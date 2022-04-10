@@ -81,7 +81,6 @@ export class TaskController extends BaseController {
 				if ( error instanceof Error ) {
 					const { message } = error;
 					response.status( 400 ).json( { error: message } );
-					console.error( message );
 					return;
 				}
 			}

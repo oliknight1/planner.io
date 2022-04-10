@@ -28,6 +28,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 	const [ title, set_title ] = useState<string>( '' );
 	const [ body_text, set_body_text ] = useState<string>( '' );
 	const [ assinged_users, set_assigned_users ] = useState<User[]>( [] );
+	const [ success_toast_msg, set_success_toast_msg ] = useState<String>( 'Task created' );
 
 	const { colorMode } = useColorMode();
 
@@ -42,6 +43,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 		set_title( task_data.title );
 		set_body_text( task_data.body_text );
 		set_assigned_users( task_data.users as User[] );
+		set_success_toast_msg( 'Task updated' );
 	}, [ task_data ] );
 
 	const handle_assigning_users = ( e : string[] | string ) => {
@@ -53,8 +55,20 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 		}
 	};
 
+	// if there is no data passed to component, create new task
+	// else update task
 	const project_mutation = useMutation(
-		( task : Task ) => ProjectController.add_task( authed_user.token, project_id, task.id! ),
+		( task : Task ) => (
+			!task_data ? ProjectController.add_task(
+				authed_user.token,
+				project_id,
+				task.id!,
+			)
+				: TaskController.update_task(
+					authed_user.token,
+					task_data.id!,
+					{ title, body_text, assinged_users },
+				) ),
 		{
 			onMutate: async ( data ) => {
 				// Cancel refetch so they do not overwrite new fetch
@@ -114,7 +128,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 	}, {
 		onSuccess: async ( response ) => {
 			toast( {
-				title: 'New task created',
+				title: success_toast_msg,
 				status: 'success',
 				isClosable: true,
 				position: 'bottom-left',
