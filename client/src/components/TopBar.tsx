@@ -1,6 +1,6 @@
 import { HamburgerIcon } from '@chakra-ui/icons';
 import {
-	Heading, IconButton, Box,
+	Heading, IconButton, Box, Avatar, Flex,
 } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import { useNav } from '../contexts/nav_context';
@@ -12,7 +12,7 @@ interface ProjectTopContentProps {
 const ProjectTopContent : FC<ProjectTopContentProps> = ( { title } ) => {
 	const { toggle_state } = useNav();
 	return (
-		<Box px={6} py={6} textAlign="center" pos="relative" bg="black.900" maxW="100%">
+		<Box px={6} py={6} pos="relative" bg="black.900" maxW="100%">
 			{
 				is_mobile_breakpoint()
 				&& (
@@ -28,7 +28,10 @@ const ProjectTopContent : FC<ProjectTopContentProps> = ( { title } ) => {
 					/>
 				)
 			}
-			<Heading fontWeight="normal" size="lg">{title}</Heading>
+			<Flex alignItems="center">
+				<Avatar name={title} borderRadius="md" mr={6} />
+				<Heading fontWeight="normal" size="lg">{title}</Heading>
+			</Flex>
 		</Box>
 	);
 };
