@@ -14,9 +14,9 @@ export const AllProjects : FC = () => {
 	} = useQuery<Project[], Error>( 'all_projects', ProjectController.get_all );
 	return (
 		<Flex flexDir="column" w="100%">
-			<TopBar title="All Projects" />
-			<Container maxW="100%" py={6}>
-				<Fade in>
+			<Fade in>
+				<TopBar title="All Projects" />
+				<Container maxW="100%" py={6}>
 					{
 						isLoading
 						&& <Center w="100%" h="100%"><Spinner size="xl" color="yellow.300" /></Center>
@@ -33,8 +33,8 @@ export const AllProjects : FC = () => {
 							</Wrap>
 						)
 					}
-				</Fade>
-			</Container>
+				</Container>
+			</Fade>
 		</Flex>
 	);
 };

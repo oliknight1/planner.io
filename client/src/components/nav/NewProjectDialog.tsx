@@ -81,22 +81,23 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 	const mutation = useMutation( ( e : SyntheticEvent ) => {
 		e.preventDefault();
 		return ProjectController.create( user.token, title, invited_members );
+	}, {
+		onError: ( mutation_error ) => {
+			if ( mutation_error instanceof Error ) {
+				toast( {
+					title: 'There was an error creating project',
+					description: mutation_error.message,
+					status: 'error',
+					isClosable: true,
+					position: 'top',
+				} );
+			}
+		},
+		onSuccess: ( response ) => {
+			navigate( `/projects/${response.data.id}` );
+			on_close();
+		},
 	} );
-
-	if ( mutation.error ) {
-		if ( mutation.error instanceof Error ) {
-			toast( {
-				title: 'There was an error creating project',
-				description: mutation.error.message,
-				status: 'error',
-				isClosable: true,
-				position: 'top',
-			} );
-		}
-	}
-	if ( mutation.isSuccess ) {
-		navigate( encodeURI( `/projects/${title}` ) );
-	}
 
 	return (
 		<Modal onClose={on_close} isOpen={is_open} isCentered>

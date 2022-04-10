@@ -55,7 +55,7 @@ export class ProjectController extends BaseController {
 		request : Request,
 		response: Response,
 	) => {
-		const { title, users } : ProjectSchema = request.body;
+		const { title, users, columns } : ProjectSchema = request.body;
 
 		const user_ids = users.map( ( user ) => user.id );
 		const token = this.verify_token( request, response );
@@ -71,8 +71,8 @@ export class ProjectController extends BaseController {
 
 		const project = new Project( {
 			title,
-			tasks: [],
 			users: user_ids,
+			columns,
 		} );
 
 		try {

@@ -19,6 +19,20 @@ export class ProjectController {
 		const post_data = {
 			title,
 			users,
+			columns: [
+				{
+					title: 'Backlog',
+					tasks: [],
+				},
+				{
+					title: 'In Progress',
+					tasks: [],
+				},
+				{
+					title: 'Completed',
+					tasks: [],
+				},
+			],
 		};
 		return axios.post( '/api/projects', post_data, { headers } );
 	};
