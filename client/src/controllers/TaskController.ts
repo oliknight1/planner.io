@@ -37,4 +37,22 @@ export class TaskController {
 			throw new Error( 'Error creating task' );
 		}
 	};
+
+	public static remove = async ( token : string, id : string ) => {
+		const headers = {
+			Authorization: `Bearer ${token}`,
+		};
+		try {
+			const resposne = await axios.delete( `/api/tasks/id/${id}`, { headers } );
+			return resposne;
+		} catch ( error : unknown ) {
+			if ( axios.isAxiosError( error ) ) {
+				return error.response?.data.error;
+			}
+			if ( error instanceof Error ) {
+				return error.message;
+			}
+			throw new Error( 'Error creating task' );
+		}
+	};
 }

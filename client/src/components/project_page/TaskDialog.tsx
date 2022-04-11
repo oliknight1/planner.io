@@ -1,9 +1,11 @@
-import { ChevronDownIcon } from '@chakra-ui/icons';
+import { ChevronDownIcon, DeleteIcon } from '@chakra-ui/icons';
 import {
 	ModalHeader, Modal, ModalCloseButton, ModalContent,
 	ModalOverlay, useColorMode, ModalBody, Input, Textarea,
 	FormControl, FormLabel, Menu, MenuButton, Button, MenuList,
-	MenuItemOption, Avatar, AvatarGroup, MenuOptionGroup, ModalFooter, useToast, HStack, Box,
+	MenuItemOption, Avatar, AvatarGroup, MenuOptionGroup, ModalFooter,
+	useToast, IconButton, PopoverTrigger, Popover, PopoverContent, PopoverHeader,
+	PopoverArrow, PopoverCloseButton, PopoverBody, PopoverFooter, ButtonGroup,
 } from '@chakra-ui/react';
 import React, {
 	FC, SyntheticEvent, useEffect, useState,
@@ -29,6 +31,9 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 	const [ body_text, set_body_text ] = useState<string>( '' );
 	const [ assinged_users, set_assigned_users ] = useState<User[]>( [] );
 	const [ success_toast_msg, set_success_toast_msg ] = useState<String>( 'Task created' );
+	const [ popover_open, set_popover_open ] = useState<boolean>( false );
+	const open_popover = () => set_popover_open( !popover_open );
+	const close_popover = () => set_popover_open( false );
 
 	const { colorMode } = useColorMode();
 
@@ -111,7 +116,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 		},
 	);
 
-	const task_mutation = useMutation( ( e : SyntheticEvent ) => {
+	const create_task = useMutation( ( e : SyntheticEvent ) => {
 		e.preventDefault();
 		const assinged_users_ids : string[] = assinged_users.map(
 			( assinged_user ) => assinged_user.id,
@@ -137,10 +142,10 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 			project_mutation.mutate( response.data );
 		},
 	} );
-	if ( task_mutation.error && task_mutation.error instanceof Error ) {
+	if ( create_task.error && create_task.error instanceof Error ) {
 		toast( {
 			title: 'There was an error creating project',
-			description: task_mutation.error.message,
+			description: create_task.error.message,
 			status: 'error',
 			isClosable: true,
 			position: 'top',
@@ -156,11 +161,39 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 		} );
 	}
 
+	const delete_task = useMutation( ( _e : SyntheticEvent ) => {
+		close_popover();
+		on_close();
+		return TaskController.remove( authed_user.token, task_data!.id! );
+	}, {
+		onError: () => {
+			toast( {
+				title: 'There was an error deleting the task',
+				description: project_mutation.error.message,
+				status: 'error',
+				isClosable: true,
+				position: 'top',
+			} );
+		},
+		// refetch data
+		onSettled: () => {
+			query_client.invalidateQueries( [ 'single_project', { id: project_id } ] );
+		},
+		onSuccess: () => {
+			toast( {
+				title: 'Task deleted',
+				status: 'success',
+				isClosable: true,
+				position: 'bottom-left',
+			} );
+		},
+	} );
+
 	return (
 		<Modal onClose={on_close} isOpen={is_open} isCentered>
 			<ModalOverlay />
 			<ModalContent background={colorMode === 'dark' ? 'gray.800' : 'white'}>
-				<form onSubmit={task_mutation.mutate}>
+				<form onSubmit={create_task.mutate}>
 					<ModalCloseButton />
 					<ModalHeader mt={4}>
 						<Input placeholder="New Task" variant="flushed" value={title} size="lg" onChange={( e ) => set_title( e.target.value )} />
@@ -201,7 +234,36 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 							<Textarea value={body_text} placeholder="Task description" id="body_text" resize="none" onChange={( e ) => set_body_text( e.target.value )} />
 						</FormControl>
 					</ModalBody>
-					<ModalFooter>
+					<ModalFooter justifyContent={task_data ? 'space-between' : undefined}>
+						{
+							task_data
+						&& (
+							<Popover
+								returnFocusOnClose={false}
+								isOpen={popover_open}
+								onClose={close_popover}
+								placement="right"
+								closeOnBlur={false}
+
+							>
+								<PopoverTrigger><IconButton onClick={open_popover} variant="ghost" icon={<DeleteIcon w={6} h={6} />} aria-label="Delete task" /></PopoverTrigger>
+								<PopoverContent>
+									<PopoverHeader fontWeight="semibold">Confirmation</PopoverHeader>
+									<PopoverArrow />
+									<PopoverCloseButton />
+									<PopoverBody>
+										Are you sure you want to delete this task?
+									</PopoverBody>
+									<PopoverFooter d="flex" justifyContent="flex-end">
+										<ButtonGroup size="sm" onClick={close_popover}>
+											<Button variant="outline" onClick={close_popover}>Cancel</Button>
+											<Button variant="solid" colorScheme="red" onClick={delete_task.mutate}>Apply</Button>
+										</ButtonGroup>
+									</PopoverFooter>
+								</PopoverContent>
+							</Popover>
+						)
+						}
 						<Button type="submit" variant="outline">Save</Button>
 					</ModalFooter>
 				</form>

@@ -36,7 +36,6 @@ export interface TaskColumnI {
 export interface Project {
 	id: string,
 	title: string,
-	tasks: Task[],
 	users: User[],
 	columns: TaskColumnI[]
 }

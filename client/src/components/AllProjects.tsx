@@ -1,5 +1,5 @@
 import {
-	Center, Container, Wrap, Spinner, WrapItem, Fade, Box, Flex,
+	Center, Container, Wrap, Spinner, WrapItem, Fade, Flex,
 } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
