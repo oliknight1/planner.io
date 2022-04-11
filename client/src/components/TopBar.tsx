@@ -1,6 +1,6 @@
 import { HamburgerIcon } from '@chakra-ui/icons';
 import {
-	Heading, IconButton, Box, Avatar, Flex,
+	Heading, IconButton, Box, Avatar, Flex, useColorMode,
 } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import { useNav } from '../contexts/nav_context';
@@ -12,8 +12,10 @@ interface TopBarProps {
 }
 const TopBar : FC<TopBarProps> = ( { title, is_project_page } ) => {
 	const { toggle_state } = useNav();
+	const { colorMode } = useColorMode();
+
 	return (
-		<Box px={6} py={6} pos="relative" bg="black.900" maxW="100%">
+		<Box px={6} py={6} pos="relative" background={colorMode === 'dark' ? 'black.900' : '#FFFFFF'} maxW="100%">
 			{
 				is_mobile_breakpoint()
 				&& (

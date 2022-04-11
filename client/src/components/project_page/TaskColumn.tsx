@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import {
-	VStack, Box, List, ListItem, useDisclosure,
+	VStack, Box, List, ListItem, useDisclosure, useColorMode,
 } from '@chakra-ui/react';
 import {
 	Draggable, DraggableProvided, DraggableStateSnapshot, Droppable, DroppableProvided,
@@ -22,6 +22,7 @@ const TaskColumn : FC<TaskColumnProps> = ( {
 } ) => {
 	const [ open_task, set_open_task ] = useState<Task|null>( null );
 	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { colorMode } = useColorMode();
 
 	const handle_task_click = ( index : number ) => {
 		set_open_task( tasks[index] );
@@ -30,12 +31,13 @@ const TaskColumn : FC<TaskColumnProps> = ( {
 	return (
 		<>
 			<VStack
-				bg="#121212"
+				background={colorMode === 'dark' ? '#121212' : 'gray.200'}
 				borderRadius="xl"
 				w="xs"
 			>
 				<Box
-					bg="#181818"
+					background={colorMode === 'dark' ? '#181818' : 'brand.dark_blue'}
+					color="white"
 					textAlign="center"
 					borderRadius="xl"
 					fontSize="2xl"
