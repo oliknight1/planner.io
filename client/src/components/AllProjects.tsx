@@ -15,7 +15,7 @@ export const AllProjects : FC = () => {
 	return (
 		<Flex flexDir="column" w="100%">
 			<Fade in>
-				<TopBar title="All Projects" />
+				<TopBar title="All Projects" is_project_page={false} />
 				<Container maxW="100%" py={6}>
 					{
 						isLoading

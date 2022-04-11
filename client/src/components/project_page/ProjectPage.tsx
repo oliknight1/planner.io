@@ -31,7 +31,7 @@ const ProjectPage : FC = () => {
 	if ( data ) {
 		return (
 			<Flex flexDirection="column" pos="relative" w="100%">
-				<TopBar title={data.title} />
+				<TopBar title={data.title} is_project_page />
 				<Box>
 					<ProjectPageBody project_id={data.id} columns={data.columns} users={data.users} />
 				</Box>

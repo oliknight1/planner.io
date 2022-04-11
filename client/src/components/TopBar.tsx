@@ -6,10 +6,11 @@ import React, { FC } from 'react';
 import { useNav } from '../contexts/nav_context';
 import { is_mobile_breakpoint } from '../utils/helpers';
 
-interface ProjectTopContentProps {
+interface TopBarProps {
 	title: string,
+	is_project_page: boolean
 }
-const ProjectTopContent : FC<ProjectTopContentProps> = ( { title } ) => {
+const TopBar : FC<TopBarProps> = ( { title, is_project_page } ) => {
 	const { toggle_state } = useNav();
 	return (
 		<Box px={6} py={6} pos="relative" bg="black.900" maxW="100%">
@@ -29,11 +30,13 @@ const ProjectTopContent : FC<ProjectTopContentProps> = ( { title } ) => {
 				)
 			}
 			<Flex alignItems="center">
-				<Avatar name={title} borderRadius="md" mr={6} />
+				{
+					is_project_page && <Avatar name={title} borderRadius="md" mr={6} />
+				}
 				<Heading fontWeight="normal" size="lg">{title}</Heading>
 			</Flex>
 		</Box>
 	);
 };
 
-export default ProjectTopContent;
+export default TopBar;
