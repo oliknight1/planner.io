@@ -1,11 +1,10 @@
-import { ChevronDownIcon, DeleteIcon } from '@chakra-ui/icons';
+import { ChevronDownIcon } from '@chakra-ui/icons';
 import {
 	ModalHeader, Modal, ModalCloseButton, ModalContent,
 	ModalOverlay, useColorMode, ModalBody, Input, Textarea,
 	FormControl, FormLabel, Menu, MenuButton, Button, MenuList,
 	MenuItemOption, Avatar, AvatarGroup, MenuOptionGroup, ModalFooter,
-	useToast, IconButton, PopoverTrigger, Popover, PopoverContent, PopoverHeader,
-	PopoverArrow, PopoverCloseButton, PopoverBody, PopoverFooter, ButtonGroup,
+	useToast,
 } from '@chakra-ui/react';
 import React, {
 	FC, SyntheticEvent, useEffect, useState,
@@ -15,6 +14,7 @@ import { useUser } from '../../contexts/auth_context';
 import { ProjectController } from '../../controllers/ProjectController';
 import { TaskController } from '../../controllers/TaskController';
 import { Project, Task, User } from '../../utils/types';
+import DeletePopover from '../DeletePopover';
 
 interface TaskDialogProps {
 	is_open: boolean,
@@ -32,8 +32,6 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 	const [ assinged_users, set_assigned_users ] = useState<User[]>( [] );
 	const [ success_toast_msg, set_success_toast_msg ] = useState<String>( 'Task created' );
 	const [ popover_open, set_popover_open ] = useState<boolean>( false );
-	const open_popover = () => set_popover_open( !popover_open );
-	const close_popover = () => set_popover_open( false );
 
 	const { colorMode } = useColorMode();
 
@@ -161,42 +159,53 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 		} );
 	}
 
-	const delete_task = useMutation( ( _e : SyntheticEvent ) => {
-		close_popover();
-		on_close();
-		return TaskController.remove( authed_user.token, task_data!.id! );
-	}, {
-		onError: () => {
-			toast( {
-				title: 'There was an error deleting the task',
-				description: project_mutation.error.message,
-				status: 'error',
-				isClosable: true,
-				position: 'top',
-			} );
+	const delete_task = useMutation(
+		( _e : SyntheticEvent ) => TaskController.remove( authed_user.token, task_data!.id! ),
+		{
+			onError: () => {
+				toast( {
+					title: 'There was an error deleting the task',
+					description: project_mutation.error.message,
+					status: 'error',
+					isClosable: true,
+					position: 'top',
+				} );
+			},
+			// refetch data
+			onSettled: () => {
+				query_client.invalidateQueries( [ 'single_project', { id: project_id } ] );
+			},
+			onSuccess: () => {
+				set_title( '' );
+				set_assigned_users( [] );
+				set_body_text( '' );
+				set_popover_open( false );
+				on_close();
+				toast( {
+					title: 'Task deleted',
+					status: 'success',
+					isClosable: true,
+					position: 'bottom-left',
+				} );
+			},
 		},
-		// refetch data
-		onSettled: () => {
-			query_client.invalidateQueries( [ 'single_project', { id: project_id } ] );
-		},
-		onSuccess: () => {
-			toast( {
-				title: 'Task deleted',
-				status: 'success',
-				isClosable: true,
-				position: 'bottom-left',
-			} );
-		},
-	} );
+	);
 
 	return (
-		<Modal onClose={on_close} isOpen={is_open} isCentered>
+		<Modal onClose={on_close} isOpen={is_open} isCentered size="xl">
 			<ModalOverlay />
 			<ModalContent background={colorMode === 'dark' ? 'gray.800' : 'white'}>
 				<form onSubmit={create_task.mutate}>
 					<ModalCloseButton />
 					<ModalHeader mt={4}>
-						<Input placeholder="New Task" variant="flushed" value={title} size="lg" onChange={( e ) => set_title( e.target.value )} />
+						<Input
+							placeholder="New Task"
+							variant="flushed"
+							value={title}
+							size="lg"
+							fontSize="xl"
+							onChange={( e ) => set_title( e.target.value )}
+						/>
 					</ModalHeader>
 					<ModalBody>
 						<FormControl>
@@ -229,7 +238,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 								{ assinged_users.map( ( user : User ) => <Avatar name={user.display_name} size="md" key={user.id} /> ) }
 							</AvatarGroup>
 						</FormControl>
-						<FormControl>
+						<FormControl mb={8}>
 							<FormLabel htmlFor="body_text">Description</FormLabel>
 							<Textarea value={body_text} placeholder="Task description" id="body_text" resize="none" onChange={( e ) => set_body_text( e.target.value )} />
 						</FormControl>
@@ -237,32 +246,14 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 					<ModalFooter justifyContent={task_data ? 'space-between' : undefined}>
 						{
 							task_data
-						&& (
-							<Popover
-								returnFocusOnClose={false}
-								isOpen={popover_open}
-								onClose={close_popover}
-								placement="right"
-								closeOnBlur={false}
-
-							>
-								<PopoverTrigger><IconButton onClick={open_popover} variant="ghost" icon={<DeleteIcon w={6} h={6} />} aria-label="Delete task" /></PopoverTrigger>
-								<PopoverContent>
-									<PopoverHeader fontWeight="semibold">Confirmation</PopoverHeader>
-									<PopoverArrow />
-									<PopoverCloseButton />
-									<PopoverBody>
-										Are you sure you want to delete this task?
-									</PopoverBody>
-									<PopoverFooter d="flex" justifyContent="flex-end">
-										<ButtonGroup size="sm" onClick={close_popover}>
-											<Button variant="outline" onClick={close_popover}>Cancel</Button>
-											<Button variant="solid" colorScheme="red" onClick={delete_task.mutate}>Apply</Button>
-										</ButtonGroup>
-									</PopoverFooter>
-								</PopoverContent>
-							</Popover>
-						)
+							&& (
+								<DeletePopover
+									title="Are you sure you want to delete this task?"
+									handle_delete={delete_task}
+									popover_open={popover_open}
+									set_popover_open={set_popover_open}
+								/>
+							)
 						}
 						<Button type="submit" variant="outline">Save</Button>
 					</ModalFooter>
