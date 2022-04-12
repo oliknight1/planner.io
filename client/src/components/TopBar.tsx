@@ -31,11 +31,11 @@ const TopBar : FC<TopBarProps> = ( { title, is_project_page } ) => {
 					/>
 				)
 			}
-			<Flex alignItems="center">
+			<Flex alignItems="center" ml={is_mobile_breakpoint() ? 16 : 0}>
 				{
 					is_project_page && <Avatar name={title} borderRadius="md" mr={6} />
 				}
-				<Heading fontWeight="normal" size="lg">{title}</Heading>
+				<Heading fontWeight="normal" textAlign="center" size="lg">{title}</Heading>
 			</Flex>
 		</Box>
 	);
