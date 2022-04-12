@@ -4,7 +4,7 @@ import {
 	FormControl, Input, useColorMode, FormLabel, FormHelperText,
 	VStack, HStack, AvatarGroup, Avatar, FormErrorMessage, useToast,
 } from '@chakra-ui/react';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import React, {
 	FC, SyntheticEvent, useEffect, useState,
 } from 'react';
@@ -33,6 +33,7 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 		email: user.email,
 	} ] );
 	const [ title, set_title ] = useState<string>( '' );
+	const query_client = useQueryClient();
 
 	const get_by_email = async ( email : string ) : Promise<User> => {
 		set_member_email( '' );
@@ -95,6 +96,7 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 		},
 		onSuccess: ( response ) => {
 			navigate( `/projects/${response.data.id}` );
+			query_client.invalidateQueries( 'all_projects' );
 			on_close();
 		},
 	} );
