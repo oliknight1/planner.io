@@ -112,10 +112,11 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 	const handle_submit = useMutation( ( e : SyntheticEvent ) => {
 		e.preventDefault();
 		if ( task_data ) {
+			const user_ids : string[] = assinged_users.map( ( user ) => user.id );
 			return TaskController.update_task(
 				authed_user.token,
 				task_data.id!,
-				{ title, body_text, assinged_users },
+				{ title, body_text, users: user_ids },
 			);
 		}
 		const assinged_users_ids : string[] = assinged_users.map(
