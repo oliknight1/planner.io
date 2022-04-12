@@ -51,30 +51,19 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 
 	const handle_assigning_users = ( e : string[] | string ) => {
 		if ( e instanceof Array ) {
-			const users_to_assign = e.map(
+			const users_to_assign : ( User | undefined )[] = e.map(
 				( id : string ) => users.find( ( user : User ) => user.id === id ),
 			);
-			set_assigned_users( users_to_assign as User[] );
+			if ( users_to_assign ) {
+				set_assigned_users( users_to_assign as User[] );
+			}
 		}
 	};
-
-	// if there is no data passed to component, create new task
-	// else update task
 	const project_mutation = useMutation(
-		( task : Task ) => (
-			!task_data ? ProjectController.add_task(
-				authed_user.token,
-				project_id,
-				task.id!,
-			)
-				: TaskController.update_task(
-					authed_user.token,
-					task_data.id!,
-					{ title, body_text, assinged_users },
-				) ),
+		( task : Task ) => ProjectController.add_task( authed_user.token, project_id, task.id! ),
 		{
 			onMutate: async ( data ) => {
-				// Cancel refetch so they do not overwrite new fetch
+				//     // Cancel refetch so they do not overwrite new fetch
 				await query_client.cancelQueries( [ 'single_project', { id: project_id } ] );
 
 				const previous_project : Project | undefined = query_client.getQueryData( [ 'single_project', { id: project_id } ] );
@@ -104,17 +93,31 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 			onError: ( context : any ) => {
 				if ( context.previous_project ) {
 					query_client.setQueryData( [ 'single_project', { id: project_id } ], context.previous_project );
+					toast( {
+						title: 'There was an error',
+						description: 'Please try again',
+						status: 'error',
+						isClosable: true,
+						position: 'bottom-left',
+					} );
 				}
 			},
-			// refetch after error or success
+			//   // refetch after error or success
 			onSettled: () => {
 				query_client.invalidateQueries( [ 'single_project', { id: project_id } ] );
 			},
 		},
 	);
 
-	const create_task = useMutation( ( e : SyntheticEvent ) => {
+	const handle_submit = useMutation( ( e : SyntheticEvent ) => {
 		e.preventDefault();
+		if ( task_data ) {
+			return TaskController.update_task(
+				authed_user.token,
+				task_data.id!,
+				{ title, body_text, assinged_users },
+			);
+		}
 		const assinged_users_ids : string[] = assinged_users.map(
 			( assinged_user ) => assinged_user.id,
 		);
@@ -136,27 +139,21 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 				position: 'bottom-left',
 			} );
 			on_close();
-			project_mutation.mutate( response.data );
+			if ( response.data ) {
+				project_mutation.mutate( response.data );
+			}
+			query_client.invalidateQueries( [ 'single_project', { id: project_id } ] );
+		},
+		onError: () => {
+			toast( {
+				title: 'There was an error',
+				description: 'Please try again',
+				status: 'error',
+				isClosable: true,
+				position: 'bottom-left',
+			} );
 		},
 	} );
-	if ( create_task.error && create_task.error instanceof Error ) {
-		toast( {
-			title: 'There was an error creating project',
-			description: create_task.error.message,
-			status: 'error',
-			isClosable: true,
-			position: 'top',
-		} );
-	}
-	if ( project_mutation.error && project_mutation.error instanceof Error ) {
-		toast( {
-			title: 'There was an error creating project',
-			description: project_mutation.error.message,
-			status: 'error',
-			isClosable: true,
-			position: 'top',
-		} );
-	}
 
 	const delete_task = useMutation(
 		( _e : SyntheticEvent ) => TaskController.remove( authed_user.token, task_data!.id! ),
@@ -164,7 +161,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 			onError: () => {
 				toast( {
 					title: 'There was an error deleting the task',
-					description: project_mutation.error.message,
+					description: 'Please try again',
 					status: 'error',
 					isClosable: true,
 					position: 'top',
@@ -194,7 +191,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 		<Modal onClose={on_close} isOpen={is_open} isCentered size="xl">
 			<ModalOverlay />
 			<ModalContent background={colorMode === 'dark' ? 'gray.800' : 'white'}>
-				<form onSubmit={create_task.mutate}>
+				<form onSubmit={handle_submit.mutate}>
 					<ModalCloseButton />
 					<ModalHeader mt={4}>
 						<Input
