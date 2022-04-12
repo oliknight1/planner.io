@@ -98,7 +98,6 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 					columns: new_columns,
 				};
 
-				query_client.setQueryData( [ 'single_project', { id: project_id } ], new_project );
 				return { previous_project, new_project };
 			},
 
