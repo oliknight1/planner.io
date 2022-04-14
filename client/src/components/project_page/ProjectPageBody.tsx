@@ -105,8 +105,6 @@ const ProjectPageBody : FC = () => {
 					<TaskDialog
 						is_open={isOpen}
 						on_close={onClose}
-						users={project.users}
-						project_id={project.id}
 						task_data={null}
 					/>
 				</DragDropContext>

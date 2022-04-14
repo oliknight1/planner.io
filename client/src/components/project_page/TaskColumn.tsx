@@ -88,8 +88,6 @@ const TaskColumn : FC<TaskColumnProps> = ( {
 			<TaskDialog
 				is_open={isOpen}
 				on_close={onClose}
-				users={project_users}
-				project_id={project_id}
 				task_data={open_task}
 			/>
 		</>

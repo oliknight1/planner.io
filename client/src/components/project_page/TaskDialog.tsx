@@ -21,13 +21,11 @@ import DeletePopover from '../DeletePopover';
 interface TaskDialogProps {
 	is_open: boolean,
 	on_close: () => void,
-	users: User[],
-	project_id: string,
 	task_data: Task | null
 }
 
 const TaskDialog : FC<TaskDialogProps> = ( {
-	is_open, on_close, users, project_id, task_data,
+	is_open, on_close, task_data,
 } ) => {
 	const [ title, set_title ] = useState<string>( '' );
 	const [ body_text, set_body_text ] = useState<string>( '' );
@@ -53,8 +51,8 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 	const project : Project | undefined = useCachedProject();
 	if ( !project ) {
 		on_close();
-
 		toast( error_toast );
+		return null;
 	}
 
 	useEffect( () => {
@@ -68,7 +66,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 	const handle_assigning_users = ( e : string[] | string ) => {
 		if ( e instanceof Array ) {
 			const users_to_assign : ( User | undefined )[] = e.map(
-				( id : string ) => users.find( ( user : User ) => user.id === id ),
+				( id : string ) => project.users.find( ( user : User ) => user.id === id ),
 			);
 			if ( users_to_assign ) {
 				set_assigned_users( users_to_assign as User[] );
@@ -76,13 +74,13 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 		}
 	};
 	const project_mutation = useMutation(
-		( task : Task ) => ProjectController.add_task( authed_user.token, project_id, task.id! ),
+		( task : Task ) => ProjectController.add_task( authed_user.token, project.id, task.id! ),
 		{
 			onMutate: async ( data ) => {
 				//     // Cancel refetch so they do not overwrite new fetch
-				await query_client.cancelQueries( [ 'single_project', { id: project_id } ] );
+				await query_client.cancelQueries( [ 'single_project', { id: project.id } ] );
 
-				const previous_project : Project | undefined = query_client.getQueryData( [ 'single_project', { id: project_id } ] );
+				const previous_project : Project | undefined = query_client.getQueryData( [ 'single_project', { id: project.id } ] );
 
 				const new_columns = [
 					{
@@ -108,13 +106,13 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 
 			onError: ( context : any ) => {
 				if ( context.previous_project ) {
-					query_client.setQueryData( [ 'single_project', { id: project_id } ], context.previous_project );
+					query_client.setQueryData( [ 'single_project', { id: project.id } ], context.previous_project );
 					toast( error_toast );
 				}
 			},
 			//   // refetch after error or success
 			onSettled: () => {
-				query_client.invalidateQueries( [ 'single_project', { id: project_id } ] );
+				query_client.invalidateQueries( [ 'single_project', { id: project.id } ] );
 			},
 		},
 	);
@@ -136,7 +134,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 			title,
 			body_text,
 			users: assinged_users_ids,
-			project: project_id,
+			project: project.id,
 			tags: [],
 			column: 'Backlog',
 		};
@@ -153,7 +151,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 			if ( response.data ) {
 				project_mutation.mutate( response.data );
 			}
-			query_client.invalidateQueries( [ 'single_project', { id: project_id } ] );
+			query_client.invalidateQueries( [ 'single_project', { id: project.id } ] );
 		},
 		onError: () => {
 			toast( error_toast );
@@ -168,7 +166,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 			},
 			// refetch data
 			onSettled: () => {
-				query_client.invalidateQueries( [ 'single_project', { id: project_id } ] );
+				query_client.invalidateQueries( [ 'single_project', { id: project.id } ] );
 			},
 			onSuccess: ( response ) => {
 				set_title( '' );
@@ -216,7 +214,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 								</MenuButton>
 								<MenuList>
 									<MenuOptionGroup type="checkbox" onChange={handle_assigning_users}>
-										{users.map( ( user ) => (
+										{project.users.map( ( user ) => (
 											<MenuItemOption
 												value={user.id}
 												key={user.id}
