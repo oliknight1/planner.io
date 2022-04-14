@@ -75,4 +75,27 @@ export class ProjectController {
 			throw new Error( 'Error updating project' );
 		}
 	};
+
+	public static remove_task = async (
+		token : string,
+		project_id : string,
+		task_id : string,
+		column_id : string,
+	) => {
+		const headers = {
+			Authorization: `Bearer ${token}`,
+		};
+		try {
+			const response = await axios.patch( `/api/projects/remove_task/${project_id}`, { column_id, task_id }, { headers } );
+			return response.data;
+		} catch ( error : unknown ) {
+			if ( axios.isAxiosError( error ) ) {
+				return error.response?.data.error;
+			}
+			if ( error instanceof Error ) {
+				return error.message;
+			}
+			throw new Error( 'Error updating project' );
+		}
+	};
 }

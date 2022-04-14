@@ -164,4 +164,43 @@ export class ProjectController extends BaseController {
 	) => {
 		this.remove( request, response, Project );
 	};
+
+	public static remove_task = async (
+		request : Request<{ id : string }>,
+		response : Response,
+	) => {
+		const project_id = request.params.id;
+		if ( !mongoose.isValidObjectId( project_id ) ) {
+			response.status( 400 ).json( { error: 'Invalid ID supplied' } );
+			return;
+		}
+
+		const token = this.verify_token( request, response );
+		if ( !token ) {
+			response.status( 401 ).json( { error: 'Auth token missing or invalid' } );
+			return;
+		}
+
+		const project = await Project.findById( project_id );
+		if ( !project ) {
+			response.status( 404 ).json( { error: 'Project not found' } );
+			return;
+		}
+
+		const { column_id, task_id } = request.body;
+		const task_obj_id = new mongoose.Types.ObjectId( task_id );
+		try {
+			await Project.findOneAndUpdate( { _id: project_id, 'columns._id': column_id }, {
+				$pull: {
+					'columns.$.tasks': task_obj_id,
+				},
+			} );
+			response.status( 200 ).json( Project.findById( project_id ) );
+		} catch ( error ) {
+			if ( error instanceof Error ) {
+				const { message } = error;
+				response.status( 400 ).json( { error: message } );
+			}
+		}
+	};
 }

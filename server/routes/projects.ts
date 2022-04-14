@@ -14,4 +14,6 @@ project_router.patch( '/id/:id', body( 'project' ).notEmpty().withMessage( 'Must
 
 project_router.patch( '/add_task/:id', ProjectController.add_task );
 
+project_router.patch( '/remove_task/:id', ProjectController.remove_task );
+
 project_router.delete( '/id/:id', ProjectController.remove_project );

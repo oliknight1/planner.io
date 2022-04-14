@@ -136,7 +136,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 			users: assinged_users_ids,
 			project: project.id,
 			tags: [],
-			column: 'Backlog',
+			column: project.columns[0].id,
 		};
 		return TaskController.create( authed_user.token, new_task );
 	}, {
@@ -173,6 +173,12 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 				set_assigned_users( [] );
 				set_body_text( '' );
 				set_popover_open( false );
+				ProjectController.remove_task(
+					authed_user.token,
+					project.id,
+					task_data!.id!,
+					task_data!.column,
+				);
 				on_close();
 				toast( {
 					title: 'Task deleted',
