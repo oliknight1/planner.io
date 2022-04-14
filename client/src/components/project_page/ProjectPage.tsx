@@ -33,7 +33,7 @@ const ProjectPage : FC = () => {
 			<Flex flexDirection="column" pos="relative" w="100%">
 				<TopBar title={data.title} is_project_page />
 				<Box>
-					<ProjectPageBody project_id={data.id} columns={data.columns} users={data.users} />
+					<ProjectPageBody />
 				</Box>
 			</Flex>
 		);
