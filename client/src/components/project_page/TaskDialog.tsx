@@ -5,6 +5,7 @@ import {
 	FormControl, FormLabel, Menu, MenuButton, Button, MenuList,
 	MenuItemOption, Avatar, AvatarGroup, MenuOptionGroup, ModalFooter,
 	useToast,
+	UseToastOptions,
 } from '@chakra-ui/react';
 import React, {
 	FC, SyntheticEvent, useEffect, useState,
@@ -13,6 +14,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { useUser } from '../../contexts/auth_context';
 import { ProjectController } from '../../controllers/ProjectController';
 import { TaskController } from '../../controllers/TaskController';
+import { useCachedProject } from '../../utils/hooks';
 import { Project, Task, User } from '../../utils/types';
 import DeletePopover from '../DeletePopover';
 
@@ -39,7 +41,21 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 
 	const toast = useToast();
 
+	const error_toast : UseToastOptions = {
+		title: 'An error occured',
+		description: 'Please try again',
+		status: 'error',
+		isClosable: true,
+		position: 'bottom-left',
+	};
 	const query_client = useQueryClient();
+
+	const project : Project | undefined = useCachedProject();
+	if ( !project ) {
+		on_close();
+
+		toast( error_toast );
+	}
 
 	useEffect( () => {
 		if ( !task_data ) return;
@@ -93,13 +109,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 			onError: ( context : any ) => {
 				if ( context.previous_project ) {
 					query_client.setQueryData( [ 'single_project', { id: project_id } ], context.previous_project );
-					toast( {
-						title: 'There was an error',
-						description: 'Please try again',
-						status: 'error',
-						isClosable: true,
-						position: 'bottom-left',
-					} );
+					toast( error_toast );
 				}
 			},
 			//   // refetch after error or success
@@ -146,13 +156,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 			query_client.invalidateQueries( [ 'single_project', { id: project_id } ] );
 		},
 		onError: () => {
-			toast( {
-				title: 'There was an error',
-				description: 'Please try again',
-				status: 'error',
-				isClosable: true,
-				position: 'bottom-left',
-			} );
+			toast( error_toast );
 		},
 	} );
 
@@ -160,19 +164,13 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 		( _e : SyntheticEvent ) => TaskController.remove( authed_user.token, task_data!.id! ),
 		{
 			onError: () => {
-				toast( {
-					title: 'There was an error deleting the task',
-					description: 'Please try again',
-					status: 'error',
-					isClosable: true,
-					position: 'top',
-				} );
+				toast( error_toast );
 			},
 			// refetch data
 			onSettled: () => {
 				query_client.invalidateQueries( [ 'single_project', { id: project_id } ] );
 			},
-			onSuccess: () => {
+			onSuccess: ( response ) => {
 				set_title( '' );
 				set_assigned_users( [] );
 				set_body_text( '' );
