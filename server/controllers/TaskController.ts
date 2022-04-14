@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import { isValidObjectId } from 'mongoose';
+import { isValidObjectId, Types } from 'mongoose';
+import { Project } from '../models/project';
 import { Task } from '../models/task';
 import { BaseController } from './BaseController';
 
@@ -64,6 +65,10 @@ export class TaskController extends BaseController {
 		if ( !task ) {
 			response.status( 404 ).json( { error: 'Task not found' } );
 			return;
+		}
+		if ( request.body.column ) {
+			const col_id = new Types.ObjectId( request.body.column );
+			task.column = col_id;
 		}
 
 		Object.keys( request.body ).reduce( ( request_task : any, key ) => {

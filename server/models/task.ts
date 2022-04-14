@@ -12,7 +12,7 @@ export const task_schema = new Schema<TaskSchema>( {
 	project: { type: Schema.Types.ObjectId, ref: 'Project' },
 	tags: [ { type: String } ],
 	due_date: Date,
-	column: String,
+	column: [ { type: Schema.Types.ObjectId, ref: 'Column' } ],
 	dependant_tasks: [ { type: Schema.Types.ObjectId, ref: 'Task' } ],
 } );
 

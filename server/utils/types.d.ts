@@ -25,7 +25,7 @@ export interface TaskSchema {
 	users: Types.ObjectId[],
 	project: Types.ObjectId,
 	tags: string[],
-	column: string,
+	column: Types.ObjectId,
 	due_date: Date,
 	dependant_tasks: Types.ObjectId[]
 }

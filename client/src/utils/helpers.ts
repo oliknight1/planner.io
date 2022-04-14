@@ -1,7 +1,6 @@
 import { useBreakpoint } from '@chakra-ui/react';
 import { DraggableLocation } from 'react-beautiful-dnd';
 import { TaskController } from '../controllers/TaskController';
-import { ColumnName } from './enums';
 import { Task } from './types';
 
 export const is_mobile_breakpoint = () : boolean => {
@@ -19,12 +18,14 @@ export const reorder_tasks = (
 	result.splice( end_index, 0, reordered_item );
 	return result;
 };
+
 export const move_to_list = (
 	source : Task[],
 	destination : Task[],
 	droppable_source : DraggableLocation,
 	droppable_destination : DraggableLocation,
 	token: string,
+	column_ids: string[],
 ) => {
 	const source_clone = Array.from( source );
 	const destination_clone = Array.from( destination );
@@ -33,22 +34,9 @@ export const move_to_list = (
 	const droppable_id : number = +droppable_destination.droppableId;
 
 	const post_data = {
-		column: '',
+		column: column_ids[droppable_id],
 	};
 
-	switch ( droppable_id ) {
-	case ColumnName.Backlog:
-		post_data.column = 'Backlog';
-		break;
-	case ColumnName.In_Progress:
-		post_data.column = 'In Progress';
-		break;
-	case ColumnName.Completed:
-		post_data.column = 'Completed';
-		break;
-	default:
-		throw new Error( 'Invalid droppable id' );
-	}
 	TaskController.update_task( token, reordered_item.id as string, post_data );
 
 	destination_clone.splice( droppable_destination.index, 0, reordered_item );

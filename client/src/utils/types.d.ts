@@ -28,7 +28,7 @@ export interface Task {
 }
 
 export interface TaskColumnI {
-		id: number
+		id: string
 		title: string,
 		tasks : Task[],
 }

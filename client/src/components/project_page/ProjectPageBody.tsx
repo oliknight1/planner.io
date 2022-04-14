@@ -57,13 +57,15 @@ const ProjectPageBody : FC = () => {
 			);
 			columns_clone[source_id].tasks = items;
 		} else {
-		// If task moved to a different column
+			const column_ids : string[] = project.columns.map( ( col ) => col.id );
+			// If task moved to a different column
 			const move_result = move_to_list(
 				project.columns[source_id].tasks,
 				project.columns[destination_id].tasks,
 				source,
 				destination,
 				user.token,
+				column_ids,
 			);
 			columns_clone[source_id].tasks = move_result[source_id];
 			columns_clone[destination_id].tasks = move_result[destination_id];

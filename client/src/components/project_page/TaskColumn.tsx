@@ -18,7 +18,7 @@ interface TaskColumnProps {
 }
 
 const TaskColumn : FC<TaskColumnProps> = ( {
-	column_header, tasks, droppable_id, project_users, project_id,
+	column_header, tasks, droppable_id,
 } ) => {
 	const [ open_task, set_open_task ] = useState<Task|null>( null );
 	const { isOpen, onOpen, onClose } = useDisclosure();
