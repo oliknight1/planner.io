@@ -15,6 +15,7 @@ import { ProjectController } from '../../controllers/ProjectController';
 import { TaskController } from '../../controllers/TaskController';
 import { ColumnName } from '../../utils/enums';
 import { is_mobile_breakpoint } from '../../utils/helpers';
+import { useCachedProject } from '../../utils/hooks';
 import { Task, TaskColumnI, User } from '../../utils/types';
 import TaskColumn from './TaskColumn';
 import TaskDialog from './TaskDialog';
@@ -29,6 +30,8 @@ const ProjectPageBody : FC<ProjectPageBodyProps> = ( { project_id, columns, user
 	const [ task_columns, set_task_columns ] = useState<TaskColumnI[]>( [] );
 	const { user } = useUser();
 	const { isOpen, onOpen, onClose } = useDisclosure();
+
+	const project = useCachedProject();
 
 	useEffect( () => {
 		set_task_columns( columns );

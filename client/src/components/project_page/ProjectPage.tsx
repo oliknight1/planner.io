@@ -2,8 +2,10 @@ import {
 	Box, Flex,
 } from '@chakra-ui/react';
 import React, { FC, useEffect } from 'react';
+import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useProject } from '../../utils/hooks';
+import { ProjectController } from '../../controllers/ProjectController';
+import { Project } from '../../utils/types';
 import TopBar from '../TopBar';
 import ProjectPageBody from './ProjectPageBody';
 
@@ -18,7 +20,9 @@ const ProjectPage : FC = () => {
 		}
 	}, [] );
 
-	const { data, isError } = useProject();
+	const {
+		data, isError,
+	} = useQuery<Project, Error>( [ 'single_project', { id: params.id } ], () => ProjectController.get_by_id( params.id as string ) );
 
 	if ( isError ) {
 		navigate( '/*' );
