@@ -73,6 +73,14 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 			}
 		}
 	};
+
+	const check_assinged : string[] = project.users.filter( ( user ) => {
+		if ( !assinged_users.some( ( assinged_user ) => assinged_user.id === user.id ) ) {
+			return false;
+		}
+		return true;
+	} ).map( ( user ) => user.id.toString() );
+
 	const project_mutation = useMutation(
 		( task : Task ) => ProjectController.add_task( authed_user.token, project.id, task.id! ),
 		{
@@ -168,7 +176,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 			onSettled: () => {
 				query_client.invalidateQueries( [ 'single_project', { id: project.id } ] );
 			},
-			onSuccess: ( response ) => {
+			onSuccess: () => {
 				set_title( '' );
 				set_assigned_users( [] );
 				set_body_text( '' );
@@ -219,7 +227,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 									Members
 								</MenuButton>
 								<MenuList>
-									<MenuOptionGroup type="checkbox" onChange={handle_assigning_users}>
+									<MenuOptionGroup type="checkbox" defaultValue={check_assinged} onChange={handle_assigning_users}>
 										{project.users.map( ( user ) => (
 											<MenuItemOption
 												value={user.id}
