@@ -206,14 +206,16 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 				<form onSubmit={handle_submit.mutate}>
 					<ModalCloseButton />
 					<ModalHeader mt={4}>
-						<Input
-							placeholder="New Task"
-							variant="flushed"
-							value={title}
-							size="lg"
-							fontSize="xl"
-							onChange={( e ) => set_title( e.target.value )}
-						/>
+						<FormControl isRequired>
+							<Input
+								placeholder="New Task"
+								variant="flushed"
+								value={title}
+								size="lg"
+								fontSize="xl"
+								onChange={( e ) => set_title( e.target.value )}
+							/>
+						</FormControl>
 					</ModalHeader>
 					<ModalBody>
 						<FormControl>
