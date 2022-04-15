@@ -14,6 +14,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { useUser } from '../../contexts/auth_context';
 import { ProjectController } from '../../controllers/ProjectController';
 import { TaskController } from '../../controllers/TaskController';
+import { is_mobile_breakpoint } from '../../utils/helpers';
 import { useCachedProject } from '../../utils/hooks';
 import { Project, Task, User } from '../../utils/types';
 import DeletePopover from '../DeletePopover';
@@ -199,7 +200,7 @@ const TaskDialog : FC<TaskDialogProps> = ( {
 	);
 
 	return (
-		<Modal onClose={on_close} isOpen={is_open} isCentered size="xl">
+		<Modal onClose={on_close} isOpen={is_open} isCentered size={is_mobile_breakpoint() ? 'sm' : 'xl'}>
 			<ModalOverlay />
 			<ModalContent background={colorMode === 'dark' ? 'gray.800' : 'white'}>
 				<form onSubmit={handle_submit.mutate}>

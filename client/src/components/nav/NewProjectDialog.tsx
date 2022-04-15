@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { User } from '../../utils/types';
 import { useUser } from '../../contexts/auth_context';
 import { ProjectController } from '../../controllers/ProjectController';
+import { is_mobile_breakpoint } from '../../utils/helpers';
 
 interface NewProjectDialogProps {
 	is_open: boolean,
@@ -102,7 +103,7 @@ const NewProjectDialog : FC<NewProjectDialogProps> = ( { is_open, on_close } ) =
 	} );
 
 	return (
-		<Modal onClose={on_close} isOpen={is_open} isCentered>
+		<Modal onClose={on_close} isOpen={is_open} isCentered size={is_mobile_breakpoint() ? 'sm' : 'xl'}>
 			<ModalOverlay />
 			<ModalContent background={colorMode === 'dark' ? 'gray.800' : 'white'}>
 				<ModalHeader>New Project</ModalHeader>
