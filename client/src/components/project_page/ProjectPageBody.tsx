@@ -95,7 +95,7 @@ const ProjectPageBody : FC = () => {
 						) )
 					}
 					<Button
-						pos="absolute"
+						pos="fixed"
 						right={12}
 						bottom={8}
 						rightIcon={<AddIcon />}
