@@ -1,5 +1,7 @@
 import {
-	Center, Container, Wrap, Spinner, WrapItem, Fade, Flex,
+	Center, Container, Wrap, Spinner,
+	WrapItem, Fade, Flex, Box, useColorMode,
+	Heading, Text,
 } from '@chakra-ui/react';
 import React, { FC } from 'react';
 import { useQuery } from 'react-query';
@@ -12,6 +14,7 @@ export const AllProjects : FC = () => {
 	const {
 		data, isLoading, isSuccess,
 	} = useQuery<Project[], Error>( 'all_projects', ProjectController.get_all );
+	const { colorMode } = useColorMode();
 	return (
 		<Flex flexDir="column" w="100%">
 			<Fade in>
@@ -23,7 +26,7 @@ export const AllProjects : FC = () => {
 					}
 					{
 						isSuccess
-						&& (
+						&& data.length > 0 && (
 							<Wrap spacing={5}>
 								{data.map( ( project ) => (
 									<WrapItem key={project.id}>
@@ -31,6 +34,29 @@ export const AllProjects : FC = () => {
 									</WrapItem>
 								) )}
 							</Wrap>
+						)
+					}
+					{
+						isSuccess && data.length <= 0
+						&& (
+							<Center>
+								<Box
+									textAlign="center"
+									w="fit-content"
+									p={8}
+									borderRadius="xl"
+									boxShadow="lg"
+									background={colorMode === 'dark' ? '#181818' : '#FFFFFF'}
+								>
+									<Heading size="lg" fontWeight="light">
+										You are not assigned to any projects
+									</Heading>
+									<Text fontSize="xl" mt={6}>
+										Try creating one!
+									</Text>
+
+								</Box>
+							</Center>
 						)
 					}
 				</Container>
