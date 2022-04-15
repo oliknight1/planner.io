@@ -17,11 +17,11 @@ const Nav : FC = () => {
 	const { colorMode, toggleColorMode } = useColorMode();
 
 	const links : NavLink[] = [
-		{
-			name: 'Home',
-			icon: HomeIcon,
-			url: '/',
-		},
+		// {
+		//   name: 'Home',
+		//   icon: HomeIcon,
+		//   url: '/',
+		// },
 		{
 			name: 'All Projects',
 			icon: AllProjectsIcon,
