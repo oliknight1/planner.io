@@ -1,6 +1,7 @@
 import { Box, BoxProps, useColorMode } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import React, { FC } from 'react';
+import { is_mobile_breakpoint } from '../utils/helpers';
 
 const Card : FC<BoxProps> = ( { children, ...props } ) => {
 	const MotionCard = motion( Box );
@@ -12,7 +13,7 @@ const Card : FC<BoxProps> = ( { children, ...props } ) => {
 			borderWidth="2px"
 			borderRadius="lg"
 			boxShadow="lg"
-			w="sm"
+			w={is_mobile_breakpoint() ? 'xs' : 'sm'}
 			p={4}
 			bg={colorMode === 'dark' ? '#181818' : '#FFFFFF'}
 			{...props}
