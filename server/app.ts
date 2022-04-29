@@ -24,3 +24,7 @@ mongoose.connect( MONGODB_URI as string )
 	.catch( ( error : Error ) => {
 		console.error( 'Error connecting to MongoDB', error );
 	} );
+
+app.get( '/*', ( request, response ) => {
+	response.sendFile( `${__dirname}/build/index.html` );
+} );
