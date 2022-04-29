@@ -19,7 +19,7 @@ beforeAll( async () => {
 		users: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
 		project: new mongoose.Types.ObjectId(),
 		tags: [ 'Test tag 1', 'Test tag 2' ],
-		column: 'backlog',
+		column: new mongoose.Types.ObjectId(),
 		due_date: new Date(),
 		dependant_tasks: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
 	};
@@ -80,7 +80,8 @@ describe( 'Testing task POST routes', () => {
 			users: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
 			project: new mongoose.Types.ObjectId(),
 			tags: [ 'tag1', 'tag2' ],
-			column: 'backlog',
+			column: new mongoose.Types.ObjectId(),
+
 			due_date: new Date(),
 			dependant_tasks: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
 		};
@@ -108,7 +109,8 @@ describe( 'Testing task POST routes', () => {
 			users: [],
 			project: new mongoose.Types.ObjectId(),
 			tags: [ 'tag1', 'tag2' ],
-			column: 'backlog',
+			column: new mongoose.Types.ObjectId(),
+
 			due_date: new Date(),
 			dependant_tasks: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
 		};
@@ -135,7 +137,8 @@ describe( 'Testing task POST routes', () => {
 			users: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
 			project: new mongoose.Types.ObjectId(),
 			tags: [ 'tag1', 'tag2' ],
-			column: 'backlog',
+			column: new mongoose.Types.ObjectId(),
+
 			due_date: new Date(),
 			dependant_tasks: [ new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId() ],
 		};
