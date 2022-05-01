@@ -15,7 +15,7 @@ app.use( '/api/users', user_router );
 app.use( '/api/projects', project_router );
 app.use( '/api/tasks', task_router );
 app.use( '/api/auth', auth_router );
-app.use( express.static( 'build' ) );
+app.use( express.static( `${__dirname}/build` ) );
 
 mongoose.connect( MONGODB_URI as string )
 	.then( () => {
